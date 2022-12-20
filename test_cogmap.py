@@ -1,7 +1,5 @@
 from unittest import TestCase
 import itertools as it
-
-import utils
 from cogmap import CogMap, Vertex, Edge, Impulses
 import numpy as np
 

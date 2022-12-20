@@ -1,0 +1,5 @@
+cognitiv-task
+0
+/home/user/Projects/Ivan/flame/FLAMEGPU-master/
+/home/user/Projects/Ivan/flame/FLAMEGPU-master/projects/
+5

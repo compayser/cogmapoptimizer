@@ -16,8 +16,8 @@
 
 # Композиция репозитория #
 
-* ![cognitive](cognitive) - файлы инструмента агентного моделирования на базе FlameGPU
 * ![cogmap](cogmap) - файлы библиотеки когнитивного моделирования
+* ![cognitive](cognitive) - файлы инструмента агентного моделирования на базе FlameGPU
 * ![docs](docs) - описание библиотеки ![CogMap Optimizer](docs/cogmap.md), программы агентного моделирования на основе 
 FlameGPU ![Cognitive](docs/cognitive.md) и примеры
 * ![Лицензия GPL v3.0](LICENSE.md)

@@ -835,10 +835,6 @@ class CogMap:
             # список вершин ПС заданной длины
             ss_vertices_list = list(it.permutations(ss_vertices, l))
             cogmap_vertices_list = list(it.permutations(cogmap_vertices, l))
-            i = 0
             for prod in it.product(*[cogmap_vertices_list, ss_vertices_list]):
                 compositions.append([1 if len(prod[0]) < len(s) else 0, self.get_composition(s, prod[0], prod[1], 0)])
-                i = i + 1
-                if i > 5:
-                    break
         return compositions

@@ -1,5 +1,3 @@
-#import cProfile
-import os
 import sys
 from pathlib import Path
 import cogmap as cm
@@ -8,7 +6,6 @@ import report
 from optimizer import Optimizer
 
 
-#def main():
 if __name__ == '__main__':
     # входные данные - файл когнитивная карта, файл групп вершин, число шагов импульсного моделирования
     if len(sys.argv) < 4:
@@ -55,7 +52,3 @@ if __name__ == '__main__':
         i = i + 1
         r.save_to_file(result_filename)
     print("Done")
-
-
-#if __name__ == '__main__':
-#    cProfile.run('main()')

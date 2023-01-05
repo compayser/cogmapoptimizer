@@ -2,16 +2,113 @@ import numpy as np
 import copy
 import json
 import itertools as it
+import numba
+
+
+def dfs(gr: list[list[float]], start: int, v: int, depth: int, stack: np.ndarray, visited: list[bool],
+        cycles: list[np.ndarray], count: int) -> tuple[np.ndarray, list[bool], list[list[int]], int]:
+    """
+
+    :param gr:
+    :param start:
+    :param v:
+    :param depth:
+    :param stack:
+    :param visited:
+    :param cycles:
+    :param count:
+    :return:
+    """
+    stack = np.append(stack, v)
+    if visited[v]:
+        if start == v:  # found a path
+            cycle = np.array(stack)
+            cycles.append(cycle)
+            count = count + 1
+
+        stack = np.delete(stack, len(stack) - 1)
+    else:
+        visited[v] = True
+        links = np.array(gr[v])
+        for l in range(len(gr)):
+            if links[l] != 0:
+                stack, visited, cycles, count = dfs(gr, start, l, depth + 1, stack, visited, cycles, count)
+        visited[v] = False
+        stack = np.delete(stack, len(stack) - 1)
+    return stack, visited, cycles, count
+
+
+def markSign(ar, cycles):
+    """
+
+    :param ar:
+    :param cycles:
+    :return:
+    """
+    n = len(cycles)
+    nOfNeg = 0
+    signs = np.array([1 for i in range(n)])
+    for j in range(n):
+        cycle = cycles[j]
+        v0 = cycle[0]
+        for i in range(len(cycle) - 1):
+            v = cycle[i + 1]
+            if ar[v0][v] < 0:
+                signs[j] = signs[j] * -1
+            v0 = v
+        if signs[j] < 0:
+            nOfNeg = nOfNeg + 1
+    return nOfNeg, signs
+
+
+def allCyclesDirectedmain(ar: list[list[float]]) -> tuple[list[np.ndarray], int]:
+    """
+
+    :param ar:
+    :return:
+    """
+    n = len(ar)
+    stack = np.array([], dtype='i4')
+    cycles = []
+    visited = [False for i in range(n)]
+    count = 0
+    depth = 1
+
+    for v in range(n):
+        stack, visited, cycles, count = dfs(ar, v, v, depth, stack, visited, cycles, count)
+        visited[v] = True
+
+    return cycles[1:], count
 
 
 class Impulses:
+    """Описывает серию импульсов (воздействий) на когнитивную карту"""
+    __slots__ = ("imp", "v_imp")
+
     def __init__(self, imp, v_imp):
+        """
+
+        :param imp:
+        :param v_imp:
+        """
         self.imp = imp
         self.v_imp = v_imp
 
 
 class Vertex:
-    def __init__(self, id, value, min, max, impulse, name):
+    """Описывает вершину когнитивной карты"""
+    __slots__ = ("id", "value", "min", "max", "impulse", "name", "idx", "short_name", "color", "show", "growth", "x", "y")
+
+    def __init__(self, id: int, value: float, min: float, max: float, impulse: float, name: str):
+        """
+
+        :param id:
+        :param value:
+        :param min:
+        :param max:
+        :param impulse:
+        :param name:
+        """
         self.id = id
         self.value = value
         self.min = min
@@ -19,19 +116,44 @@ class Vertex:
         self.impulse = impulse
         self.name = name
         self.idx = -1  # используется в работе
+        self.short_name = ""
+        self.color = "0x808080ff"
+        self.show = "false"
+        self.growth = 0.0
+        self.x = 0.0
+        self.y = 0.0
 
 
 class Edge:
-    def __init__(self, id, v1_id, v2_id, value, name):
+    """Оисывает ребро когнитивной карты"""
+    __slots__ = ("id", "v1_id", "v2_id", "value", "name", "formula", "md", "color")
+
+    def __init__(self, id: int, v1_id: int, v2_id: int, value: float, name: str):
         self.id = id
         self.v1_id = v1_id
         self.v2_id = v2_id
         self.value = value
         self.name = name
+        self.formula = ""
+        self.md = ""
+        self.color = "0x808080ff"
 
 
 class CogMap:
+    """Описывает когнитивную карту"""
+    __slots__ = ("X", "Y", "Z", "vertices", "edges", "matrix", "edge_ids", "vertex_ids", "cognimod_settings", "cognimod_map_title", "pulse_calc_log")
+
     def __init__(self, vertices=[], edges=[]):
+        """
+
+        :param vertices:
+        :param edges:
+        """
+        """
+        Конструктор.
+        ``vertices`` - массив вершин
+        ``edged`` - массив ребер
+        """
         # X - множество входных, управляющих воздействий, автономно задаваемых СППР или ЛПР, или во взаимодействии с ЛПР
         self.X = []
         # Y - множество оптимизируемых выходных показателей
@@ -43,18 +165,34 @@ class CogMap:
         self.matrix = None
         self.edge_ids = []
         self.vertex_ids = []
+        self.cognimod_settings = None
+        self.cognimod_map_title = None
+        self.pulse_calc_log = None
         if len(vertices) and len(edges):
             self.rebuild_matrix()
 
     def is_stable(self):
-        count, nOfNeg = self.cycles_calc(self.matrix)
+        """
+        Проверяет стабильность когнитивной карты
+        :return: True, если когнитивная карта стабильна (объединяет проверку структурной устройчивости и
+        устойчивости к возмущениям)
+        """
+        count, nOfNeg = CogMap.cycles_calc(self.matrix)
         f, m = self.eig_vals_calc(self.matrix)
         return f & (nOfNeg % 2 == 1)
 
     def fill_from_json(self, data, data_xyz):
+        """
+        Заполняет данные когнитивной карты из данных в формате JSON.
+        :param data: описание когнитивной карты
+        :param data_xyz: описание групп вершин когнитивной карты
+        :return:
+        """
         V, E = [], []
         json_content = json.loads(data)
         json_xyz_content = json.loads(data_xyz)
+        self.cognimod_settings = json_content["Settings"]
+        self.cognimod_map_title = json_content["MapTitle"]
         json_vertices = json_content["Vertices"]
         for v in json_vertices:
             v_id = 0
@@ -63,20 +201,46 @@ class CogMap:
             v_max = 0.0
             v_impulse = 0.0
             v_name = ""
+
+            v_short_name = ""
+            v_color = ""
+            v_show = ""
+            v_growth = 0.0
+            v_x = 0.0
+            v_y = 0.0
+
             for item in v.items():
                 if item[0] == "id":
                     v_id = item[1]
                 elif item[0] == "value":
-                    v_value = item[1]
+                    v_value = float(item[1])
                 elif item[0] == "min":
-                    v_min = item[1]
+                    v_min = float(item[1])
                 elif item[0] == "max":
-                    v_max = item[1]
+                    v_max = float(item[1])
                 elif item[0] == "impulse":
-                    v_impulse = item[1]
+                    v_impulse = float(item[1])
                 elif item[0] == "fullName":
                     v_name = item[1]
+                elif item[0] == "shortName":
+                    v_short_name = item[1]
+                elif item[0] == "color":
+                    v_color = item[1]
+                elif item[0] == "show":
+                    v_show = item[1]
+                elif item[0] == "growth":
+                    v_growth = float(item[1])
+                elif item[0] == "x":
+                    v_x = item[1]
+                elif item[0] == "y":
+                    v_y = item[1]
             vertex = Vertex(v_id, v_value, v_min, v_max, v_impulse, v_name)
+            vertex.short_name = v_short_name
+            vertex.color = v_color
+            vertex.show = v_show
+            vertex.growth = v_growth
+            vertex.x = v_x
+            vertex.y = v_y
             V.append(vertex)
 
         json_edges = json_content["Edges"]
@@ -86,6 +250,10 @@ class CogMap:
             e_shortName = ""
             e_v1 = 0
             e_v2 = 0
+
+            e_formula = ""
+            e_md = ""
+            e_color = ""
             for item in e.items():
                 if item[0] == "id":
                     e_id = item[1]
@@ -97,7 +265,16 @@ class CogMap:
                     e_v2 = item[1]
                 elif item[0] == "shortName":
                     e_shortName = item[1]
+                elif item[0] == "formula":
+                    e_formula = item[1]
+                elif item[0] == "md":
+                    e_md = item[1]
+                elif item[0] == "color":
+                    e_color = item[1]
             edge = Edge(e_id, e_v1, e_v2, e_weight, e_shortName)
+            edge.formula = e_formula
+            edge.md = e_md
+            edge.color = e_color
             E.append(edge)
 
         json_scenarios = json_content["Scenarios"]
@@ -140,12 +317,21 @@ class CogMap:
             self.rebuild_matrix()
 
     def vertex_idx_by_id(self, id):
+        """
+        Возвращает индекс вершины по ее идентификатору
+        :param id: идентификатор вершины
+        :return: индекс вершины
+        """
         for i in range(len(self.vertex_ids)):
             if self.vertex_ids[i] == id:
                 return i
         return None
 
     def rebuild_indexes(self):
+        """
+        Перестраивает таблицы индексов вершины и ребер когнитивной карты
+        :return:
+        """
         self.edge_ids = []
         self.vertex_ids = []
         for v in self.vertices:
@@ -154,10 +340,14 @@ class CogMap:
             self.edge_ids.append(e.id)
 
     def rebuild_matrix(self):
+        """
+        Перестраивает матрицу смежности согласно массивам вершин и ребер
+        :return:
+        """
         self.rebuild_indexes()
         self.matrix = np.zeros((len(self.vertices), len(self.vertices)))
         col,row = 0,0
-        for i in range(0,len(self.vertices)):
+        for i in range(len(self.vertices)):
             vid = self.vertex_ids[i]
             for e in self.edges:
                 if e.v1_id == vid:
@@ -167,6 +357,11 @@ class CogMap:
                     self.matrix[i][v2_idx] = e.value
 
     def add_vertex(self, v):
+        """
+        Добавляет вершину
+        :param v: вершина
+        :return:
+        """
         for ex_v in self.vertices:
             if ex_v.id == v.id:
                 raise Exception("Duplicated vertex id")
@@ -174,6 +369,11 @@ class CogMap:
         self.rebuild_matrix()
 
     def add_edge(self, e):
+        """
+        Добавляет ребро
+        :param e: ребро
+        :return:
+        """
         for ex_e in self.edges:
             if ex_e.id == e.id:
                 raise Exception("Duplicated edge id")
@@ -190,6 +390,11 @@ class CogMap:
         raise Exception("Invalid vertex id")
 
     def rem_vertex(self, id):
+        """
+        Удаляет вершину
+        :param id: идентификатор вершины
+        :return:
+        """
         for i in range(len(self.vertices)):
             if self.vertices[i].id == id:
                 self.vertices.pop(i)
@@ -201,6 +406,11 @@ class CogMap:
         raise Exception("Invalid vertex id")
 
     def rem_edge(self, id):
+        """
+        Удаляет ребро
+        :param id: идентификатор ребра
+        :return:
+        """
         for i in range(len(self.edges)):
             if self.edges[i].id == id:
                 self.edges.pop(i)
@@ -209,6 +419,12 @@ class CogMap:
         raise Exception("Invalid edge id")
 
     def rem_edge_by_vertices(self, v1_id, v2_id):
+        """
+        Удаляет ребро
+        :param v1_id: идентификатор вершины 1
+        :param v2_id: идентификатор вершины 2
+        :return:
+        """
         for i in range(len(self.edges)):
             if (self.edges[i].v1_id == v1_id) and (self.edges[i].v2_id == v2_id):
                 self.edges.pop(i)
@@ -216,12 +432,39 @@ class CogMap:
                 return
         raise Exception("Invalid vertex id")
 
-    def pulse_calc(self, qq, vvq, st):
+    def init_pulse_calc_log(self, vals):
+        """
+        Инициализирует лог импульсного моделирования
+        :param vals: массив значений вершин
+        :return:
+        """
+        self.pulse_calc_log = [vals]
+
+    def append_pulse_calc_log(self, vals):
+        """
+        Добавляет запись в лог импульсного моделирования
+        :param vals: массив значений вершин
+        :return:
+        """
+        self.pulse_calc_log.append(vals)
+
+    def pulse_calc(self, qq, vvq, st, log_values: bool = False):
+        """
+        Выполняет импульсное моделирование
+        :param qq: величины импульсов
+        :param vvq: индексы вершин импульсов
+        :param st: число шагов моделирования
+        :param log_values: если равно True, включает логирование значений вершин на каждом шаге моделирования
+        :return: массив новых значений вершин
+        """
         n = len(self.matrix)
-        v0 = [0.0 for i in range(n)]
-        p0 = [0.0 for i in range(n)]
+        v0 = [self.vertices[i].value for i in range(n)]
+        p0 = [self.vertices[i].growth for i in range(n)]
         for i in range(len(vvq)):
-            p0[vvq[i]] = qq[i]
+            p0[vvq[i]] = p0[vvq[i]] + qq[i]
+        if log_values:
+            self.init_pulse_calc_log(p0)
+            self.append_pulse_calc_log(v0)
         for s in range(st):
             v1 = [0.0 for i in range(n)]
             p1 = [0.0 for i in range(n)]
@@ -235,9 +478,49 @@ class CogMap:
                     p1[e] = p1[e] + p0[v] * self.matrix[v][e]
             v0 = v1
             p0 = p1
+            if log_values:
+                self.append_pulse_calc_log(v1)
+        return v1
+
+    @staticmethod
+    @numba.njit(fastmath=True)
+    def pulse_calc_opt(matrix: list[list[float]], vertices_value: list[float], vertices_growth: list[float], qq: list[float], vvq: list[int], st: int):
+        """
+        Выполняет импульсное моделирование (ускоренная и сокращенная версия метода)
+        :param matrix: матрица смежности
+        :param vertices_value: текущие значения вершин
+        :param vertices_growth: текущие значения предустановленных импульсов
+        :param qq: величины импульсов
+        :param vvq: индексы вершин импульсов
+        :param st: число шагов моделирования
+        :return: массив новых значений вершин
+        """
+        n = len(matrix)
+        v0 = vertices_value[:]
+        p0 = vertices_growth[:]
+        for i in range(len(vvq)):
+            p0[vvq[i]] = p0[vvq[i]] + qq[i]
+        for s in range(st):
+            v1 = [0.0 for i in range(n)]
+            p1 = [0.0 for i in range(n)]
+            for v in range(n):
+                v1[v] = v0[v] + p0[v]
+                if p0[v] == 0:
+                    continue
+                for e in range(n):
+                    if v == e:
+                        continue
+                    p1[e] = p1[e] + p0[v] * matrix[v][e]
+            v0 = v1
+            p0 = p1
         return v1
 
     def eig_vals_calc(self, ar):
+        """
+        Рассчитывает собственное число матрицы смежности (оределение устойчивости системы к возмущениям)
+        :param ar: матрица смежности
+        :return: собственное число
+        """
         w, v = np.linalg.eig(np.array(ar))
         re = w.real
         im = w.imag
@@ -248,64 +531,32 @@ class CogMap:
         return (m < 1), m
 
     def simplex_calc(self, v):
+        """
+        Рассчитывает симплекс для одной вершины
+        :param v: индекс вершины
+        :return: список вершин симплициального комплекса
+        """
         return self.sy1(self.matrix, v)
 
-    def cycles_calc(self, ar):
-        def allCyclesDirectedmain(ar):
-            n = len(ar)
-            stack = np.array([], dtype='i4')
-            cycles = []
-            visited = [False for i in range(n)]
-            count = 0
-            depth = 1
-
-            for v in range(n):
-                stack, visited, cycles, count = dfs(ar, v, v, depth, stack, visited, cycles, count)
-                visited[v] = True
-
-            return cycles, count
-
-        def dfs(gr, start, v, depth, stack, visited, cycles, count):
-            stack = np.append(stack, v)
-            if visited[v]:
-                if start == v:  # found a path
-                    cycle = np.array(stack)
-                    cycles.append(cycle)
-                    count = count + 1;
-
-                stack = np.delete(stack, len(stack) - 1)
-            else:
-                visited[v] = True
-                links = np.array(gr[v])
-                for l in range(len(gr)):
-                    if links[l] != 0:
-                        stack, visited, cycles, count = dfs(gr, start, l, depth + 1, stack, visited, cycles, count)
-                visited[v] = False
-                stack = np.delete(stack, len(stack) - 1)
-            return stack, visited, cycles, count
-
-        def markSign(ar, cycles):
-            n = len(cycles)
-            nOfNeg = 0
-            signs = np.array([1 for i in range(n)])
-            for j in range(n):
-                cycle = cycles[j]
-                v0 = cycle[0]
-                for i in range(len(cycle) - 1):
-                    v = cycle[i + 1]
-                    if (ar[v0][v] < 0):
-                        signs[j] = signs[j] * -1
-                    v0 = v
-                if signs[j] < 0:
-                    nOfNeg = nOfNeg + 1
-            return nOfNeg, signs
-
+    @staticmethod
+    def cycles_calc(ar):
+        """
+        Рассчитывает число циклов в когнитивной карте (определение структурной устойчивости)
+        :param ar: матрица смежности
+        :return: число циклов, число отрицательных циклов
+        """
         cycles, count = allCyclesDirectedmain(ar)
         nOfNeg, signs = markSign(ar, cycles)
 
         return count, nOfNeg
 
     def sy1(self, ar, vc):
+        """
+        Рассчитывает симплекс для одной вершины
+        :param ar: матрица смежности
+        :param vc: индекс вершины
+        :return: список вершин симплициального комплекса
+        """
         n = len(ar)  # total # of V
         Vx = [[] for i in range(n)]  # V connected with other V
         qmaxEm = -1
@@ -318,6 +569,11 @@ class CogMap:
         return Vx[vc]
 
     def sy(self, ar):
+        """
+        Рассчитывает все симплициальные комплексы
+        :param ar: матрица смежности
+        :return: симплициальные комплексы
+        """
         n = len(ar) # total # of V
         Vx = [[] for i in range(n)] # V connected with other V
         qmaxEm = -1
@@ -368,6 +624,14 @@ class CogMap:
         return Qx
 
     def get_composition(self, s1, vk, vs, use):
+        """
+        Формирует композицию выбранной простой структуры
+        :param s1: матрица смежности простой структуры
+        :param vk: список вершин исходной матрицы на которые присоединяется дополнение
+        :param vs: список вершин простой структуры s1 для присоединения
+        :param use: флаг метода дополнения исходной матрицы, 0 или 1 - регулирует поведение объединения ребер при их наличии
+        :return: новая когнитивная карта с наложенной простой структурой
+        """
         gr = self.comboV(self.matrix, s1, vk, vs, use)
         new_cogmap = copy.deepcopy(self)
 
@@ -387,33 +651,69 @@ class CogMap:
                 for e in new_cogmap.edges:
                     if e.v1_id == v1_id and e.v2_id == v2_id:
                         f = True
-                        e.value = gr[i][j]
+                        if e.value != gr[i][j]:
+                            e.value = gr[i][j]
+                            e.color = "0xff8080ff"
                         break;
                 if not f:
-                    max_e_id = max_e_id + 1
-                    new_cogmap.edges.append(Edge(max_e_id, v1_id, v2_id, gr[i][j], "New %d" % max_e_id))
+                    if gr[i][j] != 0.0:
+                        max_e_id = max_e_id + 1
+                        e = Edge(max_e_id, v1_id, v2_id, gr[i][j], "New %d" % max_e_id)
+                        e.color = "0x80ff80ff"
+                        xm = (new_cogmap.vertices[i].x + new_cogmap.vertices[j].x) / 2
+                        ym = (new_cogmap.vertices[i].y + new_cogmap.vertices[j].y) / 2
+                        e.md = f"({xm},{ym})"
+                        new_cogmap.edges.append(e)
+
+        max_x = new_cogmap.vertices[0].x
+        max_y = new_cogmap.vertices[0].y
+        for i in range(len(new_cogmap.vertices)):
+            max_x = max(max_x, new_cogmap.vertices[i].x)
+            max_y = max(max_y, new_cogmap.vertices[i].y)
 
         if len(gr) > len(self.matrix):
             for i in range((len(gr) - len(self.matrix))):
                 max_v_id = max_v_id + 1
-                v = Vertex(max_v_id, 0, 0, 0, 0, "New %d" % max_v_id)
+                v = Vertex(max_v_id, 0.0, 0.0, 0.0, 0.0, "New %d" % max_v_id)
+                v.color = "0x80ff80ff"
+                v.short_name = "V"
+                v.x = max_x + 30
+                v.y = max_y + 30
+                max_x = max_x + 30
+                max_y = max_y + 30
                 new_cogmap.X.append(v)
                 new_cogmap.vertices.append(v)
 
-            for i in range(len(self.matrix), len(gr)):
-                for j in range(len(self.matrix), len(gr)):
+            for i in range(len(gr)):
+                for j in range(len(gr)):
+                    if i < len(self.matrix) and j < len(self.matrix):
+                        continue
                     # ребро от i к j
                     v1_id = new_cogmap.vertices[i].id
                     v2_id = new_cogmap.vertices[j].id
                     edge_value = gr[i][j]
                     if edge_value != 0.0:
                         max_e_id = max_e_id + 1
-                        new_cogmap.edges.append(Edge(max_e_id, v1_id, v2_id, edge_value, "New %d" % max_e_id))
+                        e = Edge(max_e_id, v1_id, v2_id, edge_value, "New %d" % max_e_id)
+                        e.color = "0x80ff80ff"
+                        xm = (new_cogmap.vertices[i].x + new_cogmap.vertices[j].x) / 2
+                        ym = (new_cogmap.vertices[i].y + new_cogmap.vertices[j].y) / 2
+                        e.md = f"({xm},{ym})"
+                        new_cogmap.edges.append(e)
             new_cogmap.rebuild_indexes()
         new_cogmap.matrix = gr
         return new_cogmap
 
     def comboV(self, k1, s1, vk, vs, use):
+        """
+        Формирует композицию выбранной простой структуры
+        :param k1: матрица смежности когнитивной карты
+        :param s1: матрица смежности простой структуры
+        :param vk: список вершин исходной матрицы на которые присоединяется дополнение
+        :param vs: список вершин простой структуры s1 для присоединения
+        :param use: флаг метода дополнения исходной матрицы, 0 или 1 - регулирует поведение объединения ребер при их наличии
+        :return: новая матрица смежности с наложенной простой структурой
+        """
         assert (len(vk) == len(vs)), "Merging vertices should be same dimension"
 
         gr = np.array(k1)
@@ -421,9 +721,9 @@ class CogMap:
 
         # expand matrix
         for l in range(len(si) - len(vs)):
-            gr = np.append(gr, [[0 for i in range(len(k1))]], 0)
+            gr = np.append(gr, [[0.0 for i in range(len(k1))]], 0)
         for l in range(len(si) - len(vs)):
-            gr = np.append(gr, [[0] for i in range(len(gr))], 1)
+            gr = np.append(gr, [[0.0] for i in range(len(gr))], 1)
 
         # fill with new edges
         for i in range(len(vk)):
@@ -459,7 +759,14 @@ class CogMap:
 
         return gr
 
-    def pulse_model(self, N, impulses=None):
+    def pulse_model(self, N, impulses=None, log_values: bool = False):
+        """
+        Выполняет импульсное моделирование
+        :param N: число шагов импульсного моделирования
+        :param impulses: импульсы
+        :param log_values: если True, то при импульсном моделировании будет формироваться лог со значениями вершин на каждом шаге
+        :return: массив проблемных вершин, отклонение значений проблемных вершин
+        """
         imp = []
         v_imp = []
         # Введение возмущений в вершины, соответствующие сигналам изменения данных (X,Y,Z) на основе текущего среза данных.
@@ -472,7 +779,7 @@ class CogMap:
             imp = impulses.imp
             for imp_vertex in impulses.v_imp:
                 v_imp.append(self.vertex_idx_by_id(imp_vertex.id))
-        v_values = self.pulse_calc(imp, v_imp, N)
+        v_values = self.pulse_calc(imp, v_imp, N, log_values)
         v_bad = []
         Y_er = []
         # Определение вершин Vi в которых  нарушается условие Yi_min < Yi < Yi_max и в которых необходимо улучшать процесс. Ситуация отмечается как «плохая» (bad) - Vi bad, i =1,2,…k.
@@ -483,40 +790,55 @@ class CogMap:
             Y_er.append(abs(((y.max + y.min) / 2) - v_values[y.idx]) / (y.max - y.min))
         return v_bad, max(Y_er) if len(v_bad) else 0.0
 
-    def get_neighbors(self, vertex_idx: int, deep: int):
-        assert (deep > 0)
-        neighbors = []
-        local_neighbors = []    # ближайшие соседи вершины
-        for i in range(len(self.matrix)):
-            if self.matrix[i][vertex_idx] != 0.0 or self.matrix[vertex_idx][i] != 0.0:
-                local_neighbors.append(i)
-        if deep == 1:
-            return local_neighbors
-        else:
-            neighbors.extend(local_neighbors)
-            for v in local_neighbors:
-                neighbors.extend(self.get_neighbors(v, deep - 1))
-            return neighbors
+    def pulse_model_opt(self, N, Vpulse, Vidx):
+        """
+        Выполняет импульсное моделирование (сокращенная версия)
+        :param N: число шагов импульсного моделирования
+        :param Vpulse: знаечния импульсов
+        :param Vidx: индексы вершин для импульсов
+        :return: отклонение значений проблемных вершин
+        """
+        # Введение возмущений в вершины, соответствующие сигналам изменения данных (X,Y,Z) на основе текущего среза данных.
+
+        vertices_value = [v.value for v in self.vertices]
+        vertices_growth = [v.growth for v in self.vertices]
+        v_values = self.pulse_calc_opt(self.matrix, vertices_value, vertices_growth, Vpulse, Vidx, N)
+        flag = False
+        Y_er = []
+        # Определение вершин Vi в которых  нарушается условие Yi_min < Yi < Yi_max и в которых необходимо улучшать процесс. Ситуация отмечается как «плохая» (bad) - Vi bad, i =1,2,…k.
+        for y in self.Y:
+            y.idx = self.vertex_idx_by_id(y.id)
+            if v_values[y.idx] > y.max or v_values[y.idx] < y.min:
+                flag = True
+            Y_er.append(abs(((y.max + y.min) / 2) - v_values[y.idx]) / (y.max - y.min))
+        return max(Y_er) if flag else 0.0
 
     def get_compositions(self, s, vertex: Vertex):
-        v = vertex.idx
+        """
+        Возвращает список всех композиций заданной вершины с простой структурой
+        :param s: матрица смежности простой структуры
+        :param vertex: вершина
+        :return: список композиций
+        """
+        # Определение симплексов sigma вершин v_bad
+        sim = self.simplex_calc(self.vertex_idx_by_id(vertex.id))
+
         compositions = []
 
         # выбор всех ближайшик вершин
         # определение множества всех верщин КК с заданной глубиной
         vertex_idx = self.vertex_idx_by_id(vertex.id)
         ss_vertices = np.arange(0, len(s))
-        for l in range(1, len(s) + 1):
-            if l == 1:
-                cogmap_vertices = set([vertex_idx])
-            elif l == 2:
-                cogmap_vertices = set(self.get_neighbors(vertex_idx, l))
-                cogmap_vertices.add(vertex_idx)
-            else:
-                cogmap_vertices = set(self.get_neighbors(vertex_idx, l))
+        for l in range(1, min(len(s), len(sim) + 1) + 1):
+            cogmap_vertices = set(sim)
+            cogmap_vertices.add(vertex_idx)
             # список вершин ПС заданной длины
             ss_vertices_list = list(it.permutations(ss_vertices, l))
             cogmap_vertices_list = list(it.permutations(cogmap_vertices, l))
+            i = 0
             for prod in it.product(*[cogmap_vertices_list, ss_vertices_list]):
                 compositions.append([1 if len(prod[0]) < len(s) else 0, self.get_composition(s, prod[0], prod[1], 0)])
+                i = i + 1
+                if i > 5:
+                    break
         return compositions

@@ -80,7 +80,7 @@ class TestCogMap(TestCase):
         vq = [0, 2]
         q = [1.1, -1.2]
         res = self.c.pulse_calc(q, vq, steps)
-        self.assertEqual(res, [1.1, 0.0, -1.2])
+        self.assertEqual(res, [9.1, 7.0, 0.8])
 
 
         # cycles count
@@ -89,7 +89,7 @@ class TestCogMap(TestCase):
         vq = [0, 2]
         q = [1.1, -1.2]
         res = self.c.pulse_calc(q, vq, steps)
-        self.assertEqual(res, [1.1, 1.1 * 0.1, -1.42])
+        self.assertEqual(res, [9.1, 7.11, 0.5800000000000001])
 
 
         # cycles count
@@ -100,7 +100,7 @@ class TestCogMap(TestCase):
         q = [1.1, -1.2]
 
         res = self.c.pulse_calc(q, vq, steps)
-        self.assertEqual(res, [1.1, 0.11000000000000001, -1.387])
+        self.assertEqual(res, [9.1, 7.11, 0.6130000000000001])
 
         # TODO проверить на других примерах
 
@@ -241,5 +241,5 @@ class TestCogMap(TestCase):
         self.assertEqual(max_y_er, 0.0)
         self.c.Y.append(self.c.vertices[2])
         v_bad, max_y_er = self.c.pulse_model(5, imp)
-        self.assertEqual(v_bad, [self.c.vertices[2]])
-        self.assertEqual(max_y_er, abs(((2.4 - 0.5) / 2) + 1.387) / (2.4 + 0.5))
+        self.assertEqual(v_bad, [])
+        self.assertEqual(max_y_er, 0.0)

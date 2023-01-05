@@ -7,8 +7,15 @@
 
 struct TVertice{
     std::string		name;
+    std::string		token;
     unsigned long	id;
     float		value;
+    float		growth;
+
+    float	min;
+    float	max;
+    int		need_test;
+    int		correct;
 };
 
 struct TEdge{
@@ -44,12 +51,18 @@ struct modelData{
     std::vector<int>		lags;
 };
 
+struct iterXMLData{
+    int num;
+    std::vector<TVertice> vert;
+};
+
 class TModel {
     private: 
 	struct modelData	data;
+	std::vector<iterXMLData>	xml_analize;
 
 	bool set_vert(std::vector<TEdge> &e,std::vector<TVertice> v);
-	int  get_weight(int id, int to_id);
+	float  get_weight(int id, int to_id);
 
 
 	static TModel * p_instance;
@@ -66,7 +79,16 @@ class TModel {
 	char * compile_rawJSON;
 	const nx_json * compile_json;
 
+	std::string jsonFileName_group;
+	char * rawJSON_group;
+	const nx_json * json_group;
+
+	char * compile_rawJSON_group;
+	const nx_json * compile_json_group;
+
+
 	void initFromJSON();
+	void initFromJSON_group();
 
     // Входные данные
 	std::string getXMLConstant();
@@ -84,13 +106,14 @@ class TModel {
 		return p_instance;
 	}
 
-	bool loadFromJSON(const char * fileName);
-
+	bool loadFromJSON(const char * fileName, const char * fileName_group);
 
 	bool createProject();
 	bool createIteration0();
 	bool makeProject();
 	bool runProject();
+
+	bool analiseXMLResult();
 };
 
 #endif

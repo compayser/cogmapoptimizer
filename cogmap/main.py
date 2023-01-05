@@ -1,10 +1,14 @@
+#import cProfile
+import os
 import sys
+from pathlib import Path
 import cogmap as cm
 import impact_generator as ig
 import report
 from optimizer import Optimizer
 
 
+#def main():
 if __name__ == '__main__':
     # входные данные - файл когнитивная карта, файл групп вершин, число шагов импульсного моделирования
     if len(sys.argv) < 4:
@@ -39,9 +43,19 @@ if __name__ == '__main__':
     i = 0
     print("Built %d composition(s)" % len(data))
     print("Building reports...")
+    p = Path(cogmap_json_path)
+
     for d in data:
         r = report.Report(d)
-        result_filename = cogmap_json_path + ".out%d.cmj" % i
+        result_dir = str(p.parent) + "\\added_%d" % d.added_new_vertices
+        rd = Path(result_dir)
+        if not rd.exists():
+            rd.mkdir()
+        result_filename = str(result_dir) + "\\" + p.name + ".out%d.cmj" % i
         i = i + 1
         r.save_to_file(result_filename)
     print("Done")
+
+
+#if __name__ == '__main__':
+#    cProfile.run('main()')

@@ -13,7 +13,16 @@
 
 #include "string.h"
 
+#include "dirent.h"
+
+#include <algorithm>
+
 #define FILES_COUNT 5
+
+
+bool compare_iter_by_num(const iterXMLData &a, const iterXMLData &b){
+    return a.num < b.num;
+}
 
 std::string files_list[FILES_COUNT] = {"/Makefile", "/make.sh", "/run.sh", "/src/model/XMLModelFile.xml", "/src/model/functions.c"};
 
@@ -116,7 +125,7 @@ bool TModel::set_vert(std::vector<TEdge> &e,std::vector<TVertice> v)
 }
 
 
-int  TModel::get_weight(int id, int to_id){
+float  TModel::get_weight(int id, int to_id){
 
 	for (int i_edges = 0; i_edges < data.edges.size(); i_edges++){
 		if ( data.edges[i_edges].v1_id == id && data.edges[i_edges].v2_id == to_id )
@@ -127,9 +136,6 @@ int  TModel::get_weight(int id, int to_id){
 
 void TModel::initFromJSON()
 {
-
-
-
     const nx_json * retData;
     const nx_json * retArrayData;
     const nx_json * retData_2;
@@ -142,8 +148,13 @@ void TModel::initFromJSON()
 
 	//"fullName":"К1"
 	retData_2 = nx_json_get(retArrayData, "fullName");
-	printf("Vertice name: [%s]\n", retData_2->text_value);
-	tmp_vert.name = retData_2->text_value;
+	if (retData_2->text_value != NULL) {
+	    printf("Vertice name: [%s]\n", retData_2->text_value);
+	    tmp_vert.name = retData_2->text_value;
+	}
+	else{
+	    printf("Vertice name NOT SET!\n");
+        }
 
 	//"id":1655712545685
 	retData_2 = nx_json_get(retArrayData, "id");
@@ -151,8 +162,16 @@ void TModel::initFromJSON()
 	tmp_vert.id = retData_2->int_value;
 
 	retData_2 = nx_json_get(retArrayData, "value");
-	printf("Vertice value: [%f]\n", retData_2->dbl_value);
-	tmp_vert.value = retData_2->dbl_value;
+	printf("Vertice value: [%f]\n", (float)retData_2->dbl_value);
+	tmp_vert.value = (float)retData_2->dbl_value;
+
+	retData_2 = nx_json_get(retArrayData, "growth");
+	printf("Vertice growth: [%f]\n", (float)retData_2->dbl_value);
+	tmp_vert.growth = (float)retData_2->dbl_value;
+
+	tmp_vert.need_test = 0;
+	tmp_vert.min = 0;
+	tmp_vert.max = 0;
 
 	data.vertices.push_back(tmp_vert);
 	printf("\n");
@@ -167,12 +186,24 @@ void TModel::initFromJSON()
 	TEdge	tmp_edge;
 
 	retData_2 = nx_json_get(retArrayData, "shortName");
-	printf("Edge shortName: [%s]\n", retData_2->text_value);
-	tmp_edge.name = retData_2->text_value;
+	if (retData_2->text_value != NULL) {
+		printf("Edge shortName: [%s]\n", retData_2->text_value);
+		tmp_edge.name = retData_2->text_value;
+	}
+	else
+	{
+	    printf("Edge shortname NOT SET\n");
+	}
 
 	retData_2 = nx_json_get(retArrayData, "formula");
-	printf("Edge formula: [%s]\n", retData_2->text_value);
-	tmp_edge.formula = retData_2->text_value;
+	if (retData_2->text_value != NULL) {
+		printf("Edge formula: [%s]\n", retData_2->text_value);
+		tmp_edge.formula = retData_2->text_value;
+	}
+	else
+	{
+	    printf("Edge formula NOT SET\n");
+	}
 
 	retData_2 = nx_json_get(retArrayData, "id");
 	printf("Edge ID: [%ld]\n", retData_2->int_value);
@@ -233,14 +264,71 @@ void TModel::initFromJSON()
     set_vert(data.edges, data.vertices);
 }
 
-bool TModel::loadFromJSON(const char * fileName)
+
+void TModel::initFromJSON_group()
+{
+    const nx_json * retData;
+    const nx_json * retArrayData;
+    const nx_json * retData_2;
+
+    retData = nx_json_get(json_group, "Groups");
+    retArrayData = retData->child;
+    while (retArrayData != NULL) {
+// {"color":"0x808080ff","show":"false","x":144.0,"fullName":"К1","y":64.0,"growth":0.0,"id":1655712545685,"shortName":"V1","value":0.0},
+
+	unsigned long id = 0;
+	float min = 0;
+	float max = 0;
+	int need_test = 0;
+
+	retData_2 = nx_json_get(retArrayData, "id");
+	printf("Groups ID: [%ld]\n", retData_2->int_value);
+	id = retData_2->int_value;
+
+	retData_2 = nx_json_get(retArrayData, "min");
+	printf("Groups min: [%f]\n", retData_2->dbl_value);
+	min = retData_2->dbl_value;
+
+	retData_2 = nx_json_get(retArrayData, "max");
+	printf("Groups min: [%f]\n", retData_2->dbl_value);
+	max = retData_2->dbl_value;
+
+	retData_2 = nx_json_get(retArrayData, "type");
+	if (strcmp(retData_2->text_value, "Y") == 0) need_test = 1;
+	else need_test = 0;
+
+	if (need_test){
+	    for(int i = 0; i < data.vertices.size(); i++){
+		if (id == data.vertices[i].id){
+			data.vertices[i].min = min;
+			data.vertices[i].max = max;
+			data.vertices[i].need_test = need_test;
+	        }
+	    }
+	}
+
+	printf("\n");
+	retArrayData = retArrayData->next;
+    }
+}
+
+
+bool TModel::loadFromJSON(const char * fileName, const char * fileName_group)
 {
     struct stat st;
+    struct stat st_group;
+
 
     jsonFileName = fileName;
+    jsonFileName_group = fileName_group;
 
     if (stat(fileName, &st)==-1) {
 	printf("Cant find %s file\n", fileName);
+	return false;
+    }
+
+    if (stat(fileName_group, &st_group)==-1) {
+	printf("Cant find %s file\n", fileName_group);
 	return false;
     }
 
@@ -250,7 +338,15 @@ bool TModel::loadFromJSON(const char * fileName)
 	return false;
     }
 
+    int fd_group = open(fileName_group, O_RDONLY);
+    if (fd_group==-1){
+	printf("Cant open %s file\n", fileName_group);
+	return false;
+    }
+
+
     rawJSON = (char *) malloc (st.st_size+1); 
+    rawJSON_group = (char *) malloc (st_group.st_size+1); 
 
     if (st.st_size!=read(fd, rawJSON, st.st_size))
     {
@@ -261,9 +357,24 @@ bool TModel::loadFromJSON(const char * fileName)
     close(fd);
     rawJSON[st.st_size]='\0';
 
+    if (st_group.st_size!=read(fd_group, rawJSON_group, st_group.st_size))
+    {
+	printf("Cant read %s file\n", fileName_group);
+	close(fd_group);
+	return false;
+    }
+    close(fd_group);
+    rawJSON_group[st_group.st_size]='\0';
+
+
     json = nx_json_parse(rawJSON, 0);
     if (json){
 	initFromJSON();
+
+	json_group = nx_json_parse(rawJSON_group, 0);
+	if (json_group)
+	    initFromJSON_group();
+
 	return true;
     }
     
@@ -290,6 +401,113 @@ bool TModel::createProject(){
 	return ret;
 }
 
+bool TModel::analiseXMLResult()
+{
+
+    DIR *dir;
+    size_t len  = 0;
+    char * str_line = NULL;
+
+    if ( (dir = opendir(data.iterPath.c_str())) == NULL){
+	printf("Cant open dir %s\n", data.iterPath.c_str());
+    }
+    else{
+	printf("Work with data - %s\n", data.iterPath.c_str());
+	struct dirent * f_cur;
+	while ((f_cur = readdir(dir)) != NULL){
+	    FILE * fp = fopen(std::string(data.iterPath + f_cur->d_name).c_str(), "r");
+	    if (fp != NULL){
+		printf("%s\n", f_cur->d_name);
+		iterXMLData cur_iter;
+		std::size_t pos;
+		bool is_iteration_xml = false;
+		while ( (getline(&str_line, &len, fp) ) != -1) {
+		    std::string line(str_line);
+		    if ((pos = line.find("<itno>")) != std::string::npos){
+			int iter = 0;
+			std::sscanf(line.c_str(), "<itno>%d</itno>", &iter);
+			cur_iter.num = iter;
+			//printf("N iter = %d [%s]\n", cur_iter.num, line.c_str());
+			is_iteration_xml = true;
+			break;
+		    }
+		}
+
+		if (is_iteration_xml){
+			TVertice vert_temp;
+
+			while ( (getline(&str_line, &len, fp) ) != -1) {
+			    std::string line(str_line);
+			    char temp_token[256];
+			    memset(temp_token, 0, sizeof(char)*256);
+			    if ((pos = line.find("</states>")) != std::string::npos) break;
+			
+			    if ((pos = line.find("<id>")) != std::string::npos) std::sscanf(line.c_str(), "<id>%d</id>", &vert_temp.id);
+			    if ((pos = line.find("<value>")) != std::string::npos) std::sscanf(line.c_str(), "<value>%f</value>", &vert_temp.value);
+			    if ((pos = line.find("<token>")) != std::string::npos)
+			    {
+				std::sscanf(line.c_str(), "<token>%s</token>", &temp_token[0]);
+				vert_temp.token = std::string(temp_token).substr(0, std::string(temp_token).find("</token>"));
+				//printf("[%s]\n", vert_temp.token.c_str());
+			    }
+			    if ((pos = line.find("<min>")) != std::string::npos) std::sscanf(line.c_str(), "<min>%f</min>", &vert_temp.min);
+			    if ((pos = line.find("<max>")) != std::string::npos) std::sscanf(line.c_str(), "<max>%f</max>", &vert_temp.max);
+			    if ((pos = line.find("<correct>")) != std::string::npos) std::sscanf(line.c_str(), "<correct>%d</correct>", &vert_temp.correct);
+			    if ((pos = line.find("<need_test>")) != std::string::npos) std::sscanf(line.c_str(), "<need_test>%d</need_test>", &vert_temp.need_test);
+	
+			    if ((pos = line.find("</xagent>")) != std::string::npos) {
+				cur_iter.vert.push_back(vert_temp);
+				//printf("vert ->%d %f %f %f %d %d\n", vert_temp.id, vert_temp.value, vert_temp.min, vert_temp.max, vert_temp.need_test, vert_temp.correct);
+			    }
+
+			}
+			xml_analize.push_back(cur_iter);
+		}// if (is_iteration_xml)
+	    }
+	    //else printf("Skip %s\n", std::string(data.iterPath + f_cur->d_name).c_str());
+	}
+	closedir(dir);
+    }
+
+    if (xml_analize.empty()) return false;
+
+    std::sort(xml_analize.begin(), xml_analize.end(), compare_iter_by_num);
+
+    std::vector<int> need_test_vert;
+
+    FILE * f_rezult = fopen(std::string(data.iterPath + "result.txt").c_str(), "w+");
+    fprintf(f_rezult, "Отслеживаемые вершины:\n");
+    for (int i = 0; i < xml_analize[0].vert.size(); i++) {
+	if (xml_analize[0].vert[i].need_test){
+	    fprintf(f_rezult, "Вершина:");
+	    fprintf(f_rezult, " %s", xml_analize[0].vert[i].token.c_str());
+	    fprintf(f_rezult, ", Проверяемый диапазон: [%f-%f]\n", xml_analize[0].vert[i].min, xml_analize[0].vert[i].max);
+	    fprintf(f_rezult, "	Итерации на которых значение не попадает в допустимый диапазон:\n		");
+	    for(int j = 1; j < xml_analize.size(); j++){
+		for(int k = 1; k < xml_analize[j].vert.size(); k++){
+			if (xml_analize[0].vert[i].id == xml_analize[j].vert[k].id && (!xml_analize[j].vert[k].correct))
+			    fprintf(f_rezult,"%d ", j);
+		}
+	    }
+
+	    fprintf(f_rezult, "\n	Итерации на которых значение попадает в допустимый диапазон:\n		");
+	    for(int j = 1; j < xml_analize.size(); j++){
+		for(int k = 1; k < xml_analize[j].vert.size(); k++){
+			if (xml_analize[0].vert[i].id == xml_analize[j].vert[k].id && xml_analize[j].vert[k].correct)
+			    fprintf(f_rezult,"%d ", j);
+		}
+	    }
+	    fprintf(f_rezult, "\n");
+
+	}
+    }
+    fprintf(f_rezult, "");
+
+    fclose(f_rezult);
+
+    return true;
+}
+
 
 bool TModel::createIteration0(){
 
@@ -305,23 +523,26 @@ bool TModel::createIteration0(){
 
     out_file << "</environment>" << std::endl;
 
-
     for(int id = 0; id < data.vertices.size(); id++){
 	out_file << std::endl << "<xagent>" << std::endl;
 	out_file << "<name>vertice</name>" << std::endl;
 	out_file << "<id>" << std::to_string(id) << "</id>" << std::endl;;
-	out_file << "<value>" << std::to_string(data.vertices[id].value) << "</value>" << std::endl;
-	out_file << "<previous>";
+	out_file << "<token>" << std::to_string(data.vertices[id].id) << "</token>" << std::endl;;
+	out_file << "<previous>0";
+	out_file << "</previous>" << std::endl;
 
+	//out_file << "<impulse>";
 	float imp_value = 0;
 	for(std::vector<TImpulse>::iterator imp_iter = data.impulses.begin(); imp_iter != data.impulses.end(); imp_iter++){
-		if (imp_iter->step == 0 && imp_iter->v == data.vertices[id].id){
-			imp_value = imp_iter->value * (-1);
+		if (imp_iter->step == 1 && imp_iter->v == data.vertices[id].id){
+			imp_value = imp_iter->value ;// * (-1);
 			break;
 		}
 	}
-	out_file << std::to_string(imp_value);
-	out_file << "</previous>" << std::endl;
+	//out_file << std::to_string(imp_value + /*(-1)**/data.vertices[id].growth);
+	//out_file << "</impulse>" << std::endl;
+
+	out_file << "<value>" << std::to_string(imp_value + data.vertices[id].growth + data.vertices[id].value) << "</value>" << std::endl;
 
 	if (id < data.lags.size()){
 	    out_file << "<max_lag>" << std::to_string(data.lags[id]) << "</max_lag>" << std::endl;
@@ -333,6 +554,10 @@ bool TModel::createIteration0(){
 	    if (to_id < data.vertices.size() - 1) out_file << ",";
 	}
 	out_file << "</edges>" << std::endl;
+
+	out_file << "<min>" << std::to_string(data.vertices[id].min) << "</min>" << std::endl;;
+	out_file << "<max>" << std::to_string(data.vertices[id].max) << "</max>" << std::endl;;
+	out_file << "<need_test>" << std::to_string(data.vertices[id].need_test) << "</need_test>" << std::endl;;
 
 	out_file << "</xagent>" << std::endl;
     }
@@ -457,9 +682,29 @@ std::string TModel::getXMLAgentVar()
     out += "	</gpu:variable>\n";
 
     out += "	<gpu:variable>\n";
-    out += "		<type>int</type>\n";
+    out += "		<type>float</type>\n";
     out += "		<name>edges</name>\n";
     out += "		<arrayLength>"+std::to_string(data.vertices.size())+"</arrayLength>\n";
+    out += "	</gpu:variable>\n";
+
+    out += "	<gpu:variable>\n";
+    out += "		<type>float</type>\n";
+    out += "		<name>min</name>\n";
+    out += "	</gpu:variable>\n";
+
+    out += "	<gpu:variable>\n";
+    out += "		<type>float</type>\n";
+    out += "		<name>max</name>\n";
+    out += "	</gpu:variable>\n";
+
+    out += "	<gpu:variable>\n";
+    out += "		<type>int</type>\n";
+    out += "		<name>need_test</name>\n";
+    out += "	</gpu:variable>\n";
+
+    out += "	<gpu:variable>\n";
+    out += "		<type>int</type>\n";
+    out += "		<name>correct</name>\n";
     out += "	</gpu:variable>\n";
 
     return out;

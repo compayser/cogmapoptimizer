@@ -7,19 +7,19 @@
 int main(int argc, char* argv[])
 {
 
-    if (( argc >= 2 && (!strcmp(argv[1], "--help"))) || (argc != 3) ){
+    if (( argc >= 3 && (!strcmp(argv[1], "--help"))) || (argc != 4) ){
 	printf("Syntax: \n\
 	%s --help - this help\n\
-	%s --project filename.json - generate FLAME projects\n\
-	%s --generate filename.json - generate start iteration\n\
-	%s --make filename.json - compile project\n\
-	%s --run filename.json - run model\n", argv[0], argv[0], argv[0], argv[0], argv[0]);
+	%s --project filename.json group.json - generate FLAME projects\n\
+	%s --generate filename.json group.json - generate start iteration\n\
+	%s --make filename.json group.json - compile project\n\
+	%s --run filename.json group.json - run model\n", argv[0], argv[0], argv[0], argv[0], argv[0]);
 	return 0;
     }
     else {
 	TModel* model = TModel::getInstance();
 
-	if (model->loadFromJSON(argv[2])) {
+	if (model->loadFromJSON(argv[2], argv[3])) {
 		if (!strcmp(argv[1], "--project"))
 			model->createProject();
 		else
@@ -31,6 +31,8 @@ int main(int argc, char* argv[])
 		else
 		if (!strcmp(argv[1], "--run"))
 			model->runProject();
+		if (!strcmp(argv[1], "--analize"))
+			model->analiseXMLResult();
 		else
 			printf("Wrong syntax, use --help\n");
 	}

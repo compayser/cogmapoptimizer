@@ -1,24 +1,38 @@
 import json
+import pandas as pd
 import cogmap as cm
 
 
 class Report:
     def __init__(self, data):
+        """
+        Конструктор
+        :param data: данные для отчета
+        """
         self.data = data
 
     def build_report(self):
+        """
+        Формирует отчет
+        :return: Отчет (когнитивная карта + сценарий моделирования) в формате JSON, Pandas.DataFrame с данными по импульсному моделированию когнитивной карты из отчета
+        """
         scenarios = []
         impulses = []
-        for i in range(len(self.data.impulses.imp)):
-            impulses.append({"val": self.data.impulses.imp[i], "v": self.data.impulses.v_imp[i].id})
-        scenario = {"impulses": impulses}
+        if self.data.impulses is not None:
+            for i in range(len(self.data.impulses.imp)):
+                impulses.append({"val": self.data.impulses.imp[i], "v": self.data.impulses.v_imp[i].id, "step": 1})
+        scenario = {"impulses": impulses, "name": "scenario1", "id": 1670668256870,
+                    "indicators": [self.data.cogmap.Y[i].id for i in range(len(self.data.cogmap.Y))]}
         scenarios.append(scenario)
         edges = []
         for e in self.data.cogmap.edges:
-            edges.append({"id": e.id, "weight": e.value, "v1": e.v1_id, "v2": e.v2_id, "shortName": e.name})
+            edges.append({"id": e.id, "weight": e.value, "v1": e.v1_id, "v2": e.v2_id, "shortName": e.name,
+                          "formula": e.formula, "md": e.md, "color": e.color})
         vertices = []
         for v in self.data.cogmap.vertices:
-            vertices.append({"id": v.id, "value": v.value, "fullName": v.name})
+            vertices.append({"id": v.id, "value": v.value, "fullName": v.name,
+                             "shortName": v.short_name, "color": v.color, "show": v.show, "growth": v.growth,
+                             "x": v.x, "y": v.y})
 
         target_vertices = []
         for v in self.data.target_vertices:
@@ -36,14 +50,24 @@ class Report:
         }
 
         j = {
+            "MapTitle": self.data.cogmap.cognimod_map_title,
             "ModelingResults": modeling_results,
+            "Settings": self.data.cogmap.cognimod_settings,
             "Scenarios": scenarios,
             "Vertices": vertices,
             "Edges": edges
         }
-        return j
+        c = pd.DataFrame(data=self.data.cogmap.pulse_calc_log, columns=[v.id for v in self.data.cogmap.vertices])
+        return j, c
 
     def save_to_file(self, filename):
-        r = self.build_report()
+        """
+        Записывает отчет в файлы
+        :param filename: имя файла для когнитивной карты (JSON)
+        :return:
+        """
+        r, c = self.build_report()
         with open(filename, 'w') as f:
-            json.dump(r, f, indent=4)
+            json.dump(r, f, indent=4, ensure_ascii=False)
+        c.to_csv(filename+".csv")
+

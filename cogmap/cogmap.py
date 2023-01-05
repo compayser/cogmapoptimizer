@@ -5,82 +5,6 @@ import itertools as it
 import numba
 
 
-def dfs(gr: list[list[float]], start: int, v: int, depth: int, stack: np.ndarray, visited: list[bool],
-        cycles: list[np.ndarray], count: int) -> tuple[np.ndarray, list[bool], list[list[int]], int]:
-    """
-
-    :param gr:
-    :param start:
-    :param v:
-    :param depth:
-    :param stack:
-    :param visited:
-    :param cycles:
-    :param count:
-    :return:
-    """
-    stack = np.append(stack, v)
-    if visited[v]:
-        if start == v:  # found a path
-            cycle = np.array(stack)
-            cycles.append(cycle)
-            count = count + 1
-
-        stack = np.delete(stack, len(stack) - 1)
-    else:
-        visited[v] = True
-        links = np.array(gr[v])
-        for l in range(len(gr)):
-            if links[l] != 0:
-                stack, visited, cycles, count = dfs(gr, start, l, depth + 1, stack, visited, cycles, count)
-        visited[v] = False
-        stack = np.delete(stack, len(stack) - 1)
-    return stack, visited, cycles, count
-
-
-def markSign(ar, cycles):
-    """
-
-    :param ar:
-    :param cycles:
-    :return:
-    """
-    n = len(cycles)
-    nOfNeg = 0
-    signs = np.array([1 for i in range(n)])
-    for j in range(n):
-        cycle = cycles[j]
-        v0 = cycle[0]
-        for i in range(len(cycle) - 1):
-            v = cycle[i + 1]
-            if ar[v0][v] < 0:
-                signs[j] = signs[j] * -1
-            v0 = v
-        if signs[j] < 0:
-            nOfNeg = nOfNeg + 1
-    return nOfNeg, signs
-
-
-def allCyclesDirectedmain(ar: list[list[float]]) -> tuple[list[np.ndarray], int]:
-    """
-
-    :param ar:
-    :return:
-    """
-    n = len(ar)
-    stack = np.array([], dtype='i4')
-    cycles = []
-    visited = [False for i in range(n)]
-    count = 0
-    depth = 1
-
-    for v in range(n):
-        stack, visited, cycles, count = dfs(ar, v, v, depth, stack, visited, cycles, count)
-        visited[v] = True
-
-    return cycles[1:], count
-
-
 class Impulses:
     """Описывает серию импульсов (воздействий) на когнитивную карту"""
     __slots__ = ("imp", "v_imp")
@@ -545,6 +469,80 @@ class CogMap:
         :param ar: матрица смежности
         :return: число циклов, число отрицательных циклов
         """
+
+        def dfs(gr: list[list[float]], start: int, v: int, depth: int, stack: np.ndarray, visited: list[bool],
+                cycles: list[np.ndarray], count: int) -> tuple[np.ndarray, list[bool], list[list[int]], int]:
+            """
+
+            :param gr:
+            :param start:
+            :param v:
+            :param depth:
+            :param stack:
+            :param visited:
+            :param cycles:
+            :param count:
+            :return:
+            """
+            stack = np.append(stack, v)
+            if visited[v]:
+                if start == v:  # found a path
+                    cycle = np.array(stack)
+                    cycles.append(cycle)
+                    count = count + 1
+
+                stack = np.delete(stack, len(stack) - 1)
+            else:
+                visited[v] = True
+                links = np.array(gr[v])
+                for l in range(len(gr)):
+                    if links[l] != 0:
+                        stack, visited, cycles, count = dfs(gr, start, l, depth + 1, stack, visited, cycles, count)
+                visited[v] = False
+                stack = np.delete(stack, len(stack) - 1)
+            return stack, visited, cycles, count
+
+        def markSign(ar, cycles):
+            """
+
+            :param ar:
+            :param cycles:
+            :return:
+            """
+            n = len(cycles)
+            nOfNeg = 0
+            signs = np.array([1 for i in range(n)])
+            for j in range(n):
+                cycle = cycles[j]
+                v0 = cycle[0]
+                for i in range(len(cycle) - 1):
+                    v = cycle[i + 1]
+                    if ar[v0][v] < 0:
+                        signs[j] = signs[j] * -1
+                    v0 = v
+                if signs[j] < 0:
+                    nOfNeg = nOfNeg + 1
+            return nOfNeg, signs
+
+        def allCyclesDirectedmain(ar: list[list[float]]) -> tuple[list[np.ndarray], int]:
+            """
+
+            :param ar:
+            :return:
+            """
+            n = len(ar)
+            stack = np.array([], dtype='i4')
+            cycles = []
+            visited = [False for i in range(n)]
+            count = 0
+            depth = 1
+
+            for v in range(n):
+                stack, visited, cycles, count = dfs(ar, v, v, depth, stack, visited, cycles, count)
+                visited[v] = True
+
+            return cycles, count
+
         cycles, count = allCyclesDirectedmain(ar)
         nOfNeg, signs = markSign(ar, cycles)
 

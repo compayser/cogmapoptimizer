@@ -121,15 +121,6 @@ class TestCogMap(TestCase):
               [1, 1, 0, -1],
               [-1, 1, 1, 0]]
 
-        # ar = np.random.randint(-1, 1, (13, 13))
-        # for i in range(13):
-        #    ar[i,i] = 0
-        # print(ar)
-        # матрица 50х50 - 13 минут и не дождался
-        # 10x10 - 6 с
-        # 11x11 - 10 с
-        # 12x12 - 10 с
-        # 13x13 - 111 с
         count, neg = self.c.cycles_calc(ar)
         self.assertEqual(count, 20)
         self.assertEqual(neg, 8)

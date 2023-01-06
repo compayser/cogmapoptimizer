@@ -31,8 +31,12 @@ int main(int argc, char* argv[])
 		else
 		if (!strcmp(argv[1], "--run"))
 			model->runProject();
+		else
 		if (!strcmp(argv[1], "--analize"))
 			model->analiseXMLResult();
+		else
+		if (!strcmp(argv[1], "--tests"))
+			unit_tests();
 		else
 			printf("Wrong syntax, use --help\n");
 	}

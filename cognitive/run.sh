@@ -1,7 +1,7 @@
 #!/bin/bash
 cd $(dirname "$BASH_SOURCE")
-./cognitive --project test_serg.cmj group.cmj_xyz
-./cognitive --generate test_serg.cmj group.cmj_xyz
-./cognitive --make test_serg.cmj group.cmj_xyz
-./cognitive --run test_serg.cmj group.cmj_xyz
-./cognitive --analise test_serg.cmj group.cmj_xyz
+./cognitive --project unit-test.cmj unit-test-group.cmj_xyz
+./cognitive --generate unit-test.cmj unit-test-group.cmj_xyz
+./cognitive --make unit-test.cmj unit-test-group.cmj_xyz
+./cognitive --run unit-test.cmj unit-test-group.cmj_xyz
+./cognitive --analize unit-test.cmj unit-test-group.cmj_xyz

@@ -1,0 +1,1 @@
+./complete.sh /home/user/Projects/Ivan/!2022/cognitive/exampl/ /home/user/Projects/Ivan/!2022/cognitive/exampl/group.cmj_xyz /home/user/Projects/Ivan/!2022/cognitive/result/ /home/user/Projects/Ivan/flame/FLAMEGPU-master/projects/cognitiv-task/iterations/

@@ -55,7 +55,7 @@ TModel::TModel()
 	data.name = line;
     }
 
-    printf("data.name=[%s]\n", data.name.c_str());
+//    printf("data.name=[%s]\n", data.name.c_str());
 
     if ( (read = getline(&line, &len, fp) ) != -1)
 	data.visual = atoi(line);
@@ -65,14 +65,14 @@ TModel::TModel()
 	data.path = line;
     }
 
-    printf("data.path=[%s]\n", data.path.c_str());
+//    printf("data.path=[%s]\n", data.path.c_str());
 
     if ( (read = getline(&line, &len, fp) ) != -1){
 	line[strlen(line) - 1] = '\0';
 	data.iterPath = line + data.name + "/iterations/";
     }
 
-    printf("data.iterPath=[%s]\n", data.iterPath.c_str());
+//    printf("data.iterPath=[%s]\n", data.iterPath.c_str());
 
     if ( (read = getline(&line, &len, fp) ) != -1)
 	data.iterCount = atoi(line);
@@ -149,7 +149,7 @@ void TModel::initFromJSON()
 	//"fullName":"К1"
 	retData_2 = nx_json_get(retArrayData, "fullName");
 	if (retData_2->text_value != NULL) {
-	    printf("Vertice name: [%s]\n", retData_2->text_value);
+	    //printf("Vertice name: [%s]\n", retData_2->text_value);
 	    tmp_vert.name = retData_2->text_value;
 	}
 	else{
@@ -158,15 +158,15 @@ void TModel::initFromJSON()
 
 	//"id":1655712545685
 	retData_2 = nx_json_get(retArrayData, "id");
-	printf("Vertice ID: [%ld]\n", retData_2->int_value);
+	//printf("Vertice ID: [%ld]\n", retData_2->int_value);
 	tmp_vert.id = retData_2->int_value;
 
 	retData_2 = nx_json_get(retArrayData, "value");
-	printf("Vertice value: [%f]\n", (float)retData_2->dbl_value);
+	//printf("Vertice value: [%f]\n", (float)retData_2->dbl_value);
 	tmp_vert.value = (float)retData_2->dbl_value;
 
 	retData_2 = nx_json_get(retArrayData, "growth");
-	printf("Vertice growth: [%f]\n", (float)retData_2->dbl_value);
+	//printf("Vertice growth: [%f]\n", (float)retData_2->dbl_value);
 	tmp_vert.growth = (float)retData_2->dbl_value;
 
 	tmp_vert.need_test = 0;
@@ -174,7 +174,7 @@ void TModel::initFromJSON()
 	tmp_vert.max = 0;
 
 	data.vertices.push_back(tmp_vert);
-	printf("\n");
+	//printf("\n");
 
 	retArrayData = retArrayData->next;
     }
@@ -187,7 +187,7 @@ void TModel::initFromJSON()
 
 	retData_2 = nx_json_get(retArrayData, "shortName");
 	if (retData_2->text_value != NULL) {
-		printf("Edge shortName: [%s]\n", retData_2->text_value);
+		//printf("Edge shortName: [%s]\n", retData_2->text_value);
 		tmp_edge.name = retData_2->text_value;
 	}
 	else
@@ -197,32 +197,32 @@ void TModel::initFromJSON()
 
 	retData_2 = nx_json_get(retArrayData, "formula");
 	if (retData_2->text_value != NULL) {
-		printf("Edge formula: [%s]\n", retData_2->text_value);
+		//printf("Edge formula: [%s]\n", retData_2->text_value);
 		tmp_edge.formula = retData_2->text_value;
 	}
 	else
 	{
-	    printf("Edge formula NOT SET\n");
+	    //printf("Edge formula NOT SET\n");
 	}
 
 	retData_2 = nx_json_get(retArrayData, "id");
-	printf("Edge ID: [%ld]\n", retData_2->int_value);
+	//printf("Edge ID: [%ld]\n", retData_2->int_value);
 	tmp_edge.id = retData_2->int_value;
 
 	retData_2 = nx_json_get(retArrayData, "v1");
-	printf("Edge ID V1: [%ld]\n", retData_2->int_value);
+	//printf("Edge ID V1: [%ld]\n", retData_2->int_value);
 	tmp_edge.v1 = retData_2->int_value;
 
 	retData_2 = nx_json_get(retArrayData, "v2");
-	printf("Edge ID V2: [%ld]\n", retData_2->int_value);
+	//printf("Edge ID V2: [%ld]\n", retData_2->int_value);
 	tmp_edge.v2 = retData_2->int_value;
 
 	retData_2 = nx_json_get(retArrayData, "weight");
-	printf("Edge weight: [%f]\n", retData_2->dbl_value);
+	//printf("Edge weight: [%f]\n", retData_2->dbl_value);
 	tmp_edge.weight = retData_2->dbl_value;
 
 	data.edges.push_back(tmp_edge);
-	printf("\n");
+	//printf("\n");
 
 	retArrayData = retArrayData->next;
     }
@@ -240,19 +240,19 @@ void TModel::initFromJSON()
 		TImpulse	tmp_impulse;
 
 		retData_2 = nx_json_get(retArrayData, "v");
-		printf("Impulse ID: [%ld]\n", retData_2->int_value);
+		//printf("Impulse ID: [%ld]\n", retData_2->int_value);
 		tmp_impulse.v = retData_2->int_value;
 
 		retData_2 = nx_json_get(retArrayData, "step");
-		printf("Impulse step: [%ld]\n", retData_2->int_value);
+		//printf("Impulse step: [%ld]\n", retData_2->int_value);
 		tmp_impulse.step = retData_2->int_value;
     
 		retData_2 = nx_json_get(retArrayData, "val");
-		printf("Impulse val: [%f]\n", retData_2->dbl_value);
+		//printf("Impulse val: [%f]\n", retData_2->dbl_value);
 		tmp_impulse.value = retData_2->dbl_value;
 
 		data.impulses.push_back(tmp_impulse);
-		printf("\n");
+		//printf("\n");
 
 		retArrayData = retArrayData->next;
 	}// while (retArrayData != NULL) {
@@ -282,15 +282,15 @@ void TModel::initFromJSON_group()
 	int need_test = 0;
 
 	retData_2 = nx_json_get(retArrayData, "id");
-	printf("Groups ID: [%ld]\n", retData_2->int_value);
+	//printf("Groups ID: [%ld]\n", retData_2->int_value);
 	id = retData_2->int_value;
 
 	retData_2 = nx_json_get(retArrayData, "min");
-	printf("Groups min: [%f]\n", retData_2->dbl_value);
+	//printf("Groups min: [%f]\n", retData_2->dbl_value);
 	min = retData_2->dbl_value;
 
 	retData_2 = nx_json_get(retArrayData, "max");
-	printf("Groups min: [%f]\n", retData_2->dbl_value);
+	//printf("Groups min: [%f]\n", retData_2->dbl_value);
 	max = retData_2->dbl_value;
 
 	retData_2 = nx_json_get(retArrayData, "type");
@@ -307,11 +307,10 @@ void TModel::initFromJSON_group()
 	    }
 	}
 
-	printf("\n");
+	//printf("\n");
 	retArrayData = retArrayData->next;
     }
 }
-
 
 bool TModel::loadFromJSON(const char * fileName, const char * fileName_group)
 {
@@ -747,4 +746,121 @@ std::string TModel::convert_string(std::string in)
 }
 
 
+//===============================================================================================
+//
+//   UNIT TESTS
+//===============================================================================================
+
+#include "minunit.h"
+
+int tests_run = 0;
+
+int value = 0;
+
+static char * test_init_model(){
+    TModel * test_m = TModel::getInstance();
+    mu_assert("error,TModel::getInstance() == NULL", "passed, TModel::getInstance()!=NULL",  test_m != NULL);
+    return 0;
+}
+
+static char * test_init_json_vert_count(){
+    TModel * test_m = TModel::getInstance();
+    mu_assert("error, unit-test.cmj vertices count, test_m->data.vertices.size() != 17", "passed, unit-test.cmj vertices count == 17", test_m->data.vertices.size() == 17);
+    return 0;
+}
+
+static char * test_init_json_edge_count(){
+    TModel * test_m = TModel::getInstance();
+    mu_assert("error, unit-test.cmj edges count, test_m->data.edges.size() != 57", "passed, unit-test.cmj edges count == 57", test_m->data.edges.size() == 57);
+    return 0;
+}
+
+static char * test_init_json_test_0_vert_id(){
+    TModel * test_m = TModel::getInstance();
+    mu_assert("error, unit-test.cmj vertices[0] id != 1655712545685ULL", "passed, unit-test.cmj vertices[0] id == 1655712545685ULL", test_m->data.vertices[0].id == 1655712545685ULL);
+    return 0;
+}
+
+static char * test_init_json_test_0_vert_name(){
+    TModel * test_m = TModel::getInstance();
+    mu_assert("error, unit-test.cmj vertices[0] name != K1", "passed, unit-test.cmj vertices[0] name == K1", test_m->data.vertices[0].name.compare("K1") );
+    return 0;
+}
+
+static char * test_init_json_test_0_vert_value(){
+    TModel * test_m = TModel::getInstance();
+    mu_assert("error, unit-test.cmj vertices[0] (value - 1.90) < 0.0000001", "passed, unit-test.cmj vertices[0] (value - 1.90) < 0.0000001", (test_m->data.vertices[0].value - 1.90) < 0.0000001 );
+    return 0;
+}
+
+static char * test_init_json_test_0_vert_growth(){
+    TModel * test_m = TModel::getInstance();
+    mu_assert("error, unit-test.cmj vertices[0] (growth - 0.1) < 0.0000001", "passed, unit-test.cmj vertices[0] (growth - 0.1) < 0.0000001", (test_m->data.vertices[0].growth - 0.1) < 0.0000001 );
+    return 0;
+}
+
+static char * test_init_json_test_0_edge_id(){
+    TModel * test_m = TModel::getInstance();
+    mu_assert("error, unit-test.cmj edges[0] id != 1655712630647ULL", "passed, unit-test.cmj edges[0] id == 1655712630647ULL", test_m->data.edges[0].id == 1655712630647ULL);
+    return 0;
+}
+
+static char * test_init_json_test_0_edge_v1(){
+    TModel * test_m = TModel::getInstance();
+    mu_assert("error, unit-test.cmj edges[0] v1 != 1655712545685ULL", "passed, unit-test.cmj edges[0] v1 == 1655712545685ULL", test_m->data.edges[0].v1 == 1655712545685ULL);
+    return 0;
+}
+
+static char * test_init_json_test_0_edge_v2(){
+    TModel * test_m = TModel::getInstance();
+    mu_assert("error, unit-test.cmj edges[0] v2 != 1655712594662ULL", "passed, unit-test.cmj edges[0] v2 == 1655712594662ULL", test_m->data.edges[0].v2 == 1655712594662ULL);
+    return 0;
+}
+
+static char * test_init_json_test_0_edge_weight(){
+    TModel * test_m = TModel::getInstance();
+    mu_assert("error, unit-test.cmj edges[0] (weight - 0.1) < 0.0000001", "passed, unit-test.cmj edges[0] (weight - 0.1) < 0.0000001", (test_m->data.edges[0].weight - 0.1) < 0.0000001 );
+    return 0;
+}
+
+static char * test_init_json_test_0_group(){
+    TModel * test_m = TModel::getInstance();
+    mu_assert("error, unit-test-group.cmj_xyz id", "passed, unit-test-group.cmj_z edges[0] (weight - 0.1) < 0.0000001", (test_m->data.edges[0].weight - 0.1) < 0.0000001 );
+    return 0;
+}
+
+
+static char * all_tests() {
+    mu_run_test(test_init_model);
+
+    mu_run_test(test_init_json_vert_count);
+    mu_run_test(test_init_json_edge_count);
+
+    mu_run_test(test_init_json_test_0_vert_id);
+    mu_run_test(test_init_json_test_0_vert_name);
+    mu_run_test(test_init_json_test_0_vert_value);
+    mu_run_test(test_init_json_test_0_vert_growth);
+
+    mu_run_test(test_init_json_test_0_edge_id);
+    mu_run_test(test_init_json_test_0_edge_v1);
+    mu_run_test(test_init_json_test_0_edge_v2);
+    mu_run_test(test_init_json_test_0_edge_weight);
+
+    return 0;
+}
+
+void unit_tests(){
+    
+    printf("TESTS:\n");
+
+    char * result = all_tests();
+    if (result != 0) {
+	printf("%s\n", result);
+    }
+    else {
+	printf("ALL TESTS PASSED\n");
+    }
+    
+    printf("Tests run: %d\n", tests_run);
+}
 

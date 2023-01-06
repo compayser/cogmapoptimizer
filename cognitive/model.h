@@ -58,7 +58,6 @@ struct iterXMLData{
 
 class TModel {
     private: 
-	struct modelData	data;
 	std::vector<iterXMLData>	xml_analize;
 
 	bool set_vert(std::vector<TEdge> &e,std::vector<TVertice> v);
@@ -100,6 +99,9 @@ class TModel {
 	std::string convert_string(std::string in);
 
     public:
+
+	struct modelData	data;
+
 	static TModel* getInstance() {
 		if (!p_instance)
 			p_instance = new TModel();
@@ -115,6 +117,8 @@ class TModel {
 
 	bool analiseXMLResult();
 };
+
+void unit_tests();
 
 #endif
 

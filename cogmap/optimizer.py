@@ -87,17 +87,13 @@ class Optimizer:
         def opt_func(Vpulse):
             return cogmap.pulse_model_opt(N, Vpulse, Vidx)
 
-        def build_simplex(n):
-            return [i*[0]+[n]+(n+~i)*[0]for i in range(n)]+[n*[1+(n+1)**.5]]
-
-        initial_simplex = build_simplex(len(V))
         if initial_impulses is not None:
             x0 = initial_impulses
         else:
-            x0 = impactgen.get_impact(cogmap, V)
+            x0 = impactgen.get_impact(cogmap, V, N)
         xtol = 1.0e-4 # Точность поиска экстремума
         res = opt.minimize(opt_func, x0, method='Nelder-Mead',
-                           options={'xtol': xtol, 'disp': False, 'maxiter': 200, 'initial_simplex': initial_simplex})
+                           options={'xtol': xtol, 'disp': False, 'maxiter': 200})
         if res.success:
             impulses = cm.Impulses(res.x, V)
             v_bad, y_max_er = cogmap.pulse_model(N, impulses, log_values)

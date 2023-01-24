@@ -1,3 +1,5 @@
+![Логотип ИТМО](https://gitlab.actcognitive.org/itmo-sai-code/organ/-/raw/main/docs/AIM-Strong_Sign_Norm-01_Colors.svg)
+
 # Общие сведения #
 
 Компонент реализует функции сильного ИИ в части алгоритмов адаптивной оптимизации выполнения производственных 
@@ -16,15 +18,15 @@
 
 # Композиция репозитория #
 
-* ![cogmap](cogmap) - файлы библиотеки когнитивного моделирования
-* ![cognitive](cognitive) - файлы инструмента агентного моделирования на базе FlameGPU
-* ![docs](docs) - описание библиотеки ![CogMap Optimizer](docs/cogmap.md), программы агентного моделирования на основе 
-FlameGPU ![Cognitive](docs/cognitive.md) и примеры
-* ![Лицензия GPL v3.0](LICENSE.md)
+* [cogmap](cogmap) - файлы библиотеки когнитивного моделирования
+* [cognitive](cognitive) - файлы инструмента агентного моделирования на базе FlameGPU
+* [docs](docs) - описание библиотеки [CogMap Optimizer](docs/cogmap.md), программы агентного моделирования на основе 
+FlameGPU [Cognitive](docs/cognitive.md) и примеры
+* [Лицензия GPL v3.0](LICENSE.md)
 
 # Примеры когнитивных моделей и результатов оптимизации #
-1. Оптимизация ![дебета скважин](docs/example1/Control_example_1_ReadMe.md)
-2. Мероприятия по ликвидации ![разлива нефти](docs/example2/Control_example_2_ReadMe.md)
-
+1. Оптимизация [дебета скважин](docs/example1/Control_example_1_ReadMe.md)
+2. Мероприятия по ликвидации [разлива нефти](docs/example2/Control_example_2_ReadMe.md)
  
-
+# Поддержка #
+Разработка поддерживается исследовательским центром «Сильный искусственный интеллект в промышленности» Университета ИТМО.

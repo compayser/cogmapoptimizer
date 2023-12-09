@@ -44,6 +44,7 @@ Special vertices of the cognitive map:
 + Project finish - end of the project.<br><br>
 
 ![Fig. 1](Pic1.png)
+
 _Fig. 1 - Example 2a. Cognitive map of general works_
 
 Similar notations are adopted for the cognitive map describing the stage of foundation arrangement (Fig. 2):
@@ -61,6 +62,7 @@ Internal factors:
 + Other employees - other employees.<br><br>
 
 ![Fig. 2](Pic2.png)
+
 Fig. 2 — Example 2b. Cognitive map of a particular stage of work (arrangement of the foundation)_
 
 ## 2 Cognitive modeling
@@ -90,9 +92,11 @@ The simulation is considered completed if the amount of work remaining to be com
 The results of creating a model describing the technical processes of construction and carrying out cognitive modeling are the so-called “burndown charts”, which are shown in Fig. 3-4. For first example, the abscissa shows the construction time expressed in weeks, for second one - in days. The y-axis in both examples displays the amount of remaining work in conventional units.
 
 ![Fig. 3](Pic3.png)
+
 Fig. 3 — Example 2a. The result of cognitive modeling in the form of a task combustion diagram for a general work schedule_
 
 ![Fig. 4](Pic4.png)
+
 Fig. 4 — Example 2b. The result of cognitive modeling in the form of a task combustion diagram for the schedule of a particular stage of work (laying out the foundation)_
 
 As can be seen from the presented graphs, the duration of work both according to the [general schedule](Plan-General.png) and the [particular stage schedule](Plan-Particular.png) coincide with those planned in accordance with the construction project. This confirms the correctness of the selection of weighting coefficients for both vertices and edges, as well as (in general) the adequacy of the proposed model.
@@ -112,6 +116,7 @@ _Clarification._ The resulting cognitive maps display the weights of vertices an
 For example 2a (general work schedule), a set of proposed solutions was generated, the most effective of which was considered the following (see Fig. 5).
 
 ![Fig. 5](Pic5.png)
+
 Fig. 5 — Solution obtained by AI for example 2a (general work schedule)_
 
 On the resulting cognitive map, the algorithm suggested deleting the graph edge between vertices F and E. _Interpretation: the original model assumed feedback showing that work on laying utilities inside the building slows down the production of interior decoration: a common story at a construction site, when after laying communications you have to redo damaged finish. In fact, the algorithm suggested getting rid of this factor, that is, installing communications as carefully as possible._
@@ -125,6 +130,7 @@ Additionally, the weight of the D-Finish rib changes (increases by 25%). _Interp
 As a result of cognitive modeling, a task burndown diagram similar to a human solution was obtained (Fig. 6), but with a significant reduction in work time (2.3 times).
 
 ![Fig. 6](Pic6.png)
+
 _Fig. 6 - Example 2a. Problem burndown diagram for the solution obtained by AI_
 
 ### 2.4.3 Example 2b (schedule for a particular stage of work)
@@ -132,6 +138,7 @@ _Fig. 6 - Example 2a. Problem burndown diagram for the solution obtained by AI_
 For example 2b (schedule for a particular stage of work), a set of solutions was also generated, the most effective of which is shown in Fig. 7.
 
 ![Fig. 7](Pic7.png)
+
 _Fig. 7 — Solution obtained by AI for example 2b (schedule of a particular stage of work)_
 
 The algorithm suggested making three significant changes to the resulting cognitive map.
@@ -147,6 +154,7 @@ Thirdly, the proportions of the weighting coefficients on the 6-Finish and 5-Fin
 Cognitive modeling produces results supported by the task burndown chart (Fig. 8). In this case, a reduction in work time was obtained by approximately 25%.
 
 ![Fig. 8](Pic8.png)
+
 _Fig. 8 — Example 2b. Problem burndown diagram for the solution obtained by AI_
 
 ## 3 Comparison of solutions

@@ -77,7 +77,7 @@ _Fig. 9 — Map built using the MaxAvg strategy_
 
 ### 2.3 Experimental results
 
-[Experimental results](Example 3 - Results.zip) are given partially (the first 10 solutions). The results for the Min and MinAvg strategies are generally similar (adjusted for the extremum selection function used).
+[Experimental results](Example3-Results.zip) are given partially (the first 10 solutions). The results for the Min and MinAvg strategies are generally similar (adjusted for the extremum selection function used).
 
 ### 2.4 Evaluation of experimental results and conclusions
 

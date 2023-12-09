@@ -157,7 +157,7 @@ Comparing the solutions proposed by humans and AI (Fig. 3, 4, 6, 8), one can be 
 
 In order to conduct experimental studies of the developed algorithms and test their software implementation, test cases were developed:
 
-- optimization ([general construction schedule](Example 2 - General plan_rnd.cmj)),
-- optimization ([schedule of the particular construction stage](Example 2 - Particular plan_rnd.cmj)).
+- optimization ([general construction schedule](Example2-GeneralPlan_rnd.cmj)),
+- optimization ([schedule of the particular construction stage](Example2-ParticularPlan_rnd.cmj)).
 
-By comparing [human and AI solutions for test cases](Control example results.zip), you can verify that the AI solution is more effective.
+By comparing [human and AI solutions for test cases](ControlExampleResults.zip), you can verify that the AI solution is more effective.

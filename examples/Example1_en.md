@@ -18,7 +18,7 @@ The initial example is taken from the work of 2022 in order to confirm the resul
 
 _Fig. 1 — Initial view of the simulated system_
 
-[Initial cognitive map file](Example 1 - 1 Init.cmj)
+[Initial cognitive map file](Example1-1Init.cmj)
 
 The simulation result is presented in Fig. 2.
 
@@ -58,7 +58,7 @@ _Fig. 4 — Result of modeling the life cycle of a modified system with one additi
 
 During the modeling process, no resource deficit is observed; its volume stabilizes over time at around +0.78.
 
-[File with human solution](Example 1 - 2 Human.cmj)
+[File with human solution](Example1-2Human.cmj)
 
 ## 3 AI solution (2022)
 
@@ -86,7 +86,7 @@ The solution proposed by the AI can be interpreted as follows. Modification of e
 
 As a result of applying the solution recommended by the AI, an effective solution to the problem is obtained (Fig. 6) - the weight value for vertex K17 stabilizes over time around the 1.8 mark (that is not much lower than the initial values), the resource deficit is not even one of the modeling steps is also not observed.
 
-[File with the solution obtained by the AI](Example 1 - 3 Old results ai.cmj)
+[File with the solution obtained by the AI](Example1-3OldResultsAI.cmj)
 
 ![Fig. 6](xPic6.png)
 
@@ -98,8 +98,8 @@ In order to confirm the performance of new AI algorithms, a cognitive model of t
 
 Otherwise, the resulting cognitive map is similar to the initial map presented above (Fig. 7).
 
-[Cognitive map for the new version of the AI algorithm](Example 1 - 4 Rnd.zip)
-[Modeling result for the new version of the AI algorithm](Example 1 - 5 Rnd results ai.cmj)
+[Cognitive map for the new version of the AI algorithm](Example1-4Rnd.zip)
+[Modeling result for the new version of the AI algorithm](Example1-5RndResultsAI.cmj)
 
 ![Fig. 7](xPic7.png)
 
@@ -120,41 +120,6 @@ Comparing the solutions proposed by humans and two versions of AI algorithms (Fi
 
 ## 6 Experimental studies
 
-In order to conduct experimental studies of the developed new AI algorithms and test their software implementation, a [corresponding version of the test case] (Example 1.zip) was developed.
+In order to conduct experimental studies of the developed new AI algorithms and test their software implementation, a [corresponding version of the test case](Example1.zip) was developed.
 
 By comparing solutions proposed by humans and AI, one can be convinced that AI solutions are more effective, and the new version of the algorithms is slightly superior to the previous one.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

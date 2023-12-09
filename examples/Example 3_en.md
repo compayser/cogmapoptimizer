@@ -26,10 +26,10 @@ The use of these strategies is assumed as follows:
 + Maximums (Max and MaxAvg). Aggressive (“optimistic”) strategies that implement types of behavior close to the “all or nothing” principle. With this type of final data formation, an attempt is made to obtain the most profitable solution (with the Max strategy - the most profitable, with MaxAvg - as close as possible to it, but allowing for a certain degree of caution due to taking into account not one, but a pair of the “strongest” opinions). It is accepted that such a solution is less likely than when using the Avg strategy.
 + Minimums (Min and MinAvg). “Pessimistic” strategies that implement behavioral models aimed at obtaining the least likely scenarios. With this type of final data generation, an attempt is made to obtain a solution similar to the Max and MaxAvg strategies, but regarding the least probable cases.<br><br>
 
-![Fig. 1](__Pic1.png)
+![Fig. 1](yPic1.png)
 _Fig. 1 — Graphical interpretation of final data generation strategies_
 
-![Fig. 2](__Pic2.png)
+![Fig. 2](yPic2.png)
 _Fig. 2 — Source code of the experimental library responsible for choosing strategies_
 
 ## 2 Cognitive modeling
@@ -38,7 +38,7 @@ _Fig. 2 — Source code of the experimental library responsible for choosing strat
 
 The basis is a cognitive map describing the general process of construction and installation work, taken from the previous example (Fig. 3).
 
-![Fig. 3](__Pic3.png)
+![Fig. 3](yPic3.png)
 _Fig. 3 — Initial cognitive map_
 
 The following experiments are carried out for it:
@@ -53,26 +53,26 @@ The results of the experiments are shown in Fig. 3-8.
 
 #### 2.2.1 Comparison of cognitive maps of the “old” and “new” format
 
-![Fig. 4](__Pic4.png)
+![Fig. 4](yPic4.png)
 _Fig. 4 — "Old" format map_
 
-![Fig. 5](__Pic5.png)
+![Fig. 5](yPic5.png)
 _Fig. 5 — Similar map of the "new" format_
 
 #### 2.2.2 Comparison of cognitive maps built using the Avg and Max strategies
 
-![Fig. 6](__Pic6.png)
+![Fig. 6](yPic6.png)
 _Fig. 6 — Map built according to the Avg strategy_
 
-![Fig. 7](__Pic7.png)
+![Fig. 7](yPic7.png)
 _Fig. 7 — Map built using the Max strategy_
 
 #### 2.2.3 Comparison of cognitive maps built using the Max and MaxAvg strategies
 
-![Fig. 8](__Pic8.png)
+![Fig. 8](yPic8.png)
 _Fig. 8 — Map built according to the Max strategy_
 
-![Fig. 9](__Pic9.png)
+![Fig. 9](yPic9.png)
 _Fig. 9 — Map built using the MaxAvg strategy_
 
 ### 2.3 Experimental results

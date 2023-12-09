@@ -1,10 +1,10 @@
 [![SAI](https://github.com/ITMO-NSS-team/open-source-ops/blob/master/badges/SAI_badge_flat.svg)](https://sai.itmo.ru/)
 [![ITMO](https://github.com/ITMO-NSS-team/open-source-ops/blob/master/badges/ITMO_badge_flat_rus.svg)](https://en.itmo.ru/en/)
 
-[![Eng](https://img.shields.io/badge/lang-en-red.svg)](/README_en.md)
+[![Eng](https://img.shields.io/badge/lang-en-red.svg)](/examples/README_en.md)
 
-# Примеры применения #
+# РџСЂРёРјРµСЂС‹ РїСЂРёРјРµРЅРµРЅРёСЏ #
 
-* [Пример №1](Example1.md) - оптимизация нефтедобычи.
-* [Пример №2](Example2.md) - оптимизация проведения строительно-монтажных работ.
-* [Пример №3](Example3.md) - применение стратегий формирования конечных данных.
+* [РџСЂРёРјРµСЂ в„–1](Example1.md) - РѕРїС‚РёРјРёР·Р°С†РёСЏ РЅРµС„С‚РµРґРѕР±С‹С‡Рё.
+* [РџСЂРёРјРµСЂ в„–2](Example2.md) - РѕРїС‚РёРјРёР·Р°С†РёСЏ РїСЂРѕРІРµРґРµРЅРёСЏ СЃС‚СЂРѕРёС‚РµР»СЊРЅРѕ-РјРѕРЅС‚Р°Р¶РЅС‹С… СЂР°Р±РѕС‚.
+* [РџСЂРёРјРµСЂ в„–3](Example3.md) - РїСЂРёРјРµРЅРµРЅРёРµ СЃС‚СЂР°С‚РµРіРёР№ С„РѕСЂРјРёСЂРѕРІР°РЅРёСЏ РєРѕРЅРµС‡РЅС‹С… РґР°РЅРЅС‹С….

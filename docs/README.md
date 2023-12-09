@@ -3,8 +3,8 @@
 
 [![Eng](https://img.shields.io/badge/lang-en-red.svg)](/README_en.md)
 
-# Описание #
+# РћРїРёСЃР°РЅРёРµ #
 
-* [Описание программы](program-description.md)
-* [Руководство программиста](foo.md)
-* [Текст программы](program-src.md)
+* [РћРїРёСЃР°РЅРёРµ РїСЂРѕРіСЂР°РјРјС‹](program-description.md)
+* [Р СѓРєРѕРІРѕРґСЃС‚РІРѕ РїСЂРѕРіСЂР°РјРјРёСЃС‚Р°](foo.md)
+* [РўРµРєСЃС‚ РїСЂРѕРіСЂР°РјРјС‹](program-src.md)

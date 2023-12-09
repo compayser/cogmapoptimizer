@@ -4,13 +4,30 @@ import cogmap as cm
 import impact_generator as ig
 import report
 from optimizer import Optimizer
-
+import time
+import proba
 
 if __name__ == '__main__':
+    '''t1 = proba.ProbA()
+    t2 = proba.ProbA()
+    num = 10
+    for i in range(1, num+1):
+        t1.append_value(num - i, 1 / num)
+        t2.append_value(num - i, 1 / num)
+    t1.append_value(10, 0.000001)
+    t2.append_value(10, 0.000001)
+    if t1 != t2:
+        print("nEQ")
+    else:
+        print("EQ")
+    exit(0)
+'''
     # входные данные - файл когнитивная карта, файл групп вершин, число шагов импульсного моделирования
     if len(sys.argv) < 4:
         print("usage %s <input.cmj> <input.xyz_cmj> <pulse model steps>", sys.argv[0])
         exit(-1)
+
+    start_time = time.time()
 
     cogmap_json_path = sys.argv[1]
     cogmap_xyz_json_path = sys.argv[2]
@@ -51,4 +68,4 @@ if __name__ == '__main__':
         result_filename = str(result_dir) + "\\" + p.name + ".out%d.cmj" % i
         i = i + 1
         r.save_to_file(result_filename)
-    print("Done")
+    print(f"Done (in {(time.time() - start_time):.1f} second(s))")

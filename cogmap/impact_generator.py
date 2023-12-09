@@ -1,6 +1,7 @@
 import numpy as np
 import cogmap as cm
 from keras.models import save_model, load_model
+import proba
 
 
 class ImpactData:
@@ -55,7 +56,22 @@ class ImpactGenerator:
         data.extend(m)
         data.extend(np.zeros((32 ** 2) - len(m)))
 
+        data_ = []
+        for i in range(len(data)):
+            if isinstance(data[i], proba.ProbA):
+                data_.append(data[i].build_scalar())
+            else:
+                data_.append(data[i])
+        data = data_
+
         all_impulses_sum = self.model.predict([data])
+        growths_ = []
+        for i in range(len(growths)):
+            if isinstance(growths[i], proba.ProbA):
+                growths_.append(growths[i].build_scalar())
+            else:
+                growths_.append(growths[i])
+        growths = growths_
         all_impulses = np.array(all_impulses_sum[0]) - np.array(growths)
         res_impulses = []
         for v in V:

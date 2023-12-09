@@ -1,6 +1,7 @@
 import json
 import pandas as pd
 import cogmap as cm
+import proba
 
 
 class Report:
@@ -8,6 +9,7 @@ class Report:
         """
         Конструктор
         :param data: данные для отчета
+        :param mode: тип усреднения ДСВ в скалярную величину
         """
         self.data = data
 
@@ -20,19 +22,34 @@ class Report:
         impulses = []
         if self.data.impulses is not None:
             for i in range(len(self.data.impulses.imp)):
-                impulses.append({"val": self.data.impulses.imp[i], "v": self.data.impulses.v_imp[i].id, "step": 1})
+                if isinstance(self.data.impulses.imp[i], float) or isinstance(self.data.impulses.imp[i], int):
+                    val = self.data.impulses.imp[i]
+                else:
+                    val = self.data.impulses.imp[i].build_scalar()
+                impulses.append({"val": val, "v": self.data.impulses.v_imp[i].id, "step": 1})
         scenario = {"impulses": impulses, "name": "scenario1", "id": 1670668256870,
                     "indicators": [self.data.cogmap.Y[i].id for i in range(len(self.data.cogmap.Y))]}
         scenarios.append(scenario)
         edges = []
         for e in self.data.cogmap.edges:
-            edges.append({"id": e.id, "weight": e.value, "v1": e.v1_id, "v2": e.v2_id, "shortName": e.name,
-                          "formula": e.formula, "md": e.md, "color": e.color})
+            if isinstance(e.value, float) or isinstance(e.value, int):
+                edges.append({"id": e.id, "weight": e.value, "v1": e.v1_id, "v2": e.v2_id, "shortName": e.name,
+                              "formula": e.formula, "md": e.md, "color": e.color})
+            else:                weight = e.value.build_scalar()
+                edges.append({"id": e.id, "weight": weight, "v1": e.v1_id, "v2": e.v2_id, "shortName": e.name,
+                              "formula": e.formula, "md": e.md, "color": e.color})
         vertices = []
         for v in self.data.cogmap.vertices:
-            vertices.append({"id": v.id, "value": v.value, "fullName": v.name,
-                             "shortName": v.short_name, "color": v.color, "show": v.show, "growth": v.growth,
-                             "x": v.x, "y": v.y})
+            if isinstance(v.value, float) or isinstance(v.value, int):
+                val = v.value
+            else:
+                val = v.value.build_scalar()
+            if isinstance(v.growth, float) or isinstance(v.growth, int):
+                grow = v.growth
+            else:
+                grow = v.growth.build_scalar()
+            vertices.append({"id": v.id, "value": val, "fullName": v.name, "shortName": v.short_name,
+                             "color": v.color, "show": v.show, "growth": grow, "x": v.x, "y": v.y})
 
         target_vertices = []
         for v in self.data.target_vertices:
@@ -46,7 +63,7 @@ class Report:
             "added_new_vertices": self.data.added_new_vertices,
             "target_vertices": target_vertices,
             "bad_vertices": bad_vertices,
-            "y_max_er": self.data.y_max_er
+            "y_max_er": self.data.y_max_er.build_scalar()
         }
 
         j = {
@@ -57,6 +74,11 @@ class Report:
             "Vertices": vertices,
             "Edges": edges
         }
+
+        for ii in range(len(self.data.cogmap.pulse_calc_log)):
+            for jj in range(len(self.data.cogmap.pulse_calc_log[ii])):
+                self.data.cogmap.pulse_calc_log[ii][jj] = self.data.cogmap.pulse_calc_log[ii][jj].build_scalar()
+
         c = pd.DataFrame(data=self.data.cogmap.pulse_calc_log, columns=[v.id for v in self.data.cogmap.vertices])
         return j, c
 

@@ -1,5 +1,7 @@
 from unittest import TestCase
 import itertools as it
+
+import proba
 from cogmap import CogMap, Vertex, Edge, Impulses
 import numpy as np
 
@@ -16,12 +18,33 @@ class TestCogMap(TestCase):
     def setUp(self) -> None:
         v = []
         e = []
-        v.append(Vertex(27, 8, -1, 2, 15, "charlie"))
-        v.append(Vertex(42, 7, -3, 4, 12, "donnie"))
-        v.append(Vertex(38, 2, -0.5, 2.4, 11, "gillian"))
-        e.append(Edge(452, 27, 42, 0.1, "A"))
-        e.append(Edge(455, 42, 38, 0.3, "B"))
-        e.append(Edge(458, 27, 38, -0.2, "C"))
+        # Vertices
+        rnd1 = proba.ProbA()
+        rnd2 = proba.ProbA()
+        rnd1.append_value(8, 1)
+        rnd2.append_value(15, 1)
+        v.append(Vertex(27, rnd1, -1, 2, rnd2, "charlie"))
+        rnd3 = proba.ProbA()
+        rnd4 = proba.ProbA()
+        rnd3.append_value(7, 1)
+        rnd4.append_value(12, 1)
+        v.append(Vertex(42, rnd3, -3, 4, rnd4, "donnie"))
+        rnd5 = proba.ProbA()
+        rnd6 = proba.ProbA()
+        rnd5.append_value(2, 1)
+        rnd6.append_value(11, 1)
+        v.append(Vertex(38, rnd5, -0.5, 2.4, rnd6, "gillian"))
+        # Edges
+        rnd7 = proba.ProbA()
+        rnd7.append_value(0.1, 1)
+        e.append(Edge(452, 27, 42, rnd7, "A"))
+        rnd8 = proba.ProbA()
+        rnd8.append_value(0.3, 1)
+        e.append(Edge(455, 42, 38, rnd8, "B"))
+        rnd9 = proba.ProbA()
+        rnd9.append_value(-0.2, 1)
+        e.append(Edge(458, 27, 38, rnd9, "C"))
+        # C-map
         self.c = CogMap(v, e)
 
     def test_vertex_idx_by_id(self):
@@ -31,81 +54,210 @@ class TestCogMap(TestCase):
 
     def test_rebuild_matrix(self):
         m1 = self.c.matrix
-        m2 = np.array([[0, 0.1, -0.2], [0, 0, 0.3], [0, 0, 0]])
-        self.assertTrue((m1 == m2).all())
-        self.c.vertices.append(Vertex(21, 6, -1.5, 6.4, 17, "dorothy"))
-        self.c.edges.append(Edge(113, 38, 21, 0.6, "A"))
-        self.c.edges.append(Edge(112, 21, 27, 0.8, "B"))
-        self.c.edges.append(Edge(111, 38, 27, 0.1, "C"))
+        rnd0 = proba.ProbA()
+        rnd0.append_value(0, 1)
+        rnd01 = proba.ProbA()
+        rnd01.append_value(0.1, 1)
+        rnd02_ = proba.ProbA()
+        rnd02_.append_value(-0.2, 1)
+        rnd03 = proba.ProbA()
+        rnd03.append_value(0.3, 1)
+        m2 = np.array([[rnd0, rnd01, rnd02_], [rnd0, rnd0, rnd03], [rnd0, rnd0, rnd0]])
+        count = 0
+        for i in range(len(m2)):
+            for j in range(len(m2[i])):
+                count += 1
+                if not(m1[i, j] != m2[i, j]):
+                    count -= 1
+        self.assertTrue(count == 0)
+        rnd6 = proba.ProbA()
+        rnd6.append_value(6, 1)
+        rnd17 = proba.ProbA()
+        rnd17.append_value(17, 1)
+        self.c.vertices.append(Vertex(21, rnd6, -1.5, 6.4, rnd17, "dorothy"))
+        rnd06 = proba.ProbA()
+        rnd06.append_value(0.6, 1)
+        rnd08 = proba.ProbA()
+        rnd08.append_value(0.8, 1)
+        self.c.edges.append(Edge(113, 38, 21, rnd06, "A"))
+        self.c.edges.append(Edge(112, 21, 27, rnd08, "B"))
+        self.c.edges.append(Edge(111, 38, 27, rnd01, "C"))
         self.c.rebuild_matrix()
-        m2 = np.array([[0, 0.1, -0.2, 0], [0, 0, 0.3, 0], [0.1, 0, 0, 0.6], [0.8, 0, 0, 0]])
-        self.assertTrue((self.c.matrix == m2).all())
+        m2 = np.array([[rnd0, rnd01, rnd02_, rnd0], [rnd0, rnd0, rnd03, rnd0], [rnd01, rnd0, rnd0, rnd06], [rnd08, rnd0, rnd0, rnd0]])
+        count = 0
+        for i in range(len(m2)):
+            for j in range(len(m2[i])):
+                count += 1
+                if not(self.c.matrix[i, j] != m2[i, j]):
+                    count -= 1
+        self.assertTrue(count == 0)
 
     def test_add_vertex(self):
         n = len(self.c.vertices)
-        self.c.add_vertex(Vertex(878, 101, 0, 0, 2, "bone"))
+        rnd101 = proba.ProbA()
+        rnd101.append_value(101, 1)
+        rnd2 = proba.ProbA()
+        rnd2.append_value(2, 1)
+        self.c.add_vertex(Vertex(878, rnd101, 0, 0, rnd2, "bone"))
         self.assertEqual(len(self.c.vertices), n + 1)
         m1 = self.c.matrix
-        m2 = np.array([[0, 0.1, -0.2, 0], [0, 0, 0.3, 0], [0, 0, 0, 0], [0, 0, 0, 0]])
-        self.assertTrue((m1 == m2).all())
+        rnd0 = proba.ProbA()
+        rnd0.append_value(0, 1)
+        rnd01 = proba.ProbA()
+        rnd01.append_value(0.1, 1)
+        rnd02 = proba.ProbA()
+        rnd02.append_value(-0.2, 1)
+        rnd03 = proba.ProbA()
+        rnd03.append_value(0.3, 1)
+        m2 = np.array([[rnd0, rnd01, rnd02, rnd0], [rnd0, rnd0, rnd03, rnd0], [rnd0, rnd0, rnd0, rnd0], [rnd0, rnd0, rnd0, rnd0]])
+        count = 0
+        for i in range(len(m2)):
+            for j in range(len(m2[i])):
+                count += 1
+                if not(m1[i, j] != m2[i, j]):
+                    count -= 1
+        self.assertTrue(count == 0)
 
     def test_add_edge(self):
         n = len(self.c.edges)
-        self.c.add_edge(Edge(8111, 38, 27, 2, "A"))
+        rnd = proba.ProbA()
+        rnd.append_value(2, 1)
+        self.c.add_edge(Edge(8111, 38, 27, rnd, "A"))
         self.assertEqual(len(self.c.edges), n + 1)
         m1 = self.c.matrix
-        m2 = np.array([[0, 0.1, -0.2], [0, 0, 0.3], [2, 0, 0]])
-        self.assertTrue((m1 == m2).all())
+        rnd0 = proba.ProbA()
+        rnd0.append_value(0.0, 1)
+        rnd01 = proba.ProbA()
+        rnd01.append_value(0.1, 1)
+        rnd02_ = proba.ProbA()
+        rnd02_.append_value(-0.2, 1)
+        rnd03 = proba.ProbA()
+        rnd03.append_value(0.3, 1)
+        rnd2 = proba.ProbA()
+        rnd2.append_value(2, 1)
+        m2 = np.array([[rnd0, rnd01, rnd02_], [rnd0, rnd0, rnd03], [rnd2, rnd0, rnd0]])
+        count = 0
+        for i in range(len(m2)):
+            for j in range(len(m2[i])):
+                count += 1
+                if not(m1[i, j] != m2[i, j]):
+                    count -= 1
+        self.assertTrue(count == 0)
 
     def test_rem_vertex(self):
         n = len(self.c.vertices)
         self.c.rem_vertex(27)
         self.assertEqual(len(self.c.vertices), n - 1)
         m1 = self.c.matrix
-        m2 = np.array([[0, 0.3], [0, 0]])
-        self.assertTrue((m1 == m2).all())
+        rnd0 = proba.ProbA()
+        rnd0.append_value(0, 1)
+        rnd03 = proba.ProbA()
+        rnd03.append_value(0.3, 1)
+        m2 = np.array([[rnd0, rnd03], [rnd0, rnd0]])
+        count = 0
+        for i in range(len(m2)):
+            for j in range(len(m2[i])):
+                count += 1
+                if not (m1[i, j] != m2[i, j]):
+                    count -= 1
+        self.assertTrue(count == 0)
 
     def test_rem_edge(self):
         n = len(self.c.edges)
         self.c.rem_edge(452)
         self.assertEqual(len(self.c.edges), n - 1)
         m1 = self.c.matrix
-        m2 = np.array([[0, 0, -0.2], [0, 0, 0.3], [0, 0, 0]])
-        self.assertTrue((m1 == m2).all())
+        rnd0 = proba.ProbA()
+        rnd0.append_value(0, 1)
+        rnd02_ = proba.ProbA()
+        rnd02_.append_value(-0.2, 1)
+        rnd03 = proba.ProbA()
+        rnd03.append_value(0.3, 1)
+        m2 = np.array([[rnd0, rnd0, rnd02_], [rnd0, rnd0, rnd03], [rnd0, rnd0, rnd0]])
+        count = 0
+        for i in range(len(m2)):
+            for j in range(len(m2[i])):
+                count += 1
+                if not(m1[i, j] != m2[i, j]):
+                    count -= 1
+        self.assertTrue(count == 0)
 
     def test_pulse_calc(self):
         # cycles count
         steps = 1
         # put start impulses to V0 with val = 1.1 and to V2 with val = -1.2
+        rnd11 = proba.ProbA()
+        rnd11.append_value(1.1, 1)
+        rnd12_ = proba.ProbA()
+        rnd12_.append_value(-1.2, 1)
+        q = [rnd11, rnd12_]
         vq = [0, 2]
-        q = [1.1, -1.2]
         res = self.c.pulse_calc(q, vq, steps)
-        self.assertEqual(res, [9.1, 7.0, 0.8])
-
+        rnd91 = proba.ProbA()
+        rnd91.append_value(9.1, 1)
+        rnd70 = proba.ProbA()
+        rnd70.append_value(7.0, 1)
+        rnd08 = proba.ProbA()
+        rnd08.append_value(0.8, 1)
+        good = [rnd91, rnd70, rnd08]
+        count = 0
+        for i in range(len(res)):
+            count += 1
+            if not(res[i] != good[i]):
+                count -= 1
+        self.assertEqual(count, 0)
 
         # cycles count
         steps = 2
         # put start impulses to V0 with val = 1.1 and to V2 with val = -1.2
+        q = [rnd11, rnd12_]
         vq = [0, 2]
-        q = [1.1, -1.2]
         res = self.c.pulse_calc(q, vq, steps)
-        self.assertEqual(res, [9.1, 7.11, 0.5800000000000001])
-
+        rnd91 = proba.ProbA()
+        rnd91.append_value(9.1, 1)
+        rnd711 = proba.ProbA()
+        rnd711.append_value(7.11, 1)
+        rnd058 = proba.ProbA()
+        rnd058.append_value(0.5800000000000001, 1)
+        good = [rnd91, rnd711, rnd058]
+        count = 0
+        for i in range(len(res)):
+            count += 1
+            if not(res[i] != good[i]):
+                count -= 1
+        self.assertEqual(count, 0)
 
         # cycles count
         steps = 5
-
         # put start impulses to V0 with val = 1.1 and to V2 with val = -1.2
+        q = [rnd11, rnd12_]
         vq = [0, 2]
-        q = [1.1, -1.2]
-
         res = self.c.pulse_calc(q, vq, steps)
-        self.assertEqual(res, [9.1, 7.11, 0.6130000000000001])
-
-        # TODO проверить на других примерах
+        rnd91 = proba.ProbA()
+        rnd91.append_value(9.1, 1)
+        rnd711 = proba.ProbA()
+        rnd711.append_value(7.11, 1)
+        rnd061 = proba.ProbA()
+        rnd061.append_value(0.6130000000000001, 1)
+        good = [rnd91, rnd711, rnd061]
+        count = 0
+        for i in range(len(res)):
+            count += 1
+            if not(res[i] != good[i]):
+                count -= 1
+        self.assertEqual(count, 0)
 
     def test_eig_vals_calc(self):
-        ar = [[-1, -6], [2, 6]]
+        self.vertices = (1, 2)
+        rnd1 = proba.ProbA()
+        rnd1.append_value(-1, 1.0)
+        rnd2 = proba.ProbA()
+        rnd2.append_value(-6, 1.0)
+        rnd3 = proba.ProbA()
+        rnd3.append_value(+2, 1.0)
+        rnd4 = proba.ProbA()
+        rnd4.append_value(+6, 1.0)
+        ar = [[rnd1, rnd2], [rnd3, rnd4]]
         f, m = self.c.eig_vals_calc(ar)
         self.assertEqual(f, False)
         self.assertEqual(m, 3)
@@ -124,15 +276,26 @@ class TestCogMap(TestCase):
         count, neg = self.c.cycles_calc(ar)
         self.assertEqual(count, 20)
         self.assertEqual(neg, 8)
-        # TODO проверить на других примерах
 
     def test_rem_edge_by_vertices(self):
         n = len(self.c.edges)
         self.c.rem_edge_by_vertices(27, 42)
         self.assertEqual(len(self.c.edges), n - 1)
         m1 = self.c.matrix
-        m2 = np.array([[0, 0, -0.2], [0, 0, 0.3], [0, 0, 0]])
-        self.assertTrue((m1 == m2).all())
+        rnd0 = proba.ProbA()
+        rnd0.append_value(0, 1)
+        rnd02_ = proba.ProbA()
+        rnd02_.append_value(-0.2, 1)
+        rnd03 = proba.ProbA()
+        rnd03.append_value(0.3, 1)
+        m2 = np.array([[rnd0, rnd0, rnd02_], [rnd0, rnd0, rnd03], [rnd0, rnd0, rnd0]])
+        count = 0
+        for i in range(len(m2)):
+            for j in range(len(m2[i])):
+                count += 1
+                if not(m1[i, j] != m2[i, j]):
+                    count -= 1
+        self.assertTrue(count == 0)
 
     def test_sy1(self):
         ar = [[0, -1, 1, 1], [1, 0, -1, 1], [1, 1, 0, -1], [-1, 1, 1, 0]]
@@ -146,91 +309,421 @@ class TestCogMap(TestCase):
         self.assertEqual(self.c.sy(ar), [[[0], [1], [2], [3]], [[0, 1, 2, 3]]])
 
     def test_combo_v(self):
-        ar = [[0, -1, -1, -1, -1],
-               [-1, 0, -1, -1, -1],
-               [-1, -1, 0, -1, -1],
-               [-1, -1, -1, 0, -1],
-               [-1, -1, -1, -1, 0]]
-        sim2 = [[0, 12],
-                [21, 0]]
-        sim4 = [[0, 12, 13, 14],
-                [21, 0, 23, 24],
-                [31, 32, 0, 34],
-                [41, 42, 43, 0]]
+        rnd1 = proba.ProbA()
+        rnd1.append_value(-1, 1)
+        rnd0 = proba.ProbA()
+        rnd0.append_value(0, 1)
+        ar = [[rnd0, rnd1, rnd1, rnd1, rnd1],
+              [rnd1, rnd0, rnd1, rnd1, rnd1],
+              [rnd1, rnd1, rnd0, rnd1, rnd1],
+              [rnd1, rnd1, rnd1, rnd0, rnd1],
+              [rnd1, rnd1, rnd1, rnd1, rnd0]]
+        rnd12 = proba.ProbA()
+        rnd12.append_value(12, 1)
+        rnd21 = proba.ProbA()
+        rnd21.append_value(21, 1)
+        sim2 = [[rnd0, rnd12],
+                [rnd21, rnd0]]
+        rnd13 = proba.ProbA()
+        rnd13.append_value(13, 1)
+        rnd14 = proba.ProbA()
+        rnd14.append_value(14, 1)
+        rnd23 = proba.ProbA()
+        rnd23.append_value(23, 1)
+        rnd24 = proba.ProbA()
+        rnd24.append_value(24, 1)
+        rnd31 = proba.ProbA()
+        rnd31.append_value(31, 1)
+        rnd32 = proba.ProbA()
+        rnd32.append_value(32, 1)
+        rnd34 = proba.ProbA()
+        rnd34.append_value(34, 1)
+        rnd41 = proba.ProbA()
+        rnd41.append_value(41, 1)
+        rnd42 = proba.ProbA()
+        rnd42.append_value(42, 1)
+        rnd43 = proba.ProbA()
+        rnd43.append_value(43, 1)
+        sim4 = [[rnd0, rnd12, rnd13, rnd14],
+                [rnd21, rnd0, rnd23, rnd24],
+                [rnd31, rnd32, rnd0, rnd34],
+                [rnd41, rnd42, rnd43, rnd0]]
         k1 = np.array(ar)
         s1 = np.array(sim2)
         # Example 1 - merge graph with 2D by 1 vertex
-        res1 = [[ 0., -1., -1., -1., -1.,  0.],
-                [-1.,  0., -1., -1., -1.,  0.],
-                [-1., -1.,  0., -1., -1.,  21.],
-                [-1., -1., -1.,  0., -1.,  0.],
-                [-1., -1., -1., -1.,  0.,  0.],
-                [ 0., 0.,  12.,  0.,  0.,  0.]]
+        res1 = [[rnd0, rnd1, rnd1, rnd1, rnd1, rnd0],
+                [rnd1, rnd0, rnd1, rnd1, rnd1, rnd0],
+                [rnd1, rnd1, rnd0, rnd1, rnd1, rnd21],
+                [rnd1, rnd1, rnd1, rnd0, rnd1, rnd0],
+                [rnd1, rnd1, rnd1, rnd1, rnd0, rnd0],
+                [rnd0, rnd0, rnd12, rnd0, rnd0, rnd0]]
 
         r = self.c.comboV(k1, s1, [2], [1], 0)
-        self.assertTrue((r == np.array(res1)).all())
+        count = 0
+        for i in range(len(r)):
+            for j in range(len(r[i])):
+                count += 1
+                if not(r[i, j] != res1[i][j]):
+                    count -= 1
+        self.assertTrue(count == 0)
 
         # Example 2 - merge graph with 2D by 2 vertex
         k1 = np.array(ar)
         s1 = np.array(sim2)
-        res2 = [[ 0., -1., -1., -1., -1.],
-                [-1.,  0., -1., 12., -1.],
-                [-1., -1.,  0., -1., -1.],
-                [-1., 21., -1.,  0., -1.],
-                [-1., -1., -1., -1.,  0.]]
-        r = self.c.comboV(k1, s1, [1,3], [0,1], 0)
-        self.assertTrue((r == np.array(res2)).all())
+        res2 = [[rnd0, rnd1, rnd1, rnd1, rnd1],
+                [rnd1, rnd0, rnd1, rnd12, rnd1],
+                [rnd1, rnd1, rnd0, rnd1, rnd1],
+                [rnd1, rnd21, rnd1, rnd0, rnd1],
+                [rnd1, rnd1, rnd1, rnd1, rnd0]]
+        r = self.c.comboV(k1, s1, [1, 3], [0, 1], 0)
+        count = 0
+        for i in range(len(r)):
+            for j in range(len(r[i])):
+                count += 1
+                if not(r[i, j] != res2[i][j]):
+                    count -= 1
+        self.assertTrue(count == 0)
 
         # Example 3 - merge graph with 4D by 3 vertex
         k1 = np.array(ar)
         s1 = np.array(sim4)
-        res3 = [[ 0., 13., -1., 14., -1., 12.],
-                [31.,  0., -1., 34., -1., 32.],
-                [-1., -1.,  0., -1., -1.,  0.],
-                [41., 43., -1.,  0., -1., 42.],
-                [-1., -1., -1., -1.,  0.,  0.],
-                [21., 23., 0., 24.,  0.,  0.]]
-        r = self.c.comboV(k1, s1, [0,1,3], [0,2,3], 0)
-        self.assertTrue((r == np.array(res3)).all())
+        res3 = [[rnd0, rnd13, rnd1, rnd14, rnd1, rnd12],
+                [rnd31, rnd0, rnd1, rnd34, rnd1, rnd32],
+                [rnd1, rnd1, rnd0, rnd1, rnd1, rnd0],
+                [rnd41, rnd43, rnd1, rnd0, rnd1, rnd42],
+                [rnd1, rnd1, rnd1, rnd1, rnd0, rnd0],
+                [rnd21, rnd23, rnd0, rnd24, rnd0, rnd0]]
+        r = self.c.comboV(k1, s1, [0, 1, 3], [0, 2, 3], 0)
+        count = 0
+        for i in range(len(r)):
+            for j in range(len(r[i])):
+                count += 1
+                if not(r[i, j] != res3[i][j]):
+                    count -= 1
+        self.assertTrue(count == 0)
 
     def test_get_composition(self):
-        s1 = np.array([[0, 0, 1],
-                       [-1, 0, 0],
-                       [0, 1, 0]])
-        res1 = [[0., 0.1, -0.2, 0., 1.],
-                [0., 0.,   0.3, 0., 0.],
-                [0., 0.,   0.,  0., 0.],
-                [-1., 0.,  0.,  0., 0.],
-                [0., 0.,   0.,  1., 0.]]
+        rnd0 = proba.ProbA()
+        rnd0.append_value(0, 1)
+        rnd1 = proba.ProbA()
+        rnd1.append_value(1, 1)
+        rnd1_ = proba.ProbA()
+        rnd1_.append_value(-1, 1)
+        s1 = np.array([[rnd0, rnd0, rnd1],
+                       [rnd1_, rnd0, rnd0],
+                       [rnd0, rnd1, rnd0]])
+        rnd01 = proba.ProbA()
+        rnd01.append_value(0.1, 1)
+        rnd02_ = proba.ProbA()
+        rnd02_.append_value(-0.2, 1)
+        rnd03 = proba.ProbA()
+        rnd03.append_value(0.3, 1)
+        res1 = [[rnd0, rnd01, rnd02_, rnd0, rnd1],
+                [rnd0, rnd0, rnd03, rnd0, rnd0],
+                [rnd0, rnd0, rnd0, rnd0, rnd0],
+                [rnd1_, rnd0, rnd0, rnd0, rnd0],
+                [rnd0, rnd0, rnd0, rnd1, rnd0]]
         new_cm = self.c.get_composition(s1, [0], [0], 0)
-        self.assertTrue((new_cm.matrix == np.array(res1)).all())
+        count = 0
+        for i in range(len(new_cm.matrix)):
+            for j in range(len(new_cm.matrix[i])):
+                count += 1
+                if not(new_cm.matrix[i, j] != res1[i][j]):
+                    count -= 1
+        self.assertTrue(count == 0)
 
-        res2 = [[0., 1., -0.2, 0.],
-                [0., 0.,   0.3, 1.],
-                [0., 0.,   0.,  0.],
-                [-1., 0.,  0.,  0.]]
+        res2 = [[rnd0, rnd1, rnd02_, rnd0],
+                [rnd0, rnd0, rnd03, rnd1],
+                [rnd0, rnd0, rnd0, rnd0],
+                [rnd1_, rnd0, rnd0, rnd0]]
         new_cm = self.c.get_composition(s1, [0, 1], [0, 2], 0)
-#        print(new_cm.matrix)
-        self.assertTrue((new_cm.matrix == np.array(res2)).all())
+        count = 0
+        for i in range(len(new_cm.matrix)):
+            for j in range(len(new_cm.matrix[i])):
+                count += 1
+                if not(new_cm.matrix[i, j] != res2[i][j]):
+                    count -= 1
+        self.assertTrue(count == 0)
 
-        # cogmap_json_path = "Контрольный пример 1.cmj"
-        # cogmap_xyz_json_path = "Контрольный пример 1.cmj_xyz"
-        # with open(cogmap_json_path, "r") as config_file:
-        #     cogmap_json = config_file.read()
-        # with open(cogmap_xyz_json_path, "r") as config_xyz_file:
-        #     cogmap_xyz_json = config_xyz_file.read()
-        # base_cogmap = CogMap()
-        # base_cogmap.fill_from_json(cogmap_json, cogmap_xyz_json)
-        # for v in base_cogmap.Y:
-        #     for s in utils.get_simple_structs():
-        #         base_cogmap.get_composition(s, [v.idx], [0], 0)
+
 
     def test_pulse_model(self):
-        imp = Impulses([1.1, -1.2], [self.c.vertices[0], self.c.vertices[2]])
+        rnd11 = proba.ProbA()
+        rnd11.append_value(1.1, 1)
+        rnd12_ = proba.ProbA()
+        rnd12_.append_value(-1.2, 1)
+        imp = Impulses([rnd11, rnd12_], [self.c.vertices[0], self.c.vertices[2]])
         v_bad, max_y_er = self.c.pulse_model(5, imp)
         self.assertEqual(v_bad, [])
-        self.assertEqual(max_y_er, 0.0)
+        rnd0 = proba.ProbA()
+        rnd0.append_value(0.0, 1.0)
+        self.assertFalse(max_y_er != rnd0)
         self.c.Y.append(self.c.vertices[2])
         v_bad, max_y_er = self.c.pulse_model(5, imp)
         self.assertEqual(v_bad, [])
-        self.assertEqual(max_y_er, 0.0)
+        self.assertFalse(max_y_er != rnd0)
+
+
+class TestProbVal(TestCase):
+    pass
+
+
+class TestProbA(TestCase):
+    @classmethod
+    def setUpClass(self) -> None:
+        self.rnd = proba.ProbA()
+
+    def test_proba_append_value(self):
+        self.rnd.vals.clear()
+        for i in range(4):
+            val = (i + 1) / 10
+            prob = (4 - i) / 10
+            self.rnd.append_value(val, prob)
+        count = 0
+        for i in range(4):
+            check = self.rnd.vals[i]
+            if i == 0 and check.value == 0.1 and check.prob == 0.4:
+                count += 1
+            if i == 1 and check.value == 0.2 and check.prob == 0.3:
+                count += 1
+            if i == 2 and check.value == 0.3 and check.prob == 0.2:
+                count += 1
+            if i == 3 and check.value == 0.4 and check.prob == 0.1:
+                count += 1
+        self.assertEqual(count, 4)
+
+    def test_proba_check_probs(self):
+        # Subtest 1
+        res = self.rnd.check_probs()
+        self.assertEqual(res, 0)
+
+        # Subtest 2
+        val = 0.0
+        prob = 0.2
+        self.rnd.append_value(val, prob)
+        res = self.rnd.check_probs()
+        self.assertEqual(res > 0, True)
+
+        # Subtest 3
+        self.rnd.vals.clear()
+        val = 0.0
+        prob = 0.2
+        self.rnd.append_value(val, prob)
+        res = self.rnd.check_probs()
+        self.assertEqual(res < 0, True)
+
+    def test_proba_check_reduce(self):
+        self.rnd.vals.clear()
+        for i in range(100):
+            val = i
+            prob = 0.01
+            self.rnd.append_value(val, prob)
+        self.rnd.reduce(10)
+        count = 0
+        if self.rnd.vals[0].value ==  5.000000000000001 and self.rnd.vals[0].prob == 0.10999999999999999:
+            count += 1
+        if self.rnd.vals[1].value == 16.000000000000004 and self.rnd.vals[1].prob == 0.10999999999999999:
+            count += 1
+        if self.rnd.vals[2].value == 27.000000000000004 and self.rnd.vals[2].prob == 0.10999999999999999:
+            count += 1
+        if self.rnd.vals[3].value == 38.000000000000000 and self.rnd.vals[3].prob == 0.10999999999999999:
+            count += 1
+        if self.rnd.vals[4].value == 49.000000000000014 and self.rnd.vals[4].prob == 0.10999999999999999:
+            count += 1
+        if self.rnd.vals[5].value == 60.000000000000014 and self.rnd.vals[5].prob == 0.10999999999999999:
+            count += 1
+        if self.rnd.vals[6].value == 71.000000000000000 and self.rnd.vals[6].prob == 0.10999999999999999:
+            count += 1
+        if self.rnd.vals[7].value == 82.000000000000000 and self.rnd.vals[7].prob == 0.10999999999999999:
+            count += 1
+        if self.rnd.vals[8].value == 93.000000000000030 and self.rnd.vals[8].prob == 0.10999999999999999:
+            count += 1
+        if self.rnd.vals[9].value == 99.000000000000000 and self.rnd.vals[9].prob == 0.01000000000000000:
+            count += 1
+        self.assertEqual(count, 10)
+
+    def test_proba_check_maths(self):
+        rnd1 = proba.ProbA()
+        rnd1.append_value(1.0, 0.5)
+        rnd1.append_value(2.0, 0.5)
+        rnd2 = proba.ProbA()
+        rnd2.append_value(1.0, 0.1)
+        rnd2.append_value(2.0, 0.2)
+        rnd2.append_value(3.0, 0.3)
+        rnd2.append_value(4.0, 0.4)
+
+        # Subtest 1 - Add
+        rnd_res = rnd1 + rnd2
+        count = 0
+        if rnd_res.vals[0].value == 2.0 and rnd_res.vals[0].prob == 0.05:
+            count += 1
+        if rnd_res.vals[1].value == 3.0 and rnd_res.vals[1].prob == 0.15000000000000002:
+            count += 1
+        if rnd_res.vals[2].value == 4.0 and rnd_res.vals[2].prob == 0.25:
+            count += 1
+        if rnd_res.vals[3].value == 5.0 and rnd_res.vals[3].prob == 0.35:
+            count += 1
+        if rnd_res.vals[4].value == 6.0 and rnd_res.vals[4].prob == 0.2:
+            count += 1
+        self.assertEqual(count, 5)
+
+        # Subtest 2 - Subtract
+        rnd_res = rnd1 - rnd2
+        count = 0
+        if rnd_res.vals[0].value == -3.0 and rnd_res.vals[0].prob == 0.2:
+            count += 1
+        if rnd_res.vals[1].value == -2.0 and rnd_res.vals[1].prob == 0.35:
+            count += 1
+        if rnd_res.vals[2].value == -1.0 and rnd_res.vals[2].prob == 0.25:
+            count += 1
+        if rnd_res.vals[3].value == 0.0 and rnd_res.vals[3].prob == 0.15000000000000002:
+            count += 1
+        if rnd_res.vals[4].value == 1.0 and rnd_res.vals[4].prob == 0.05:
+            count += 1
+        self.assertEqual(count, 5)
+
+        # Subtest 3 - Multiply
+        rnd_res = rnd1 * rnd2
+        count = 0
+        if rnd_res.vals[0].value == 1.0 and rnd_res.vals[0].prob == 0.05:
+            count += 1
+        if rnd_res.vals[1].value == 2.0 and rnd_res.vals[1].prob == 0.15000000000000002:
+            count += 1
+        if rnd_res.vals[2].value == 3.0 and rnd_res.vals[2].prob == 0.15:
+            count += 1
+        if rnd_res.vals[3].value == 4.0 and rnd_res.vals[3].prob == 0.30000000000000004:
+            count += 1
+        if rnd_res.vals[4].value == 6.0 and rnd_res.vals[4].prob == 0.15:
+            count += 1
+        if rnd_res.vals[5].value == 8.0 and rnd_res.vals[5].prob == 0.2:
+            count += 1
+        self.assertEqual(count, 6)
+
+        # Subtest 4 - Divide
+        rnd_res = rnd1 / rnd2
+        count = 0
+        if rnd_res.vals[0].value == 0.25 and rnd_res.vals[0].prob == 0.2:
+            count += 1
+        if rnd_res.vals[1].value == 0.3333333333333333 and rnd_res.vals[1].prob == 0.15:
+            count += 1
+        if rnd_res.vals[2].value == 0.5 and rnd_res.vals[2].prob == 0.30000000000000004:
+            count += 1
+        if rnd_res.vals[3].value == 0.6666666666666666 and rnd_res.vals[3].prob == 0.15:
+            count += 1
+        if rnd_res.vals[4].value == 1.0 and rnd_res.vals[4].prob == 0.15000000000000002:
+            count += 1
+        if rnd_res.vals[5].value == 2.0 and rnd_res.vals[5].prob == 0.05:
+            count += 1
+        self.assertEqual(count, 6)
+
+    def test_proba_check_compares(self):
+        rnd1 = proba.ProbA()
+        rnd1.append_value(1.0, 0.5)
+        rnd1.append_value(2.0, 0.5)
+        rnd2 = proba.ProbA()
+        rnd2.append_value(1.0, 0.1)
+        rnd2.append_value(2.0, 0.2)
+        rnd2.append_value(3.0, 0.3)
+        rnd2.append_value(4.0, 0.4)
+        rnd3 = proba.ProbA()
+        rnd3.append_value(1.0, 0.5)
+        rnd3.append_value(2.0, 0.5)
+
+        # Subtest 1 - Greater
+        self.assertEqual(rnd1 > rnd2, False)
+        # Subtest 2 - Greater or equal
+        self.assertEqual(rnd1 >= rnd3, False)
+        # Subtest 3 - Less
+        self.assertEqual(rnd1 < rnd2, True)
+        # Subtest 4 - Less or equal
+        self.assertEqual(rnd1 <= rnd3, False)
+        # Subtest 5 - Not equal
+        self.assertEqual(rnd1 != rnd2, True)
+        self.assertEqual(rnd1 != rnd3, False)
+
+    def test_proba_check_addons(self):
+        rnd1 = proba.ProbA()
+        rnd1.append_value(1.0, 0.5)
+        rnd1.append_value(2.0, 0.5)
+        rnd2 = proba.ProbA()
+        rnd2.append_value(1.0, 0.1)
+        rnd2.append_value(2.0, 0.2)
+        rnd2.append_value(3.0, 0.3)
+        rnd2.append_value(4.0, 0.4)
+        rnd3 = proba.ProbA()
+        rnd3.append_value(-1.0, 0.5)
+        rnd3.append_value(-2.0, 0.5)
+        rnd4 = proba.ProbA()
+        rnd4.append_value(10.0, 1.0)
+        rnd5 = proba.ProbA()
+
+        # Subtest 1 - Average
+        self.assertEqual(rnd1.avg(), +1.5)
+        self.assertEqual(rnd2.avg(), +3.0)
+        self.assertEqual(rnd3.avg(), -1.5)
+
+        # Subtest 2 - Minimum
+        arr = [rnd1, rnd2, rnd3]
+        min_rnd = min(arr)
+        self.assertEqual(min_rnd.avg(), -1.5)
+
+        # Subtest 3 - Maximum
+        arr = [rnd1, rnd2, rnd3]
+        min_rnd = max(arr)
+        self.assertEqual(min_rnd.avg(), +3.0)
+
+        # Subtest 4 - Absolute
+        self.assertEqual(not (rnd1.abs() != rnd1), True)
+        rnd3.abs()
+        self.assertEqual(rnd3.avg(), +1.5)
+
+        # Subtest 5 - Max probability
+        self.assertEqual(rnd2.max_prob(), 4.0)
+        self.assertEqual(rnd4.max_prob(), 10.0)
+        self.assertEqual(rnd5.max_prob(), None)
+
+        # Subtest 6 - Min probability
+        self.assertEqual(rnd2.min_prob(), 1.0)
+        self.assertEqual(rnd4.min_prob(), 10.0)
+        self.assertEqual(rnd5.min_prob(), None)
+
+        # Subtest 7 - Second Max probability
+        self.assertEqual(rnd2.max2_prob(), 3.0)
+        self.assertEqual(rnd4.max2_prob(), 10.0)
+        self.assertEqual(rnd5.max2_prob(), None)
+
+        # Subtest 8 - Second Min probability
+        self.assertEqual(rnd2.min2_prob(), 2.0)
+        self.assertEqual(rnd4.min2_prob(), 10.0)
+        self.assertEqual(rnd5.min2_prob(), None)
+
+    def test_proba_build_scalar(self):
+        rnd = proba.ProbA()
+        rnd.append_value(1.0, 0.1)
+        rnd.append_value(2.0, 0.2)
+        rnd.append_value(3.0, 0.3)
+        rnd.append_value(4.0, 0.4)
+
+        # Subtest 1 - None
+        rnd.BUILD_SCALAR = 'trash'
+        self.assertEqual(rnd.build_scalar(), None)
+
+        # Subtest 2 - Average
+        rnd.BUILD_SCALAR = 'avg'
+        self.assertEqual(rnd.build_scalar(), 3.0)
+
+        # Subtest 3 - Maximum
+        rnd.BUILD_SCALAR = 'max'
+        self.assertEqual(rnd.build_scalar(), 4.0)
+
+        # Subtest 4 - Minimum
+        rnd.BUILD_SCALAR = 'min'
+        self.assertEqual(rnd.build_scalar(), 1.0)
+
+        # Subtest 5 - Average maximum
+        rnd.BUILD_SCALAR = 'max_avg'
+        self.assertEqual(rnd.build_scalar(), 3.5)
+
+        # Subtest 6 - Average minimum
+        rnd.BUILD_SCALAR = 'min_avg'
+        self.assertEqual(rnd.build_scalar(), 1.5)

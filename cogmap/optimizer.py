@@ -3,6 +3,7 @@ import numpy as np
 import itertools as it
 import scipy.optimize as opt
 import impact_generator as ig
+import proba
 
 
 class SolutionData:
@@ -26,42 +27,48 @@ class Optimizer:
         Возвращает список простых структур
         :return: список простых структур (матриц смежности)
         """
+        plus = proba.ProbA()
+        plus.append_value(1.0, 1.0)
+        minus = proba.ProbA()
+        minus.append_value(-1.0, 1.0)
+        zero = proba.ProbA()
+        zero.append_value(0.0, 1.0)
         # каждая простая структура - матрица смежности (матрицы разных размеров)
         simple_structs = []
         # отрезок
-        simple_structs.append([[0, 1],
-                               [0, 0]])
+        simple_structs.append([[zero, plus],
+                               [zero, zero]])
         # треугольник - устойчивый цикл
-        simple_structs.append([[0, 0, 1],
-                               [-1, 0, 0],
-                               [0, 1, 0]])
+        simple_structs.append([[zero, zero, plus],
+                               [minus, zero, zero],
+                               [zero, plus, zero]])
         # треугольник - неустойчивый цикл
-        simple_structs.append([[0, 0, 1],
-                               [1, 0, 0],
-                               [0, 1, 0]])
+        simple_structs.append([[zero, zero, plus],
+                               [plus, zero, zero],
+                               [zero, plus, zero]])
         # песочные часы - устойчивый цикл
-        simple_structs.append([[0, -1, 0, 0, 0],
-                               [0, 0, 0, 0, 1],
-                               [0, 0, 0, 1, 0],
-                               [0, 0, 0, 0, 1],
-                               [1, 0, 1, 0, 0]])
+        simple_structs.append([[zero, minus, zero, zero, zero],
+                               [zero, zero, zero, zero, plus],
+                               [zero, zero, zero, plus, zero],
+                               [zero, zero, zero, zero, plus],
+                               [plus, zero, plus, zero, zero]])
         # песочные часы - неустойчивый цикл
-        simple_structs.append([[0, -1, 0, 0, 0],
-                               [0, 0, 0, 0, 1],
-                               [0, 0, 0, -1, 0],
-                               [0, 0, 0, 0, 1],
-                               [1, 0, 1, 0, 0]])
+        simple_structs.append([[zero, minus, zero, zero, zero],
+                               [zero, zero, zero, zero, plus],
+                               [zero, zero, zero, minus, zero],
+                               [zero, zero, zero, zero, plus],
+                               [plus, zero, plus, zero, zero]])
         # два треугольника - неустойчивый цикл
-        simple_structs.append([[0, 1, 0, 0],
-                               [0, 0, 0, 1],
-                               [0, 1, 0, 0],
-                               [1, 0, 1, 0]])
+        simple_structs.append([[zero, plus, zero, zero],
+                               [zero, zero, zero, plus],
+                               [zero, plus, zero, zero],
+                               [plus, zero, plus, zero]])
         # конверт - неустойчивый цикл
-        simple_structs.append([[0, 1, 0, 0, 0],
-                               [0, 0, 1, 0, 1],
-                               [0, 0, 0, 1, 1],
-                               [1, 0, 0, 0, 1],
-                               [1, 0, 0, 0, 0]])
+        simple_structs.append([[zero, plus, zero, zero, zero],
+                               [zero, zero, plus, zero, plus],
+                               [zero, zero, zero, plus, plus],
+                               [plus, zero, zero, zero, plus],
+                               [plus, zero, zero, zero, zero]])
         return simple_structs
 
     def find_impact(self, cogmap: cm.CogMap, V: list[cm.Vertex], N: int, impactgen: ig.ImpactGenerator,
@@ -91,11 +98,19 @@ class Optimizer:
             x0 = initial_impulses
         else:
             x0 = impactgen.get_impact(cogmap, V, N)
-        xtol = 1.0e-4 # Точность поиска экстремума
+        tol = 1.0e-4 # Точность поиска экстремума
         res = opt.minimize(opt_func, x0, method='Nelder-Mead',
-                           options={'xtol': xtol, 'disp': False, 'maxiter': 200})
+                           options={'xtol': tol, 'disp': False, 'maxiter': 200})
+
+        res_ = []
+        for i in range(len(res.x)):
+            temp = proba.ProbA()
+            temp.append_value(res.x[i], 1.0)
+            res_.append(temp)
+
         if res.success:
-            impulses = cm.Impulses(res.x, V)
+            # impulses = cm.Impulses(res.x, V)
+            impulses = cm.Impulses(res_, V)
             v_bad, y_max_er = cogmap.pulse_model(N, impulses, log_values)
             return impulses, v_bad, y_max_er
         else:
@@ -127,7 +142,7 @@ class Optimizer:
         counts = np.zeros(len(cogmap.matrix))
         impulses = np.zeros(len(cogmap.matrix))
         for i in range(len(imp)):
-            impulses[imp_v_idx[i]] = impulses[imp_v_idx[i]] + imp[i]
+            impulses[imp_v_idx[i]] = impulses[imp_v_idx[i]] + imp[i].build_scalar()
             counts[imp_v_idx[i]] = counts[imp_v_idx[i]] + 1
         res_imp = []
         res_imp_v = []
@@ -199,8 +214,12 @@ class Optimizer:
         solutions = []
         compositions = cogmap.get_compositions(np.array(s), vertex)
         print("Found %d composition(s)" % len(compositions))
+        comp_num = 0
+        comp_len = len(compositions)
+
         if len(compositions):
             for comp in compositions:
+                print(f'  Processing composition #{comp_num}/{comp_len} ...')
                 if comp[0] == 1:
                     if comp[1].is_stable():
                         # Новая КК создается в get_compositions
@@ -219,7 +238,7 @@ class Optimizer:
             if imp is not None:
                 # ...отсутствие перехода вершин из числа благополучных в проблемные, а также ухудшения состояния проблемных
                 if is_valid_solution(v_bad, y_max_er):
-                    # добавление варианта решения в список частных рещений
+                    # добавление варианта решения в список частных решений
                     solutions.append(SolutionData(0, cogmap, [vertex], imp, v_bad, y_max_er))
                     # пополнение обучающей выборки нейросети
                     impactgen.add_impact(ig.ImpactData(cogmap, imp, y_max_er))
@@ -252,6 +271,9 @@ class Optimizer:
                     partial_solutions.extend(solutions)
 
         print("Found %d solution(s)" % len(partial_solutions))
+        if len(partial_solutions) == 0:
+            exit(0)
+
         print("Building compositions...")
         # Формирование композиций решений
         compositions = self.build_compositions(base_cogmap, partial_solutions)
@@ -259,7 +281,10 @@ class Optimizer:
         # Выполнение когнитивного моделирования для всех композиций. Формирование списка копозиций на основе результатов моделирования
         print("Modeling compositions...")
         composed_solutions = []
+        c_num = 1
         for c in compositions:
+            print(f"  Composition {c_num}/{len(compositions)}")
+            c_num += 1
             V = []
             initial_impulses = []
             for i in range(len(c[1].imp)):

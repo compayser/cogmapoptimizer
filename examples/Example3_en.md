@@ -8,7 +8,7 @@ In order to improve the quality of results obtained through the use of new AI al
 
 Exploring these strategies and demonstrating the corresponding results is the purpose of this test case.
 
-Strategies mean the use of ìfiltersî that make it possible to obtain an answer from the resulting fuzzy probabilistic cognitive map that is convenient for human perception (that is, a regular fuzzy cognitive map).
+Strategies mean the use of ‚Äúfilters‚Äù that make it possible to obtain an answer from the resulting fuzzy probabilistic cognitive map that is convenient for human perception (that is, a regular fuzzy cognitive map).
 
 ### 1.2 Strategies for generating final data
 
@@ -16,23 +16,23 @@ Obtaining finite data is the formation of a scalar quantity from a discrete rand
 
 The following strategies are proposed to generate the final data:
 + **Avg** - average value (for a discrete random variable, a weighted average value is calculated based on the weighting coefficients of the values, which are their probabilities; in fact, this is the expectation of the random variable in question),
-+ **Max** - maximum (by ìmaximumî we mean the most probable value of a discrete random variable, that is, having the maximum probability in a given distribution),
++ **Max** - maximum (by ‚Äúmaximum‚Äù we mean the most probable value of a discrete random variable, that is, having the maximum probability in a given distribution),
 + **MaxAvg** - average maximum (arithmetic mean of values that have the two highest probabilities in a given distribution of a discrete random variable),
-+ **Min** - minimum (by ìminimumî we mean, accordingly, the least probable value of a discrete random variable, that is, having the minimum probability in a given distribution),
++ **Min** - minimum (by ‚Äúminimum‚Äù we mean, accordingly, the least probable value of a discrete random variable, that is, having the minimum probability in a given distribution),
 + **MinAvg** - average minimum (arithmetic mean of values that have the two lowest probabilities in a given distribution of a discrete random variable).<br><br>
 
 The use of these strategies is assumed as follows:
-+ Average value (Avg). The strategy implements the behavior of a ìcautious playerî. In this case, the entire spectrum of data is taken into account, which, perhaps, does not give the most optimal solution, but the most probable (that is, the most ìreliableî).
-+ Maximums (Max and MaxAvg). Aggressive (ìoptimisticî) strategies that implement types of behavior close to the ìall or nothingî principle. With this type of final data formation, an attempt is made to obtain the most profitable solution (with the Max strategy - the most profitable, with MaxAvg - as close as possible to it, but allowing for a certain degree of caution due to taking into account not one, but a pair of the ìstrongestî opinions). It is accepted that such a solution is less likely than when using the Avg strategy.
-+ Minimums (Min and MinAvg). ìPessimisticî strategies that implement behavioral models aimed at obtaining the least likely scenarios. With this type of final data generation, an attempt is made to obtain a solution similar to the Max and MaxAvg strategies, but regarding the least probable cases.<br><br>
++ Average value (Avg). The strategy implements the behavior of a ‚Äúcautious player‚Äù. In this case, the entire spectrum of data is taken into account, which, perhaps, does not give the most optimal solution, but the most probable (that is, the most ‚Äúreliable‚Äù).
++ Maximums (Max and MaxAvg). Aggressive (‚Äúoptimistic‚Äù) strategies that implement types of behavior close to the ‚Äúall or nothing‚Äù principle. With this type of final data formation, an attempt is made to obtain the most profitable solution (with the Max strategy - the most profitable, with MaxAvg - as close as possible to it, but allowing for a certain degree of caution due to taking into account not one, but a pair of the ‚Äústrongest‚Äù opinions). It is accepted that such a solution is less likely than when using the Avg strategy.
++ Minimums (Min and MinAvg). ‚ÄúPessimistic‚Äù strategies that implement behavioral models aimed at obtaining the least likely scenarios. With this type of final data generation, an attempt is made to obtain a solution similar to the Max and MaxAvg strategies, but regarding the least probable cases.<br><br>
 
 ![Fig. 1](yPic1.png)
 
-_Fig. 1 ó Graphical interpretation of final data generation strategies_
+_Fig. 1 ‚Äî Graphical interpretation of final data generation strategies_
 
 ![Fig. 2](yPic2.png)
 
-_Fig. 2 ó Source code of the experimental library responsible for choosing strategies_
+_Fig. 2 ‚Äî Source code of the experimental library responsible for choosing strategies_
 
 ## 2 Cognitive modeling
 
@@ -42,47 +42,47 @@ The basis is a cognitive map describing the general process of construction and 
 
 ![Fig. 3](yPic3.png)
 
-_Fig. 3 ó Initial cognitive map_
+_Fig. 3 ‚Äî Initial cognitive map_
 
 The following experiments are carried out for it:
-+ Comparison of the cognitive map of the ìoldî format (with scalar values obtained by averaging the opinions of experts) and the cognitive map of the ìnewî format (with random discrete values obtained from the results of a survey of the expert group and ìaveragedî according to the Avg strategy).
-+ Comparison of cognitive maps of the ìnewî format, built using the Avg and Max strategies.
-+ Comparison of cognitive maps of the ìnewî format, built using the Max and MaxAvg strategies.
++ Comparison of the cognitive map of the ‚Äúold‚Äù format (with scalar values obtained by averaging the opinions of experts) and the cognitive map of the ‚Äúnew‚Äù format (with random discrete values obtained from the results of a survey of the expert group and ‚Äúaveraged‚Äù according to the Avg strategy).
++ Comparison of cognitive maps of the ‚Äúnew‚Äù format, built using the Avg and Max strategies.
++ Comparison of cognitive maps of the ‚Äúnew‚Äù format, built using the Max and MaxAvg strategies.
 
 
 ### 2.2 Experiment
 
-The results of the experiments are shown in Fig. 3-8.
+The results of the experiments are shown in Fig. 4-9.
 
-#### 2.2.1 Comparison of cognitive maps of the ìoldî and ìnewî format
+#### 2.2.1 Comparison of cognitive maps of the ‚Äúold‚Äù and ‚Äúnew‚Äù format
 
 ![Fig. 4](yPic4.png)
 
-_Fig. 4 ó "Old" format map_
+_Fig. 4 ‚Äî "Old" format map_
 
 ![Fig. 5](yPic5.png)
 
-_Fig. 5 ó Similar map of the "new" format_
+_Fig. 5 ‚Äî Similar map of the "new" format_
 
 #### 2.2.2 Comparison of cognitive maps built using the Avg and Max strategies
 
 ![Fig. 6](yPic6.png)
 
-_Fig. 6 ó Map built according to the Avg strategy_
+_Fig. 6 ‚Äî Map built according to the Avg strategy_
 
 ![Fig. 7](yPic7.png)
 
-_Fig. 7 ó Map built using the Max strategy_
+_Fig. 7 ‚Äî Map built using the Max strategy_
 
 #### 2.2.3 Comparison of cognitive maps built using the Max and MaxAvg strategies
 
 ![Fig. 8](yPic8.png)
 
-_Fig. 8 ó Map built according to the Max strategy_
+_Fig. 8 ‚Äî Map built according to the Max strategy_
 
 ![Fig. 9](yPic9.png)
 
-_Fig. 9 ó Map built using the MaxAvg strategy_
+_Fig. 9 ‚Äî Map built using the MaxAvg strategy_
 
 ### 2.3 Experimental results
 
@@ -91,6 +91,6 @@ _Fig. 9 ó Map built using the MaxAvg strategy_
 ### 2.4 Evaluation of experimental results and conclusions
 
 Analysis of the experimental results shows that:
-+ The results for the ìoldî and ìnewî formats are identical. From this we can conclude that, in principle, the previous generation model is sufficient to implement the Avg strategy, if the user is not interested in the issue of preserving the range of expert opinions and agrees to the initially averaged ìopinion of the average expert.î
++ The results for the ‚Äúold‚Äù and ‚Äúnew‚Äù formats are identical. From this we can conclude that, in principle, the previous generation model is sufficient to implement the Avg strategy, if the user is not interested in the issue of preserving the range of expert opinions and agrees to the initially averaged ‚Äúopinion of the average expert.‚Äù
 + The results of comparing the Avg, Max and MaxAvg strategies are comparable: structurally, the solutions proposed by the AI are equivalent. This is explained by the same initial conditions (the structure of the cognitive map, which is built on the same subject area). At the same time, the initial impulse effects in the modeling scenarios change, which leads to the fact that the required result (the same for all strategies) is achieved in different ways.
 + As a conclusion, we can assume that obtaining a structural diagram of a solution can, apparently, be carried out with fuzzy cognitive maps, which are less labor-intensive to process. And the clarification of the results (in accordance with various strategies) is already done with the help of fuzzy probabilistic cognitive maps.

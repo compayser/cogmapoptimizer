@@ -52,7 +52,7 @@ The following experiments are carried out for it:
 
 ### 2.2 Experiment
 
-The results of the experiments are shown in Fig. 3-8.
+The results of the experiments are shown in Fig. 4-9.
 
 #### 2.2.1 Comparison of cognitive maps of the “old” and “new” format
 

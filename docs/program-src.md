@@ -1,6 +1,8 @@
-# Общие сведения
+# ТЕКСТ ПРОГРАММЫ
 
-Текст программы размещен в репозитории [https://gitlab.actcognitive.org/itmo-sai-code/cogmapoptimizer](https://gitlab.actcognitive.org/itmo-sai-code/cogmapoptimizer).
+# ОБЩИЕ СВЕДЕНИЯ
+
+Текст программы размещен в репозитории [cogmapoptimizer](../../cogmapoptimizer).
 
 В директории `cogmap` собраны файлы модуля когнитивного моделирования. Перечень основных файлов (исходный код, файлы данных, файлы конфигурации и т. п.) представлен в табл. 1.
 

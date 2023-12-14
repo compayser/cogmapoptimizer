@@ -5,6 +5,6 @@
 
 # Application examples #
 
-* [Example #1](Example1_en.md) - optimization of oil production.
-* [Example #2](Example2_en.md) - optimization of construction and installation work.
-* [Example #3](Example3_en.md) - application of strategies for generating final data.
+* [Example #1](Example1/Example1_en.md) - optimization of oil production.
+* [Example #2](Example2/Example2_en.md) - optimization of construction and installation work.
+* [Example #3](Example3/Example3_en.md) - application of strategies for generating final data.

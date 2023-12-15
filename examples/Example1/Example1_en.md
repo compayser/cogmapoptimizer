@@ -12,11 +12,11 @@ Objective: by influencing existing wells and connections between them, to achiev
 
 ### 1.2 Initial cognitive map
 
-The initial example is taken from the work of 2022 in order to confirm the results obtained in the current year. A field of size 4x4 (Fig. 1) is described by vertices K1óK16 evenly distributed on the plane. The resource extraction point K17 (production well) is located in the geometric center of the field. The connections between the vertices are bidirectional and have a absolute weight of 0.1 (positive weights for points K1-K16, and opposite signs for the resource extraction point).
+The initial example is taken from the work of 2022 in order to confirm the results obtained in the current year. A field of size 4x4 (Fig. 1) is described by vertices K1‚ÄîK16 evenly distributed on the plane. The resource extraction point K17 (production well) is located in the geometric center of the field. The connections between the vertices are bidirectional and have a absolute weight of 0.1 (positive weights for points K1-K16, and opposite signs for the resource extraction point).
 
 ![Fig. 1](pics/xPic1.png)
 
-_Fig. 1 ó Initial view of the simulated system_
+_Fig. 1 ‚Äî Initial view of the simulated system_
 
 [Initial cognitive map file](data/Example1-1Init.cmj)
 
@@ -24,11 +24,11 @@ The simulation result is presented in Fig. 2.
 
 ![Fig. 2](pics/xPic2.png)
 
-_Fig. 2 ó Result of modeling the life cycle of the initial system (volume of resource at the resource extraction point K17)_
+_Fig. 2 ‚Äî Result of modeling the life cycle of the initial system (volume of resource at the resource extraction point K17)_
 
 During the modeling process, the volume of resource at the point of extraction during the first 4-5 steps of modeling stabilizes around the +0.12 mark. This is a good result, since it shows that in the long term there is no depletion of the resource, which would reduce the efficiency of the system in question.
 
-A negative result of the modeling is that at the 2nd step of the modeling a resource deficit is created, which can be interpreted approximately as a situation of the form ìreplenishment of the resource at the point of its extraction does not have time to be carried out due to the flow of resources from neighboring regions due to the high intensity of extraction.î
+A negative result of the modeling is that at the 2nd step of the modeling a resource deficit is created, which can be interpreted approximately as a situation of the form ‚Äúreplenishment of the resource at the point of its extraction does not have time to be carried out due to the flow of resources from neighboring regions due to the high intensity of extraction.‚Äù
 
 In reality, the volume of the resource, naturally, would not be negative - this can be interpreted as a local time decrease in the rate of resource extraction from the space under consideration, or as a temporary suspension of resource extraction. In any case, such a situation movement is unacceptable or, at least, undesirable.
 
@@ -44,17 +44,17 @@ Let's consider two more ways to increase the efficiency of resource extraction i
 
 If an additional vertex is created near the point of resource extraction, connected to it by links with a sufficiently high throughput, then there is a possibility that the flow of resource from such an additional source will be able to compensate for the deficit caused by excessively intensive extraction.
 
-This is a fairly obvious statement. Therefore, the actual task is to determine how ìwideî such a connection between the vertices should be.
+This is a fairly obvious statement. Therefore, the actual task is to determine how ‚Äúwide‚Äù such a connection between the vertices should be.
 
 As modeling shows, the introduction of an additional vertex (K18) (Fig. 3) with a connection that ensures a very fast flow of resource (0.7 instead of 0.1) can really improve the situation (Fig. 4).
 
 ![Fig. 3](pics/xPic3.png)
 
-_Fig. 3 ó Modified system with an additional vertex (K18)_
+_Fig. 3 ‚Äî Modified system with an additional vertex (K18)_
 
 ![Fig. 4](pics/xPic4.png)
 
-_Fig. 4 ó Result of modeling the life cycle of a modified system with one additional vertex_
+_Fig. 4 ‚Äî Result of modeling the life cycle of a modified system with one additional vertex_
 
 During the modeling process, no resource deficit is observed; its volume stabilizes over time at around +0.78.
 
@@ -72,13 +72,13 @@ These options can be divided into three conditional classes:
 
 3 hybrid options that combine the two previous classes.
 
-This options for influencing the system have shown their performance in the process of modeling ìspace'n'resourceî systems.
+This options for influencing the system have shown their performance in the process of modeling ‚Äúspace'n'resource‚Äù systems.
 
 Let's consider the most effective of them (Fig. 5).
 
 ![Fig. 5](pics/xPic5.png)
 
-_Fig. 5 ó Solving the problem using an adaptive optimization algorithm for the execution of production processes based on cognitive analysis of the parameters of the production environment_
+_Fig. 5 ‚Äî Solving the problem using an adaptive optimization algorithm for the execution of production processes based on cognitive analysis of the parameters of the production environment_
 
 As you can see in the presented image, no additional vertices were introduced into the system - the AI made do with modifying existing ones and creating several new arcs on the graph.
 
@@ -90,11 +90,11 @@ As a result of applying the solution recommended by the AI, an effective solutio
 
 ![Fig. 6](pics/xPic6.png)
 
-_Fig. 6 ó Result of modeling the life cycle of a system modified according to the recommendation of the AI_
+_Fig. 6 ‚Äî Result of modeling the life cycle of a system modified according to the recommendation of the AI_
 
 ## 4 Solution obtained by the new version of AI algorithms (2023)
 
-In order to confirm the performance of new AI algorithms, a cognitive model of the subject area under study was created similar to that described above. The parameters of the cognitive map (the weights of vertices and edges) are described in the form of discrete random variables: the main (most probable value) value is taken from the old model, additional (less probable) values imitate the pluralism of opinions of experts involved in evaluating the model, introducing some ìnoiseî, which tilts the value up and down and creates a distribution of the random variable.
+In order to confirm the performance of new AI algorithms, a cognitive model of the subject area under study was created similar to that described above. The parameters of the cognitive map (the weights of vertices and edges) are described in the form of discrete random variables: the main (most probable value) value is taken from the old model, additional (less probable) values imitate the pluralism of opinions of experts involved in evaluating the model, introducing some ‚Äúnoise‚Äù, which tilts the value up and down and creates a distribution of the random variable.
 
 Otherwise, the resulting cognitive map is similar to the initial map presented above (Fig. 7).
 
@@ -104,18 +104,18 @@ Otherwise, the resulting cognitive map is similar to the initial map presented a
 
 ![Fig. 7](pics/xPic7.png)
 
-_Fig. 7 ó Result of modeling the life cycle of a system modified according to the recommendation of the AI_
+_Fig. 7 ‚Äî Result of modeling the life cycle of a system modified according to the recommendation of the AI_
 
 As a result of the simulation, in general, results were obtained that were somewhat better than the results obtained using the previous version of AI algorithms: the solution also turns out to be effective - the weight value for the target vertex (K17) stabilizes around value of 1.98 , which is even slightly higher then initial value; resource shortage is also not observed at any of the modeling steps.
 
 ![Fig. 8](pics/xPic8.png)
 
-_Fig. 8 ó Result of modeling the life cycle of a system modified according to the recommendation of a new version of the AI
+_Fig. 8 ‚Äî Result of modeling the life cycle of a system modified according to the recommendation of a new version of the AI
 
 ## 5 Solutions comparing 
 
 Comparing the solutions proposed by humans and two versions of AI algorithms (Fig. 4, 6 and 8), one can be convinced that:
-- the AI solution is more effective than the solution proposed by a human (there is no ìfailureî with the cessation or significant limitation of production at the 2nd modeling step, and the process also stabilizes more quickly),
+- the AI solution is more effective than the solution proposed by a human (there is no ‚Äúfailure‚Äù with the cessation or significant limitation of production at the 2nd modeling step, and the process also stabilizes more quickly),
 - the solution of the new AI algorithm is slightly more effective than the solution proposed by the previous version of AI (allows it to slightly exceed the initial indicators).
 <br><br>
 

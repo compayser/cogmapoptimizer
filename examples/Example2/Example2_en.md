@@ -4,20 +4,20 @@
 
 ### 1.1 Legend
 
-It is necessary to build a certain object (using the example of the construction of an object like ìDormitoryî). There is a project for the specified construction project, an integral part of which is the construction work schedule - a list of works by type, indicating their duration and sequence of execution.
+It is necessary to build a certain object (using the example of the construction of an object like ‚ÄúDormitory‚Äù). There is a project for the specified construction project, an integral part of which is the construction work schedule - a list of works by type, indicating their duration and sequence of execution.
 
 During the construction process, various delays may occur due to a variety of factors:
 + internal (for example, qualifications of employees, professionalism of management, punctuality of suppliers, etc.),
 + external (for example, weather conditions in the form of precipitation or ambient temperature).
 <br><br>
 
-These factors can significantly influence the construction process. In particular, the lack of professionalism of the involved personnel (both workers and management) can lead to a shift in the timing of each of the stages of construction and installation work ìto the rightî and to the failure of the overall construction deadlines. External factors also influence meeting construction deadlines in a similar way. For example, during construction in the Far North, works on drilling, driving piles, digging base pits is very dependent on the temperature of the soil - such work cannot be carried out in winter without additional labor costs (warming up the soil, building temporary shelters, explosive works, etc. ).
+These factors can significantly influence the construction process. In particular, the lack of professionalism of the involved personnel (both workers and management) can lead to a shift in the timing of each of the stages of construction and installation work ‚Äúto the right‚Äù and to the failure of the overall construction deadlines. External factors also influence meeting construction deadlines in a similar way. For example, during construction in the Far North, works on drilling, driving piles, digging base pits is very dependent on the temperature of the soil - such work cannot be carried out in winter without additional labor costs (warming up the soil, building temporary shelters, explosive works, etc. ).
 
 Objective: by influencing existing concepts that describe the factors influencing the construction process and the connections between them, to achieve a schedule of construction and installation work that meets or exceeds the initial expectations of the customer (that is, the original project).
 
 ### 1.2 Initial cognitive maps
 
-Due to the fact that a cognitive map that could describe the complete construction process (including tens of works and no less number of external and internal factors even for such a simple construction project as a ìDormitoryî) turns out to be overly complex. As a way out, you can use the principle of decomposition: cognitive modeling can be divided into several stages. As an example, two cognitive maps will be considered:
+Due to the fact that a cognitive map that could describe the complete construction process (including tens of works and no less number of external and internal factors even for such a simple construction project as a ‚ÄúDormitory‚Äù) turns out to be overly complex. As a way out, you can use the principle of decomposition: cognitive modeling can be divided into several stages. As an example, two cognitive maps will be considered:
 
 + Example 2a - General work, divided into large stages (preparing the foundation, installing [block boxes or shipping containers](https://www.archdaily.com/886447/lot-ek-the-shipping-container-is-a-vehicle-to-invent-new-architecture), arrangement of additional structures, interior and exterior finishing, wiring of utilities ),
 + Example 2b - Particular work, divided into stages in more detail. As an example of particular work, the stage of arrangement of a pile foundation is considered (drilling work, production, preparation and installation of piles, as well as their further preparation for use as the basis for the structure being erected).
@@ -63,7 +63,7 @@ Internal factors:
 
 ![Fig. 2](pics/yPic2.png)
 
-Fig. 2 ó Example 2b. Cognitive map of a particular stage of work (arrangement of the foundation)_
+Fig. 2 ‚Äî Example 2b. Cognitive map of a particular stage of work (arrangement of the foundation)_
 
 ## 2 Cognitive modeling
 
@@ -77,7 +77,7 @@ To modify fuzzy cognitive maps in order to work with discrete random variables, 
 2. Weighting coefficients of the cognitive map concepts (vertices of the graph) are replaced in a similar way.
 3. It is allowed (if necessary) to use arbitrary scales by normalizing not to the interval [-1;+1], but to the interval \[-X;+X\] (where X is a conditionally arbitrary value determined by the subject area in which the AI algorithms in question are used).<br><br>
 
-The data structure for storing the values of discrete random variables is proposed to be simple: discrete random variables are described as a list of known length, each element of which is a ìvalue - probabilityî pair. ìValueî is generally a real number (in some cases, if necessary, it can be represented as an integer value). A ìprobabilityî is a positive real number such that the sum of all ìprobabilitiesî in the list is strictly equal to 1 (adjusted for the available accuracy of storing numbers on the computing system used).
+The data structure for storing the values of discrete random variables is proposed to be simple: discrete random variables are described as a list of known length, each element of which is a ‚Äúvalue - probability‚Äù pair. ‚ÄúValue‚Äù is generally a real number (in some cases, if necessary, it can be represented as an integer value). A ‚Äúprobability‚Äù is a positive real number such that the sum of all ‚Äúprobabilities‚Äù in the list is strictly equal to 1 (adjusted for the available accuracy of storing numbers on the computing system used).
 
 ### 2.2 General modeling principles
 
@@ -89,15 +89,15 @@ The simulation is considered completed if the amount of work remaining to be com
 
 ### 2.3 Human Solutions
 
-The results of creating a model describing the technical processes of construction and carrying out cognitive modeling are the so-called ìburndown chartsî, which are shown in Fig. 3-4. For first example, the abscissa shows the construction time expressed in weeks, for second one - in days. The y-axis in both examples displays the amount of remaining work in conventional units.
+The results of creating a model describing the technical processes of construction and carrying out cognitive modeling are the so-called ‚Äúburndown charts‚Äù, which are shown in Fig. 3-4. For first example, the abscissa shows the construction time expressed in weeks, for second one - in days. The y-axis in both examples displays the amount of remaining work in conventional units.
 
 ![Fig. 3](pics/yPic3.png)
 
-Fig. 3 ó Example 2a. The result of cognitive modeling in the form of a task combustion diagram for a general work schedule_
+Fig. 3 ‚Äî Example 2a. The result of cognitive modeling in the form of a task combustion diagram for a general work schedule_
 
 ![Fig. 4](pics/yPic4.png)
 
-Fig. 4 ó Example 2b. The result of cognitive modeling in the form of a task combustion diagram for the schedule of a particular stage of work (laying out the foundation)_
+Fig. 4 ‚Äî Example 2b. The result of cognitive modeling in the form of a task combustion diagram for the schedule of a particular stage of work (laying out the foundation)_
 
 As can be seen from the presented graphs, the duration of work both according to the [general schedule](pics/yPlan-General.png) and the [particular stage schedule](pics/yPlan-Particular.png) coincide with those planned in accordance with the construction project. This confirms the correctness of the selection of weighting coefficients for both vertices and edges, as well as (in general) the adequacy of the proposed model.
 
@@ -109,7 +109,7 @@ The vertices of cognitive maps, which describe internal factors, are described a
 
 As a result of cognitive modeling, the following results were obtained.
 
-_Clarification._ The resulting cognitive maps display the weights of vertices and edges that are different from the original ones. This is explained by the fact that recommendations obtained on the basis of fuzzy probabilistic cognitive maps should not be probabilistic (no matter how paradoxical it may sound). A recommendation issued by an expert advisory system should not look like the advice ìTo achieve a result, with probability N, perform action A, and with probability 1-N, do not perform it.î Therefore, the weighted average of discrete random variables is taken as recommendations: it one way or another takes into account the opinion of all experts involved in creating the model, and at the same time does not coarse the final modeling results, being as close as possible to reality.
+_Clarification._ The resulting cognitive maps display the weights of vertices and edges that are different from the original ones. This is explained by the fact that recommendations obtained on the basis of fuzzy probabilistic cognitive maps should not be probabilistic (no matter how paradoxical it may sound). A recommendation issued by an expert advisory system should not look like the advice ‚ÄúTo achieve a result, with probability N, perform action A, and with probability 1-N, do not perform it.‚Äù Therefore, the weighted average of discrete random variables is taken as recommendations: it one way or another takes into account the opinion of all experts involved in creating the model, and at the same time does not coarse the final modeling results, being as close as possible to reality.
 
 ### 2.4.1 Example 2a (general work schedule)
 
@@ -117,7 +117,7 @@ For example 2a (general work schedule), a set of proposed solutions was generate
 
 ![Fig. 5](pics/yPic5.png)
 
-Fig. 5 ó Solution obtained by AI for example 2a (general work schedule)_
+Fig. 5 ‚Äî Solution obtained by AI for example 2a (general work schedule)_
 
 On the resulting cognitive map, the algorithm suggested deleting the graph edge between vertices F and E. _Interpretation: the original model assumed feedback showing that work on laying utilities inside the building slows down the production of interior decoration: a common story at a construction site, when after laying communications you have to redo damaged finish. In fact, the algorithm suggested getting rid of this factor, that is, installing communications as carefully as possible._
 
@@ -139,7 +139,7 @@ For example 2b (schedule for a particular stage of work), a set of solutions was
 
 ![Fig. 7](pics/yPic7.png)
 
-_Fig. 7 ó Solution obtained by AI for example 2b (schedule of a particular stage of work)_
+_Fig. 7 ‚Äî Solution obtained by AI for example 2b (schedule of a particular stage of work)_
 
 The algorithm suggested making three significant changes to the resulting cognitive map.
 
@@ -155,7 +155,7 @@ Cognitive modeling produces results supported by the task burndown chart (Fig. 8
 
 ![Fig. 8](pics/yPic8.png)
 
-_Fig. 8 ó Example 2b. Problem burndown diagram for the solution obtained by AI_
+_Fig. 8 ‚Äî Example 2b. Problem burndown diagram for the solution obtained by AI_
 
 ## 3 Comparison of solutions
 

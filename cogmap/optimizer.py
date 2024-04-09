@@ -4,6 +4,7 @@ import itertools as it
 import scipy.optimize as opt
 import impact_generator as ig
 import proba
+from datetime import datetime
 
 
 class SolutionData:
@@ -102,6 +103,7 @@ class Optimizer:
         res = opt.minimize(opt_func, x0, method='Nelder-Mead',
                            options={'xtol': tol, 'disp': False, 'maxiter': 200})
 
+        # added by Anton
         res_ = []
         for i in range(len(res.x)):
             temp = proba.ProbA()
@@ -142,6 +144,8 @@ class Optimizer:
         counts = np.zeros(len(cogmap.matrix))
         impulses = np.zeros(len(cogmap.matrix))
         for i in range(len(imp)):
+            # impulses[imp_v_idx[i]] = impulses[imp_v_idx[i]] + imp[i].avg()
+            # debug - new
             impulses[imp_v_idx[i]] = impulses[imp_v_idx[i]] + imp[i].build_scalar()
             counts[imp_v_idx[i]] = counts[imp_v_idx[i]] + 1
         res_imp = []
@@ -217,9 +221,20 @@ class Optimizer:
         comp_num = 0
         comp_len = len(compositions)
 
+        # DEBUG !!!
+        max_count = 150000
+
         if len(compositions):
             for comp in compositions:
-                print(f'  Processing composition #{comp_num}/{comp_len} ...')
+                # DEBUG !!!
+                comp_num += 1
+                if comp_num > max_count:
+                    break
+
+                # DEBUG !!!
+                total = comp_len if (comp_len < max_count) else max_count
+                print(f'  Processing composition #{comp_num}/{total} ...')
+                #print(f'  Processing composition #{comp_num}/{comp_len} ...')
                 if comp[0] == 1:
                     if comp[1].is_stable():
                         # Новая КК создается в get_compositions
@@ -245,13 +260,15 @@ class Optimizer:
 
         return solutions
 
-    def find_optimal_changes(self, base_cogmap: cm.CogMap, N: int, simple_structs: list[list[float]], impactgen: ig.ImpactGenerator):
+    def find_optimal_changes(self, base_cogmap: cm.CogMap, N: int, simple_structs: list[list[float]],
+                             impactgen: ig.ImpactGenerator, figures_range: list[int]):
         """
         Ищет оптимальное изменение когнитивной карты для приведения значений целевых вершин в заданные пределы
         :param base_cogmap: базовая когнитивная карта
         :param N: число шагов импульсного моделирования
         :param simple_structs: список простых структур
         :param impactgen: генератор воздействий
+        :param figures_range: список простых фигур для обработки
         :return: 0 - решений не найдено, -1 - решений не требуется, 1 - решения найдены; список композиций решений
         """
 
@@ -262,13 +279,24 @@ class Optimizer:
         print("Found %d problem vertice(s)" % len(v_bad))
 
         partial_solutions = []
+        now = datetime.now()
+        print(f"DEBUG: START 1 AT {now.strftime('%H:%M:%S')}")
         for v in v_bad:
             for i in range(len(simple_structs)):
+                # Пропуск структур, не указанных в списке figures_range
+                if i not in figures_range:
+                    continue
                 print("Processing simple structure %d for vertex id %d" % (i, v.id))
                 # Обработка простых структур
+                now = datetime.now()
+                print(f"DEBUG:   START STRUCT {i} AT {now.strftime('%H:%M:%S')}")
                 solutions = self.process_simple_structs(base_cogmap, simple_structs[i], v, N, impactgen, v_bad, max_y_er)
+                now = datetime.now()
+                print(f"DEBUG:   FINISH STRUCT {i} AT {now.strftime('%H:%M:%S')}")
                 if len(solutions):
                     partial_solutions.extend(solutions)
+        now = datetime.now()
+        print(f"DEBUG: FINISH 1 AT {now.strftime('%H:%M:%S')}")
 
         print("Found %d solution(s)" % len(partial_solutions))
         if len(partial_solutions) == 0:
@@ -276,13 +304,21 @@ class Optimizer:
 
         print("Building compositions...")
         # Формирование композиций решений
+        now = datetime.now()
+        print(f"DEBUG: START 2 AT {now.strftime('%H:%M:%S')}")
         compositions = self.build_compositions(base_cogmap, partial_solutions)
+        now = datetime.now()
+        print(f"DEBUG: FINISH 2 AT {now.strftime('%H:%M:%S')}")
 
         # Выполнение когнитивного моделирования для всех композиций. Формирование списка копозиций на основе результатов моделирования
         print("Modeling compositions...")
         composed_solutions = []
         c_num = 1
+        now = datetime.now()
+        print(f"DEBUG: START 3 AT {now.strftime('%H:%M:%S')}")
         for c in compositions:
+            now = datetime.now()
+            print(f"DEBUG:   START AT {now.strftime('%H:%M:%S')}")
             print(f"  Composition {c_num}/{len(compositions)}")
             c_num += 1
             V = []
@@ -292,6 +328,10 @@ class Optimizer:
                 initial_impulses.append(c[1].imp[i])
             impulses, bad_vertices, y_max_er = self.find_impact(c[0], V, N, impactgen, initial_impulses, True)
             composed_solutions.append(SolutionData(len(c[0].matrix) - len(base_cogmap.matrix), c[0], c[2], impulses, bad_vertices, y_max_er))
+            now = datetime.now()
+            print(f"DEBUG:   FINISH AT {now.strftime('%H:%M:%S')}")
+        now = datetime.now()
+        print(f"DEBUG: FINISH 3 AT {now.strftime('%H:%M:%S')}")
         composed_solutions.sort(key=lambda x: (len(x.bad_vertices), x.y_max_er, len(x.cogmap.matrix)))
         # возвращаем статус и данные для отчета
         return 1 if len(compositions) > 0 else 0, composed_solutions

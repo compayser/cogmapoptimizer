@@ -524,11 +524,14 @@ class CogMap:
         :param ar: матрица смежности
         :return: собственное число
         """
+        # added by Anton
         rows = min(len(self.vertices), len(ar))
         cols = min(len(self.vertices), len(ar[0]))
         ar_ = np.full((rows, cols), 0.0)
         for i in range(rows):
             for j in range(cols):
+                # ar_[i][j] = ar[i][j].avg()
+                # debug - new
                 ar_[i][j] = ar[i][j].build_scalar()
 
         w, v = np.linalg.eig(np.array(ar_))
@@ -766,6 +769,8 @@ class CogMap:
                         ym = (new_cogmap.vertices[i].y + new_cogmap.vertices[j].y) / 2
                         e.md = f"({xm},{ym})"
                         new_cogmap.edges.append(e)
+                        #debug
+                        #print(f'append e{max_e_id} = e.v1={e.v1_id}, e.v2={e.v2_id}, e.value={e.value}')
 
         max_x = new_cogmap.vertices[0].x
         max_y = new_cogmap.vertices[0].y
@@ -949,6 +954,8 @@ class CogMap:
         temp_t = temp_t.max(Y_er)
         temp_f = proba.ProbA()
         temp_f.append_value(0.0, 1.0)
+        # return temp_t.avg() if flag else temp_f.avg()
+        # debug- new
         return temp_t.build_scalar() if flag else temp_f.build_scalar()
 
     def get_compositions(self, s, vertex: Vertex):

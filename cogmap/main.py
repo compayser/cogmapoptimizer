@@ -6,25 +6,28 @@ import report
 from optimizer import Optimizer
 import time
 import proba
+# from typing import List
+
+
+def GetRangeFromArgs(args):
+    res1 = args.split(",")
+    res2 = []
+    for ii in range(len(res1)):
+        rangeIn = res1[ii].split("-")
+        if len(rangeIn) == 1:
+            res2.append(int(rangeIn[0]))
+        else:
+            for jj in range(int(rangeIn[0]), int(rangeIn[1])+1):
+                res2.append(jj)
+    print(f"{args} => {res2}")
+    return res2
+
 
 if __name__ == '__main__':
-    '''t1 = proba.ProbA()
-    t2 = proba.ProbA()
-    num = 10
-    for i in range(1, num+1):
-        t1.append_value(num - i, 1 / num)
-        t2.append_value(num - i, 1 / num)
-    t1.append_value(10, 0.000001)
-    t2.append_value(10, 0.000001)
-    if t1 != t2:
-        print("nEQ")
-    else:
-        print("EQ")
-    exit(0)
-'''
-    # входные данные - файл когнитивная карта, файл групп вершин, число шагов импульсного моделирования
+    # входные данные - файл когнитивная карта, файл групп вершин,
+    #                  число шагов импульсного моделирования, [диапазон для простых фигур]
     if len(sys.argv) < 4:
-        print("usage %s <input.cmj> <input.xyz_cmj> <pulse model steps>", sys.argv[0])
+        print("usage %s <input.cmj> <input.xyz_cmj> <pulse_model_steps> [simple_figures_range]", sys.argv[0])
         exit(-1)
 
     start_time = time.time()
@@ -35,6 +38,20 @@ if __name__ == '__main__':
 
     optimizer = Optimizer()
     simple_structs = optimizer.get_simple_structs()
+
+    # диапазон обработки (какие из простых фигур надо обработать)
+    if len(sys.argv) == 5:
+        Range = GetRangeFromArgs(sys.argv[4])
+        Range = sorted(Range)
+        if Range[0] < 0 or Range[len(Range)-1] > len(simple_structs)-1:
+            Range: list[int] = []
+            for ii in range(0, len(simple_structs)):
+                Range.append(ii)
+    else:
+        Range: list[int] = []
+        for ii in range(0, len(simple_structs)):
+            Range.append(ii)
+
     impactgen = ig.ImpactGenerator()
 
     # чтение конфигурации когнитивной карты и входных данных
@@ -46,7 +63,7 @@ if __name__ == '__main__':
     base_cogmap = cm.CogMap()
     base_cogmap.fill_from_json(cogmap_json, cogmap_xyz_json)
     print("Analyzing...")
-    res, data = optimizer.find_optimal_changes(base_cogmap, N, simple_structs, impactgen)
+    res, data = optimizer.find_optimal_changes(base_cogmap, N, simple_structs, impactgen, Range)
     if res == -1:
         print("Problems not found")
         exit(0)

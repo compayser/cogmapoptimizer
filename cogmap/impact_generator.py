@@ -56,18 +56,24 @@ class ImpactGenerator:
         data.extend(m)
         data.extend(np.zeros((32 ** 2) - len(m)))
 
+        # added by Anton
         data_ = []
         for i in range(len(data)):
             if isinstance(data[i], proba.ProbA):
+                # data_.append(data[i].avg())
+                # debug - new
                 data_.append(data[i].build_scalar())
             else:
                 data_.append(data[i])
         data = data_
 
         all_impulses_sum = self.model.predict([data])
+        # added by Anton
         growths_ = []
         for i in range(len(growths)):
             if isinstance(growths[i], proba.ProbA):
+                # growths_.append(growths[i].avg())
+                # debug - new
                 growths_.append(growths[i].build_scalar())
             else:
                 growths_.append(growths[i])

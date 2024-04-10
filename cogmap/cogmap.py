@@ -9,7 +9,7 @@ class Impulses:
     """Описывает серию импульсов (воздействий) на когнитивную карту"""
     __slots__ = ("imp", "v_imp")
 
-    qdef __init__(self, imp, v_imp):
+    def __init__(self, imp, v_imp):
         """
 
         :param imp:

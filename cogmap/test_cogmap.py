@@ -1,24 +1,31 @@
-from unittest import TestCase
-import itertools as it
-
 import proba
-from cogmap import CogMap, Vertex, Edge, Impulses
 import numpy as np
+from unittest import TestCase
+from cogmap import CogMap, Vertex, Edge, Impulses
 
 
 class TestVertex(TestCase):
+    """
+    Тест вершины
+    """
     pass
 
 
 class TestEdge(TestCase):
+    """
+    Тест ребра
+    """
     pass
 
 
 class TestCogMap(TestCase):
+    """
+    Тест когнитивной карты
+    """
     def setUp(self) -> None:
         v = []
         e = []
-        # Vertices
+        # Вершины
         rnd1 = proba.ProbA()
         rnd2 = proba.ProbA()
         rnd1.append_value(8, 1)
@@ -34,7 +41,7 @@ class TestCogMap(TestCase):
         rnd5.append_value(2, 1)
         rnd6.append_value(11, 1)
         v.append(Vertex(38, rnd5, -0.5, 2.4, rnd6, "gillian"))
-        # Edges
+        # Ребра
         rnd7 = proba.ProbA()
         rnd7.append_value(0.1, 1)
         e.append(Edge(452, 27, 42, rnd7, "A"))
@@ -44,15 +51,21 @@ class TestCogMap(TestCase):
         rnd9 = proba.ProbA()
         rnd9.append_value(-0.2, 1)
         e.append(Edge(458, 27, 38, rnd9, "C"))
-        # C-map
+        # Когнитивная карта
         self.c = CogMap(v, e)
 
     def test_vertex_idx_by_id(self):
+        """
+        Тест вершин
+        """
         self.assertEqual(self.c.vertex_idx_by_id(27), 0)
         self.assertEqual(self.c.vertex_idx_by_id(42), 1)
         self.assertEqual(self.c.vertex_idx_by_id(38), 2)
 
     def test_rebuild_matrix(self):
+        """
+        Тест перестроения матрицы
+        """
         m1 = self.c.matrix
         rnd0 = proba.ProbA()
         rnd0.append_value(0, 1)
@@ -83,7 +96,10 @@ class TestCogMap(TestCase):
         self.c.edges.append(Edge(112, 21, 27, rnd08, "B"))
         self.c.edges.append(Edge(111, 38, 27, rnd01, "C"))
         self.c.rebuild_matrix()
-        m2 = np.array([[rnd0, rnd01, rnd02_, rnd0], [rnd0, rnd0, rnd03, rnd0], [rnd01, rnd0, rnd0, rnd06], [rnd08, rnd0, rnd0, rnd0]])
+        m2 = np.array([[rnd0, rnd01, rnd02_, rnd0],
+                       [rnd0, rnd0, rnd03, rnd0],
+                       [rnd01, rnd0, rnd0, rnd06],
+                       [rnd08, rnd0, rnd0, rnd0]])
         count = 0
         for i in range(len(m2)):
             for j in range(len(m2[i])):
@@ -93,6 +109,9 @@ class TestCogMap(TestCase):
         self.assertTrue(count == 0)
 
     def test_add_vertex(self):
+        """
+        Тест добавления вершин
+        """
         n = len(self.c.vertices)
         rnd101 = proba.ProbA()
         rnd101.append_value(101, 1)
@@ -109,7 +128,10 @@ class TestCogMap(TestCase):
         rnd02.append_value(-0.2, 1)
         rnd03 = proba.ProbA()
         rnd03.append_value(0.3, 1)
-        m2 = np.array([[rnd0, rnd01, rnd02, rnd0], [rnd0, rnd0, rnd03, rnd0], [rnd0, rnd0, rnd0, rnd0], [rnd0, rnd0, rnd0, rnd0]])
+        m2 = np.array([[rnd0, rnd01, rnd02, rnd0],
+                       [rnd0, rnd0, rnd03, rnd0],
+                       [rnd0, rnd0, rnd0, rnd0],
+                       [rnd0, rnd0, rnd0, rnd0]])
         count = 0
         for i in range(len(m2)):
             for j in range(len(m2[i])):
@@ -119,6 +141,9 @@ class TestCogMap(TestCase):
         self.assertTrue(count == 0)
 
     def test_add_edge(self):
+        """
+        Тест добавления ребер
+        """
         n = len(self.c.edges)
         rnd = proba.ProbA()
         rnd.append_value(2, 1)
@@ -145,6 +170,9 @@ class TestCogMap(TestCase):
         self.assertTrue(count == 0)
 
     def test_rem_vertex(self):
+        """
+        Тест удаления вершин
+        """
         n = len(self.c.vertices)
         self.c.rem_vertex(27)
         self.assertEqual(len(self.c.vertices), n - 1)
@@ -163,6 +191,9 @@ class TestCogMap(TestCase):
         self.assertTrue(count == 0)
 
     def test_rem_edge(self):
+        """
+        Тест удаления ребер
+        """
         n = len(self.c.edges)
         self.c.rem_edge(452)
         self.assertEqual(len(self.c.edges), n - 1)
@@ -183,9 +214,12 @@ class TestCogMap(TestCase):
         self.assertTrue(count == 0)
 
     def test_pulse_calc(self):
-        # cycles count
+        """
+        Тест вычисления воздействия
+        """
+        # Число циклов
         steps = 1
-        # put start impulses to V0 with val = 1.1 and to V2 with val = -1.2
+        # Ставим стартовые импульсы на V0 с val=1,1 и на V2 с val=-1,2
         rnd11 = proba.ProbA()
         rnd11.append_value(1.1, 1)
         rnd12_ = proba.ProbA()
@@ -207,9 +241,9 @@ class TestCogMap(TestCase):
                 count -= 1
         self.assertEqual(count, 0)
 
-        # cycles count
+        # Число циклов
         steps = 2
-        # put start impulses to V0 with val = 1.1 and to V2 with val = -1.2
+        # Ставим стартовые импульсы на V0 с val=1,1 и на V2 с val=-1,2
         q = [rnd11, rnd12_]
         vq = [0, 2]
         res = self.c.pulse_calc(q, vq, steps)
@@ -227,9 +261,9 @@ class TestCogMap(TestCase):
                 count -= 1
         self.assertEqual(count, 0)
 
-        # cycles count
+        # Число циклов
         steps = 5
-        # put start impulses to V0 with val = 1.1 and to V2 with val = -1.2
+        # Ставим стартовые импульсы на V0 с val=1,1 и на V2 с val=-1,2
         q = [rnd11, rnd12_]
         vq = [0, 2]
         res = self.c.pulse_calc(q, vq, steps)
@@ -248,6 +282,9 @@ class TestCogMap(TestCase):
         self.assertEqual(count, 0)
 
     def test_eig_vals_calc(self):
+        """
+        Тест вычисления собственных значений
+        """
         self.vertices = (1, 2)
         rnd1 = proba.ProbA()
         rnd1.append_value(-1, 1.0)
@@ -263,21 +300,29 @@ class TestCogMap(TestCase):
         self.assertEqual(m, 3)
 
     def test_simplex_calc(self):
+        """
+        Тест вычисления симплексов
+        """
         self.assertEqual(self.c.simplex_calc(0), [])
         self.assertEqual(self.c.simplex_calc(1), [0])
         self.assertEqual(self.c.simplex_calc(2), [0, 1])
 
     def test_cycles_calc(self):
+        """
+        Тест вычисления циклов
+        """
         ar = [[0, -1, 1, 1],
               [1, 0, -1, 1],
               [1, 1, 0, -1],
               [-1, 1, 1, 0]]
-
         count, neg = self.c.cycles_calc(ar)
         self.assertEqual(count, 20)
         self.assertEqual(neg, 8)
 
     def test_rem_edge_by_vertices(self):
+        """
+        Тест удаления ребра по вершинам
+        """
         n = len(self.c.edges)
         self.c.rem_edge_by_vertices(27, 42)
         self.assertEqual(len(self.c.edges), n - 1)
@@ -298,6 +343,9 @@ class TestCogMap(TestCase):
         self.assertTrue(count == 0)
 
     def test_sy1(self):
+        """
+        Тест вычисления симплекса для одной вершины
+        """
         ar = [[0, -1, 1, 1], [1, 0, -1, 1], [1, 1, 0, -1], [-1, 1, 1, 0]]
         self.assertEqual(self.c.sy1(ar, 0), [1, 2, 3])
         self.assertEqual(self.c.sy1(ar, 1), [0, 2, 3])
@@ -305,10 +353,16 @@ class TestCogMap(TestCase):
         self.assertEqual(self.c.sy1(ar, 3), [0, 1, 2])
 
     def test_sy(self):
+        """
+        Тест вычисления всех симплициальных комплексов
+        """
         ar = [[0, -1, 1, 1], [1, 0, -1, 1], [1, 1, 0, -1], [-1, 1, 1, 0]]
         self.assertEqual(self.c.sy(ar), [[[0], [1], [2], [3]], [[0, 1, 2, 3]]])
 
     def test_combo_v(self):
+        """
+        Тест вычисления композиции выбранной простой структуры
+        """
         rnd1 = proba.ProbA()
         rnd1.append_value(-1, 1)
         rnd0 = proba.ProbA()
@@ -350,7 +404,7 @@ class TestCogMap(TestCase):
                 [rnd41, rnd42, rnd43, rnd0]]
         k1 = np.array(ar)
         s1 = np.array(sim2)
-        # Example 1 - merge graph with 2D by 1 vertex
+        # Пример 1 - объединить граф с 2D по 1 вершине
         res1 = [[rnd0, rnd1, rnd1, rnd1, rnd1, rnd0],
                 [rnd1, rnd0, rnd1, rnd1, rnd1, rnd0],
                 [rnd1, rnd1, rnd0, rnd1, rnd1, rnd21],
@@ -367,7 +421,7 @@ class TestCogMap(TestCase):
                     count -= 1
         self.assertTrue(count == 0)
 
-        # Example 2 - merge graph with 2D by 2 vertex
+        # Пример 2 - объединить граф с 2D по 2 вершинам
         k1 = np.array(ar)
         s1 = np.array(sim2)
         res2 = [[rnd0, rnd1, rnd1, rnd1, rnd1],
@@ -384,7 +438,7 @@ class TestCogMap(TestCase):
                     count -= 1
         self.assertTrue(count == 0)
 
-        # Example 3 - merge graph with 4D by 3 vertex
+        # Пример 3 - # Пример 3 - объединить граф с 4D по 3 вершине
         k1 = np.array(ar)
         s1 = np.array(sim4)
         res3 = [[rnd0, rnd13, rnd1, rnd14, rnd1, rnd12],
@@ -403,6 +457,9 @@ class TestCogMap(TestCase):
         self.assertTrue(count == 0)
 
     def test_get_composition(self):
+        """
+        Тест формирования композиции выбранной простой структуры
+        """
         rnd0 = proba.ProbA()
         rnd0.append_value(0, 1)
         rnd1 = proba.ProbA()
@@ -445,9 +502,10 @@ class TestCogMap(TestCase):
                     count -= 1
         self.assertTrue(count == 0)
 
-
-
     def test_pulse_model(self):
+        """
+        Тест импульсного моделирования
+        """
         rnd11 = proba.ProbA()
         rnd11.append_value(1.1, 1)
         rnd12_ = proba.ProbA()
@@ -465,15 +523,27 @@ class TestCogMap(TestCase):
 
 
 class TestProbVal(TestCase):
+    """
+    Тест вероятностного числа
+    """
     pass
 
 
 class TestProbA(TestCase):
+    """
+    Тесты ДСВ-арифметики
+    """
     @classmethod
-    def setUpClass(self) -> None:
-        self.rnd = proba.ProbA()
+    def setUpClass(cls) -> None:
+        """
+        Инициализация экземпляра класса
+        """
+        cls.rnd = proba.ProbA()
 
     def test_proba_append_value(self):
+        """
+        Тест добавления описаний "величина/вероятность" в ДСВ-величину
+        """
         self.rnd.vals.clear()
         for i in range(4):
             val = (i + 1) / 10
@@ -493,18 +563,21 @@ class TestProbA(TestCase):
         self.assertEqual(count, 4)
 
     def test_proba_check_probs(self):
-        # Subtest 1
+        """
+        Тест проверки ДСВ-величины
+        """
+        # Подтест 1
         res = self.rnd.check_probs()
         self.assertEqual(res, 0)
 
-        # Subtest 2
+        # Подтест 2
         val = 0.0
         prob = 0.2
         self.rnd.append_value(val, prob)
         res = self.rnd.check_probs()
         self.assertEqual(res > 0, True)
 
-        # Subtest 3
+        # Подтест 3
         self.rnd.vals.clear()
         val = 0.0
         prob = 0.2
@@ -513,6 +586,9 @@ class TestProbA(TestCase):
         self.assertEqual(res < 0, True)
 
     def test_proba_check_reduce(self):
+        """
+        Тест проверки редукции ДСВ-величины
+        """
         self.rnd.vals.clear()
         for i in range(100):
             val = i
@@ -520,7 +596,7 @@ class TestProbA(TestCase):
             self.rnd.append_value(val, prob)
         self.rnd.reduce(10)
         count = 0
-        if self.rnd.vals[0].value ==  5.000000000000001 and self.rnd.vals[0].prob == 0.10999999999999999:
+        if self.rnd.vals[0].value == 5.000000000000001 and self.rnd.vals[0].prob == 0.10999999999999999:
             count += 1
         if self.rnd.vals[1].value == 16.000000000000004 and self.rnd.vals[1].prob == 0.10999999999999999:
             count += 1
@@ -543,6 +619,9 @@ class TestProbA(TestCase):
         self.assertEqual(count, 10)
 
     def test_proba_check_maths(self):
+        """
+        Тест проверки ДСВ-арифметики
+        """
         rnd1 = proba.ProbA()
         rnd1.append_value(1.0, 0.5)
         rnd1.append_value(2.0, 0.5)
@@ -552,7 +631,7 @@ class TestProbA(TestCase):
         rnd2.append_value(3.0, 0.3)
         rnd2.append_value(4.0, 0.4)
 
-        # Subtest 1 - Add
+        # Подтест 1 - сложение
         rnd_res = rnd1 + rnd2
         count = 0
         if rnd_res.vals[0].value == 2.0 and rnd_res.vals[0].prob == 0.05:
@@ -567,7 +646,7 @@ class TestProbA(TestCase):
             count += 1
         self.assertEqual(count, 5)
 
-        # Subtest 2 - Subtract
+        # Подтест 2 - вычитание
         rnd_res = rnd1 - rnd2
         count = 0
         if rnd_res.vals[0].value == -3.0 and rnd_res.vals[0].prob == 0.2:
@@ -582,7 +661,7 @@ class TestProbA(TestCase):
             count += 1
         self.assertEqual(count, 5)
 
-        # Subtest 3 - Multiply
+        # Подтест 3 - умножение
         rnd_res = rnd1 * rnd2
         count = 0
         if rnd_res.vals[0].value == 1.0 and rnd_res.vals[0].prob == 0.05:
@@ -599,7 +678,7 @@ class TestProbA(TestCase):
             count += 1
         self.assertEqual(count, 6)
 
-        # Subtest 4 - Divide
+        # Подтест 4 - деление
         rnd_res = rnd1 / rnd2
         count = 0
         if rnd_res.vals[0].value == 0.25 and rnd_res.vals[0].prob == 0.2:
@@ -617,6 +696,9 @@ class TestProbA(TestCase):
         self.assertEqual(count, 6)
 
     def test_proba_check_compares(self):
+        """
+        Тесты сравнения ДСВ-величин
+        """
         rnd1 = proba.ProbA()
         rnd1.append_value(1.0, 0.5)
         rnd1.append_value(2.0, 0.5)
@@ -629,19 +711,22 @@ class TestProbA(TestCase):
         rnd3.append_value(1.0, 0.5)
         rnd3.append_value(2.0, 0.5)
 
-        # Subtest 1 - Greater
+        # Подтест 1 - больше
         self.assertEqual(rnd1 > rnd2, False)
-        # Subtest 2 - Greater or equal
+        # Подтест 2 - больше или равно
         self.assertEqual(rnd1 >= rnd3, False)
-        # Subtest 3 - Less
+        # Подтест 3 - меньше
         self.assertEqual(rnd1 < rnd2, True)
-        # Subtest 4 - Less or equal
+        # Подтест 4 - меьше или равно
         self.assertEqual(rnd1 <= rnd3, False)
-        # Subtest 5 - Not equal
+        # Подтест 5 - не равно
         self.assertEqual(rnd1 != rnd2, True)
         self.assertEqual(rnd1 != rnd3, False)
 
     def test_proba_check_addons(self):
+        """
+        Тест дополнительного функционала
+        """
         rnd1 = proba.ProbA()
         rnd1.append_value(1.0, 0.5)
         rnd1.append_value(2.0, 0.5)
@@ -657,73 +742,76 @@ class TestProbA(TestCase):
         rnd4.append_value(10.0, 1.0)
         rnd5 = proba.ProbA()
 
-        # Subtest 1 - Average
+        # Подтест 1 - среднее
         self.assertEqual(rnd1.avg(), +1.5)
         self.assertEqual(rnd2.avg(), +3.0)
         self.assertEqual(rnd3.avg(), -1.5)
 
-        # Subtest 2 - Minimum
+        # Подтест 2 - минимум
         arr = [rnd1, rnd2, rnd3]
         min_rnd = min(arr)
         self.assertEqual(min_rnd.avg(), -1.5)
 
-        # Subtest 3 - Maximum
+        # Подтест 3 - максимум
         arr = [rnd1, rnd2, rnd3]
         min_rnd = max(arr)
         self.assertEqual(min_rnd.avg(), +3.0)
 
-        # Subtest 4 - Absolute
+        # Подтест 4 - модуль
         self.assertEqual(not (rnd1.abs() != rnd1), True)
         rnd3.abs()
         self.assertEqual(rnd3.avg(), +1.5)
 
-        # Subtest 5 - Max probability
+        # Подтест 5 - максимальная вероятность
         self.assertEqual(rnd2.max_prob(), 4.0)
         self.assertEqual(rnd4.max_prob(), 10.0)
         self.assertEqual(rnd5.max_prob(), None)
 
-        # Subtest 6 - Min probability
+        # Подтест 6 - минимальная вероятность
         self.assertEqual(rnd2.min_prob(), 1.0)
         self.assertEqual(rnd4.min_prob(), 10.0)
         self.assertEqual(rnd5.min_prob(), None)
 
-        # Subtest 7 - Second Max probability
+        # Подтест 7 - вторая по величине максимальная вероятность
         self.assertEqual(rnd2.max2_prob(), 3.0)
         self.assertEqual(rnd4.max2_prob(), 10.0)
         self.assertEqual(rnd5.max2_prob(), None)
 
-        # Subtest 8 - Second Min probability
+        # Подтест 8 - вторая по величине минимальная вероятность
         self.assertEqual(rnd2.min2_prob(), 2.0)
         self.assertEqual(rnd4.min2_prob(), 10.0)
         self.assertEqual(rnd5.min2_prob(), None)
 
     def test_proba_build_scalar(self):
+        """
+        Тест конвертации ДСВ-величины в скаляр
+        """
         rnd = proba.ProbA()
         rnd.append_value(1.0, 0.1)
         rnd.append_value(2.0, 0.2)
         rnd.append_value(3.0, 0.3)
         rnd.append_value(4.0, 0.4)
 
-        # Subtest 1 - None
+        # Подтест 1 - ошибка
         rnd.BUILD_SCALAR = 'trash'
         self.assertEqual(rnd.build_scalar(), None)
 
-        # Subtest 2 - Average
+        # Подтест 2 - среднее
         rnd.BUILD_SCALAR = 'avg'
         self.assertEqual(rnd.build_scalar(), 3.0)
 
-        # Subtest 3 - Maximum
+        # Подтест 3 - максимум
         rnd.BUILD_SCALAR = 'max'
         self.assertEqual(rnd.build_scalar(), 4.0)
 
-        # Subtest 4 - Minimum
+        # Подтест 4 - минимум
         rnd.BUILD_SCALAR = 'min'
         self.assertEqual(rnd.build_scalar(), 1.0)
 
-        # Subtest 5 - Average maximum
+        # Подтест 5 - средний максимум
         rnd.BUILD_SCALAR = 'max_avg'
         self.assertEqual(rnd.build_scalar(), 3.5)
 
-        # Subtest 6 - Average minimum
+        # Подтест 6 - средний минимум
         rnd.BUILD_SCALAR = 'min_avg'
         self.assertEqual(rnd.build_scalar(), 1.5)

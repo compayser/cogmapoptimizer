@@ -1,8 +1,9 @@
-import numpy as np
 import copy
 import json
-import itertools as it
 import proba
+import numpy as np
+import itertools as it
+from typing import List, Tuple
 
 
 class Impulses:
@@ -11,9 +12,9 @@ class Impulses:
 
     def __init__(self, imp, v_imp):
         """
-
-        :param imp:
-        :param v_imp:
+        Конструктор
+        :param imp: воздействия
+        :param v_imp: вершины для воздействий
         """
         self.imp = imp
         self.v_imp = v_imp
@@ -21,31 +22,30 @@ class Impulses:
 
 class Vertex:
     """Описывает вершину когнитивной карты"""
-    __slots__ = ("id", "value", "min", "max", "impulse", "name", "idx", "short_name", "color", "show", "growth", "x", "y")
+    __slots__ = ("id", "value", "min", "max", "impulse", "name", "idx",
+                 "short_name", "color", "show", "growth", "x", "y")
 
-    def __init__(self, id: int, value: proba.ProbA, min: float, max: float, impulse: proba.ProbA, name: str):
+    def __init__(self, id: int, value: proba.ProbA, min_: float, max_: float, impulse: proba.ProbA, name: str):
         """
-
-        :param id:
-        :param value:
-        :param min:
-        :param max:
-        :param impulse:
-        :param name:
+        Конструктор
+        :param id: идентификатор вершины
+        :param value: вес вершины
+        :param min_: минимальное значение веса
+        :param max_: максимальное значение веса
+        :param impulse: воздействие
+        :param name: название вершины
         """
         self.id = id
         self.value = value
-        self.min = min
-        self.max = max
-        # old self.impulse = impulse
+        self.min = min_
+        self.max = max_
         self.impulse = proba.ProbA()
         self.impulse = impulse
         self.name = name
-        self.idx = -1  # используется в работе
+        self.idx = -1  # Используется в работе
         self.short_name = ""
         self.color = "0x808080ff"
         self.show = "false"
-        # old self.growth = 0.0
         self.growth = proba.ProbA()
         self.growth.append_value(0.0, 1.0)
         self.x = 0.0
@@ -57,6 +57,14 @@ class Edge:
     __slots__ = ("id", "v1_id", "v2_id", "value", "name", "formula", "md", "color")
 
     def __init__(self, id: int, v1_id: int, v2_id: int, value: proba.ProbA, name: str):
+        """
+        Конструктор
+        :param id: идентификатор ребра
+        :param v1_id: идентификатор вершины 1
+        :param v2_id: идентификатор вершины 2
+        :param value: вес ребра
+        :param name: название ребра
+        """
         self.id = id
         self.v1_id = v1_id
         self.v2_id = v2_id
@@ -69,27 +77,26 @@ class Edge:
 
 class CogMap:
     """Описывает когнитивную карту"""
-    __slots__ = ("X", "Y", "Z", "vertices", "edges", "matrix", "edge_ids", "vertex_ids", "cognimod_settings", "cognimod_map_title", "pulse_calc_log")
+    __slots__ = ("X", "Y", "Z", "vertices", "edges", "matrix", "edge_ids",
+                 "vertex_ids", "cognimod_settings", "cognimod_map_title", "pulse_calc_log")
 
-    def __init__(self, vertices=[], edges=[]):
+    def __init__(self, vertices=None, edges=None):
         """
-
-        :param vertices:
-        :param edges:
+        Конструктор
+        :param vertices: массив вершин
+        :param edges: массив ребер
         """
-        """
-        Конструктор.
-        ``vertices`` - массив вершин
-        ``edged`` - массив ребер
-        """
-        # X - множество входных, управляющих воздействий, автономно задаваемых СППР или ЛПР, или во взаимодействии с ЛПР
+        if edges is None:
+            edges = []
+        if vertices is None:
+            vertices = []
+        # X - Множество входных, управляющих воздействий, автономно задаваемых СППР или ЛПР, или во взаимодействии с ЛПР
         self.X = []
-        # Y - множество оптимизируемых выходных показателей
+        # Y - Множество оптимизируемых выходных показателей
         self.Y = []
-        # Z - множество контролируемых, но неуправляемых возмущающих воздействий внешней и внутренней среды
+        # Z - Множество контролируемых, но неуправляемых возмущающих воздействий внешней и внутренней среды
         self.Z = []
         self.vertices = vertices
-        # self.vertices = np.empty((0,), dtype=proba.ProbA)
         self.edges = edges
         self.matrix = None
         self.edge_ids = []
@@ -128,7 +135,6 @@ class CogMap:
             v_value = proba.ProbA()
             v_min = 0.0
             v_max = 0.0
-            # old v_impulse = 0.0
             v_impulse = proba.ProbA()
             v_impulse.append_value(0.0, 1.0)
             v_name = ""
@@ -136,7 +142,6 @@ class CogMap:
             v_short_name = ""
             v_color = ""
             v_show = ""
-            # old v_growth = 0.0
             v_growth = proba.ProbA()
             v_growth.append_value(0.0, 1.0)
             v_x = 0.0
@@ -165,7 +170,6 @@ class CogMap:
                 elif item_split[0] == "max":
                     v_max = float(item[1])
                 elif item_split[0] == "impulse":
-                    # old v_impulse = float(item[1])
                     v_impulse = proba.ProbA()
                     v_impulse.append_value(float(item[1]), 1.0)
                 elif item_split[0] == "fullName":
@@ -177,7 +181,6 @@ class CogMap:
                 elif item_split[0] == "show":
                     v_show = item[1]
                 elif item_split[0] == "growth":
-                    # old v_growth = float(item[1])
                     v_growth = proba.ProbA()
                     v_growth.append_value(float(item[1]), 1.0)
                 elif item_split[0] == "x":
@@ -254,7 +257,6 @@ class CogMap:
                         imp_v = item[1]
                 for v in V:
                     if v.id == imp_v:
-                        # old v.impulse = imp_val
                         v.impulse = proba.ProbA()
                         v.impulse.append_value(imp_val, 1.0)
                         break
@@ -311,12 +313,10 @@ class CogMap:
         """
         self.rebuild_indexes()
 
-        # old self.matrix = np.zeros((len(self.vertices), len(self.vertices)))
         tmp_prob = proba.ProbA()
         tmp_prob.append_value(0.0, 1.0)
         self.matrix = np.full((len(self.vertices), len(self.vertices)), tmp_prob)
 
-        col, row = 0, 0
         for i in range(len(self.vertices)):
             vid = self.vertex_ids[i]
             for e in self.edges:
@@ -377,7 +377,7 @@ class CogMap:
 
     def rem_edge(self, id):
         """
-        Удаляет ребро
+        Удаляет ребро по его идентификатору
         :param id: идентификатор ребра
         :return:
         """
@@ -390,7 +390,7 @@ class CogMap:
 
     def rem_edge_by_vertices(self, v1_id, v2_id):
         """
-        Удаляет ребро
+        Удаляет ребро по его вершинам
         :param v1_id: идентификатор вершины 1
         :param v2_id: идентификатор вершины 2
         :return:
@@ -428,12 +428,9 @@ class CogMap:
         :return: массив новых значений вершин
         """
         n = len(self.matrix)
-        # v0 = [self.vertices[i].value for i in range(n)]
-        # p0 = [self.vertices[i].growth for i in range(n)]
         v0 = []
         p0 = []
-        #v0 = [self.vertices[i].value for i in range(n)]
-        #p0 = [self.vertices[i].growth for i in range(n)]
+        v1 = []
         for i in range(n):
             if isinstance(self.vertices[i].value, float):
                 temp = proba.ProbA()
@@ -450,16 +447,12 @@ class CogMap:
             self.init_pulse_calc_log(p0)
             self.append_pulse_calc_log(v0)
         for s in range(st):
-            # old v1 = [0.0 for i in range(n)]
-            # old p1 = [0.0 for i in range(n)]
             tmp_prob = proba.ProbA()
-            tmp_prob.append_value(0.0, 1.0) # ???
-            v1 = [tmp_prob for i in range(n)]
-            p1 = [tmp_prob for i in range(n)]
+            tmp_prob.append_value(0.0, 1.0)
+            v1 = [tmp_prob for _ in range(n)]
+            p1 = [tmp_prob for _ in range(n)]
             for v in range(n):
-                # old v1[v] = v0[v] + p0[v]
                 v1[v] = v0[v]+p0[v]
-                # old if p0[v] == 0:
                 if len(p0[v].vals) == 0 or p0[v].vals[0].value == 0:
                     continue
                 for e in range(n):
@@ -473,11 +466,9 @@ class CogMap:
         return v1
 
     @staticmethod
-    #@numba.njit(fastmath=True)
-    #def pulse_calc_opt(matrix: list[list[float]], vertices_value: list[float], vertices_growth: list[float], qq: list[float], vvq: list[int], st: int):
     def pulse_calc_opt(matrix,
-                       vertices_value, # : list[proba.ProbA]
-                       vertices_growth, # : list[proba.ProbA]
+                       vertices_value: List[proba.ProbA],
+                       vertices_growth: List[proba.ProbA],
                        qq, vvq, st):
         """
         Выполняет импульсное моделирование (ускоренная и сокращенная версия метода)
@@ -491,6 +482,7 @@ class CogMap:
         """
         n = len(matrix)
         v0 = vertices_value[:]
+        v1 = []
         for i in range(n):
             if isinstance(v0[i], float):
                 temp = proba.ProbA()
@@ -504,8 +496,8 @@ class CogMap:
         tmp = proba.ProbA()
         tmp.append_value(0.0, 1.0)
         for s in range(st):
-            v1 = [tmp for i in range(n)]
-            p1 = [tmp for i in range(n)]
+            v1 = [tmp for _ in range(n)]
+            p1 = [tmp for _ in range(n)]
             for v in range(n):
                 v1[v] = v0[v] + p0[v]
                 if p0[v] == 0:
@@ -524,14 +516,11 @@ class CogMap:
         :param ar: матрица смежности
         :return: собственное число
         """
-        # added by Anton
         rows = min(len(self.vertices), len(ar))
         cols = min(len(self.vertices), len(ar[0]))
         ar_ = np.full((rows, cols), 0.0)
         for i in range(rows):
             for j in range(cols):
-                # ar_[i][j] = ar[i][j].avg()
-                # debug - new
                 ar_[i][j] = ar[i][j].build_scalar()
 
         w, v = np.linalg.eig(np.array(ar_))
@@ -559,84 +548,79 @@ class CogMap:
         :return: число циклов, число отрицательных циклов
         """
 
-        def dfs(gr: list[list[float]], start: int, v: int, depth: int, stack: np.ndarray, visited: list[bool],
-                cycles: list[np.ndarray], count: int) -> tuple[np.ndarray, list[bool], list[list[int]], int]:
+        def dfs(gr: List[List[float]], start: int, v: int, depth: int, stack: np.ndarray, visited: List[bool],
+                cycles_lst: List[np.ndarray], counter: int) -> Tuple[np.ndarray, List[bool], List[List[int]], int]:
             """
-
             :param gr:
             :param start:
             :param v:
             :param depth:
             :param stack:
             :param visited:
-            :param cycles:
-            :param count:
+            :param cycles_lst:
+            :param counter:
             :return:
             """
             stack = np.append(stack, v)
             if visited[v]:
-                if start == v:  # found a path
+                if start == v:  # Путь найден
                     cycle = np.array(stack)
-                    cycles.append(cycle)
-                    count = count + 1
-
+                    cycles_lst.append(cycle)
+                    counter += 1
                 stack = np.delete(stack, len(stack) - 1)
             else:
                 visited[v] = True
                 links = np.array(gr[v])
                 for l in range(len(gr)):
                     if links[l] != 0:
-                        stack, visited, cycles, count = dfs(gr, start, l, depth + 1, stack, visited, cycles, count)
+                        stack, visited, cycles_lst, counter = dfs(gr, start, l, depth + 1, stack, visited,
+                                                                  cycles_lst, counter)
                 visited[v] = False
                 stack = np.delete(stack, len(stack) - 1)
-            return stack, visited, cycles, count
+            return stack, visited, cycles_lst, counter
 
-        def markSign(ar, cycles):
+        def markSign(arr, cycles_lst):
             """
-
-            :param ar:
-            :param cycles:
+            :param arr:
+            :param cycles_lst:
             :return:
             """
             n = len(cycles)
-            nOfNeg = 0
-            signs = np.array([1 for i in range(n)])
+            nOfNeg_ = 0
+            signs_ = np.array([1 for _ in range(n)])
             for j in range(n):
-                cycle = cycles[j]
+                cycle = cycles_lst[j]
                 v0 = cycle[0]
                 for i in range(len(cycle) - 1):
                     v = cycle[i + 1]
-                    if ar[v0][v] < 0:
-                        signs[j] = signs[j] * -1
+                    if arr[v0][v] < 0:
+                        signs_[j] = signs_[j] * -1
                     v0 = v
-                if signs[j] < 0:
-                    nOfNeg = nOfNeg + 1
-            return nOfNeg, signs
+                if signs_[j] < 0:
+                    nOfNeg_ += 1
+            return nOfNeg_, signs_
 
-        def allCyclesDirectedmain(ar: list[list[float]]) -> tuple[list[np.ndarray], int]:
+        def allCyclesDirectedMain(arr: List[List[float]]) -> Tuple[List[np.ndarray], int]:
             """
-
-            :param ar:
+            :param arr:
             :return:
             """
-            n = len(ar)
+            n = len(arr)
             stack = np.array([], dtype='i4')
-            cycles = []
-            visited = [False for i in range(n)]
-            count = 0
+            cycles_lst = []
+            visited = [False for _ in range(n)]
+            counter = 0
             depth = 1
-
             for v in range(n):
-                stack, visited, cycles, count = dfs(ar, v, v, depth, stack, visited, cycles, count)
+                stack, visited, cycles_lst, counter = dfs(ar, v, v, depth, stack, visited, cycles_lst, counter)
                 visited[v] = True
+            return cycles_lst, counter
 
-            return cycles, count
-
-        cycles, count = allCyclesDirectedmain(ar)
+        cycles, count = allCyclesDirectedMain(ar)
         nOfNeg, signs = markSign(ar, cycles)
-
         return count, nOfNeg
 
+    # noinspection PyMethodMayBeStatic
     def sy1(self, ar, vc):
         """
         Рассчитывает симплекс для одной вершины
@@ -644,8 +628,8 @@ class CogMap:
         :param vc: индекс вершины
         :return: список вершин симплициального комплекса
         """
-        n = len(ar)  # total # of V
-        Vx = [[] for i in range(n)]  # V connected with other V
+        n = len(ar)
+        Vx = [[] for _ in range(n)]
         qmaxEm = -1
         for j in range(n):
             for v in range(n):
@@ -655,68 +639,66 @@ class CogMap:
                         qmaxEm = max(qmaxEm, len(Vx[j]) - 1)
         return Vx[vc]
 
+    # noinspection PyMethodMayBeStatic
     def sy(self, ar):
         """
         Рассчитывает все симплициальные комплексы
         :param ar: матрица смежности
         :return: симплициальные комплексы
         """
-        n = len(ar) # total # of V
-        Vx = [[] for i in range(n)] # V connected with other V
+        n = len(ar)
+        Vx = [[] for _ in range(n)]
         qmaxEm = -1
         for l in range(n):
             for v in range(n):
                 if l != v:
                     if ar[v][l] != 0.0:
                         Vx[l].append(v)
-                        qmaxEm = max(qmaxEm, len(Vx[l]) -1 )
+                        qmaxEm = max(qmaxEm, len(Vx[l]) - 1)
 
-        # if Vx has same dots as for Vy - combine it per #of same dots: 3same -> Q2
-
-        Qxx = [[] for i in range(qmaxEm)] # num of V for each Q
+        Qxx = [[] for _ in range(qmaxEm)]
         for q in range(qmaxEm, 0, -1):
             for v in range(n):
-                if len(Vx[v]) -1 >= q:
+                if len(Vx[v]) - 1 >= q:
                     Qxx[qmaxEm-q].append(v)
 
         nQ = len(Qxx)
-        Qx = [[] for i in range(qmaxEm)]
-        for qn in range(nQ): # all ranges
+        Qx = [[] for _ in range(qmaxEm)]
+        for qn in range(nQ):
             Qcur = Qxx[qn]
-            for vc in range(len(Qcur)):    # all V in cur range
+            for vc in range(len(Qcur)):
                 Vcur = Qcur[vc]
-                if Vcur != -1: #skip if already proceed
+                if Vcur != -1:
                     Qx[qn].append([Vcur])
-                for v in range(len(Qcur)): # other V in cur range
+                for v in range(len(Qcur)):
                     if vc != v:
                         Vint = Qcur[v]
-                        intersect = list(set(Vx[Vcur]) & set(Vx[Vint]))
-                        q = len(intersect) -1   # has same siplexes
-                        if Vint > Vcur and q >= nQ-qn: # and same or higher Q
-                            # merge in same part
+                        intersect: List = list(set(Vx[Vcur]) & set(Vx[Vint]))
+                        q = len(intersect) - 1
+                        if Vint > Vcur and q >= nQ-qn:
                             Qx[qn][len(Qx[qn])-1].append(Vint)
 
-        for qn in range(nQ):  # all ranges
+        for qn in range(nQ):
             for i in range(len(Qx[qn])):
                 for j in range(len(Qx[qn])):
                     if i == j:
                         continue
-                    intersect = list(set(Qx[qn][i]) & set(Qx[qn][j])) # cur with each in line
+                    intersect: List = list(set(Qx[qn][i]) & set(Qx[qn][j]))
                     ii = len(intersect)
                     if ii > 0:
-                        Qx[qn][i] = list(set(Qx[qn][i] + Qx[qn][j]))
+                        Qx[qn][i]: List = list(set(Qx[qn][i] + Qx[qn][j]))
                         Qx[qn][j] = []
             Qx[qn] = [item for item in Qx[qn] if item != []]
 
         return Qx
 
-    def pulse_model_nn(self, N):
+    def pulse_model_nn(self, n):
         """
         Выполняет импульсное моделирование
-        :param N: число шагов импульсного моделирования
+        :param n: число шагов импульсного моделирования
         :return: массив отклонений значений контролируемых вершин
         """
-        v_values = self.pulse_calc([], [], N)
+        v_values = self.pulse_calc([], [], n)
         res_deltas = []
         for v in self.vertices:
             temp = proba.ProbA()
@@ -734,7 +716,8 @@ class CogMap:
         :param s1: матрица смежности простой структуры
         :param vk: список вершин исходной матрицы на которые присоединяется дополнение
         :param vs: список вершин простой структуры s1 для присоединения
-        :param use: флаг метода дополнения исходной матрицы, 0 или 1 - регулирует поведение объединения ребер при их наличии
+        :param use: флаг метода дополнения исходной матрицы, 0 или 1 - регулирует поведение объединения ребер
+        при их наличии
         :return: новая когнитивная карта с наложенной простой структурой
         """
         gr = self.comboV(self.matrix, s1, vk, vs, use)
@@ -747,7 +730,7 @@ class CogMap:
         for e in self.edges:
             max_e_id = max(e.id, max_e_id)
 
-        # обновляем существующие ребра согласно новой матрице
+        # Обновляем существующие ребра согласно новой матрице
         for i in range(len(self.matrix)):
             for j in range(len(self.matrix)):
                 v1_id = self.vertices[i].id
@@ -769,8 +752,6 @@ class CogMap:
                         ym = (new_cogmap.vertices[i].y + new_cogmap.vertices[j].y) / 2
                         e.md = f"({xm},{ym})"
                         new_cogmap.edges.append(e)
-                        #debug
-                        #print(f'append e{max_e_id} = e.v1={e.v1_id}, e.v2={e.v2_id}, e.value={e.value}')
 
         max_x = new_cogmap.vertices[0].x
         max_y = new_cogmap.vertices[0].y
@@ -778,10 +759,12 @@ class CogMap:
             max_x = max(max_x, new_cogmap.vertices[i].x)
             max_y = max(max_y, new_cogmap.vertices[i].y)
 
+        zero = proba.ProbA()
+        zero.append_value(0.0, 1.0)
         if len(gr) > len(self.matrix):
             for i in range((len(gr) - len(self.matrix))):
                 max_v_id = max_v_id + 1
-                v = Vertex(max_v_id, 0.0, 0.0, 0.0, 0.0, "New %d" % max_v_id)
+                v = Vertex(max_v_id, zero, 0.0, 0.0, zero, "New %d" % max_v_id)
                 v.color = "0x80ff80ff"
                 v.short_name = "V"
                 v.x = max_x + 30
@@ -795,7 +778,7 @@ class CogMap:
                 for j in range(len(gr)):
                     if i < len(self.matrix) and j < len(self.matrix):
                         continue
-                    # ребро от i к j
+                    # Ребро от i к j
                     v1_id = new_cogmap.vertices[i].id
                     v2_id = new_cogmap.vertices[j].id
                     edge_value = gr[i][j]
@@ -811,6 +794,7 @@ class CogMap:
         new_cogmap.matrix = gr
         return new_cogmap
 
+    # noinspection PyMethodMayBeStatic
     def comboV(self, k1, s1, vk, vs, use):
         """
         Формирует композицию выбранной простой структуры
@@ -818,7 +802,8 @@ class CogMap:
         :param s1: матрица смежности простой структуры
         :param vk: список вершин исходной матрицы на которые присоединяется дополнение
         :param vs: список вершин простой структуры s1 для присоединения
-        :param use: флаг метода дополнения исходной матрицы, 0 или 1 - регулирует поведение объединения ребер при их наличии
+        :param use: флаг метода дополнения исходной матрицы, 0 или 1 - регулирует поведение объединения
+        ребер при их наличии
         :return: новая матрица смежности с наложенной простой структурой
         """
         assert (len(vk) == len(vs)), "Merging vertices should be same dimension"
@@ -826,32 +811,26 @@ class CogMap:
         gr = np.array(k1)
         si = np.array(s1)
 
-        # expand matrix
+        # Расширяем матрицу
         tmp = proba.ProbA()
         tmp.append_value(0.0, 1.0)
         for l in range(len(si) - len(vs)):
-            # old gr = np.append(gr, [[0.0 for i in range(len(k1))]], 0)
-            gr = np.append(gr, [[tmp for i in range(len(k1))]], 0)
+            gr = np.append(gr, [[tmp for _ in range(len(k1))]], 0)
         for l in range(len(si) - len(vs)):
-            # old gr = np.append(gr, [[0.0] for i in range(len(gr))], 1)
-            gr = np.append(gr, [[tmp] for i in range(len(gr))], 1)
+            gr = np.append(gr, [[tmp] for _ in range(len(gr))], 1)
 
-        # fill with new edges
+        # Заполняем новыми ребрами
         for i in range(len(vk)):
             for j in range(len(vk)):
                 if i == j:
                     continue
-
-#todo Где-то int...
-                tmp = si[vs[i]][vs[j]]
-                if use == 0:    # заменяем исходный вес связи
+                if use == 0:  # Заменяем исходный вес связи
                     gr[vk[i]][vk[j]] = si[vs[i]][vs[j]]
-                elif use == 1:  # добаляем вес новой связи
+                elif use == 1:  # Добаляем вес новой связи
                     gr[vk[i]][vk[j]] = gr[vk[i]][vk[j]] + si[vs[i]][vs[j]]
-                elif use == 2:  # усредняем вес старой и новой связи
+                elif use == 2:  # Усредняем вес старой и новой связи
                     gr[vk[i]][vk[j]] = (gr[vk[i]][vk[j]] + si[vs[i]][vs[j]]) / 2
-
-        # fill row and col for merged vertices
+        # Заполняем строку и столбец для объединенных вершин
         d = 0
         for i in range(len(si)):
             if i in vs:
@@ -861,32 +840,30 @@ class CogMap:
             for k in range(len(vs)):
                 gr[vk[k]][aa] = si[vs[k]][i]
                 gr[aa][vk[k]] = si[i][vs[k]]
-
-        # remove rows and cols
+        # Удаляем строку и столбец
         si = np.delete(si, vs, 0)
         si = np.delete(si, vs, 1)
-
-        # fill remaining rows and cols
+        # Заполняем оставшиеся столбцы и строки
         for i in range(len(si)):
             for j in range(len(si)):
                 gr[len(k1) + i][len(k1) + j] = si[i][j]
-
         return gr
 
-    def pulse_model(self, N, impulses=None, log_values: bool = False):
+    def pulse_model(self, n, impulses=None, log_values: bool = False):
         """
         Выполняет импульсное моделирование
-        :param N: число шагов импульсного моделирования
+        :param n: число шагов импульсного моделирования
         :param impulses: импульсы
-        :param log_values: если True, то при импульсном моделировании будет формироваться лог со значениями вершин на каждом шаге
+        :param log_values: если True, то при импульсном моделировании будет формироваться
+        лог со значениями вершин на каждом шаге
         :return: массив проблемных вершин, отклонение значений проблемных вершин
         """
         imp = []
         v_imp = []
-        # Введение возмущений в вершины, соответствующие сигналам изменения данных (X,Y,Z) на основе текущего среза данных.
+        # Введение возмущений в вершины, соответствующие сигналам
+        # изменения данных (X,Y,Z) на основе текущего среза данных
         if impulses is None:
             for v in self.vertices:
-                # old if v.impulse != 0.0:
                 if v.impulse.vals[0].value != 0.0:
                     imp.append(v.impulse)
                     v_imp.append(self.vertex_idx_by_id(v.id))
@@ -894,10 +871,11 @@ class CogMap:
             imp = impulses.imp
             for imp_vertex in impulses.v_imp:
                 v_imp.append(self.vertex_idx_by_id(imp_vertex.id))
-        v_values = self.pulse_calc(imp, v_imp, N, log_values)
+        v_values = self.pulse_calc(imp, v_imp, n, log_values)
         v_bad = []
         Y_er = []
-        # Определение вершин Vi в которых  нарушается условие Yi_min < Yi < Yi_max и в которых необходимо улучшать процесс. Ситуация отмечается как «плохая» (bad) - Vi bad, i =1,2,…k.
+        # Определение вершин Vi в которых  нарушается условие Yi_min < Yi < Yi_max и в которых необходимо улучшать
+        # процесс. Ситуация отмечается как «плохая» (bad) - Vi bad, i =1,2,…,k.
         for y in self.Y:
             y.idx = self.vertex_idx_by_id(y.id)
             temp_max = proba.ProbA()
@@ -913,29 +891,30 @@ class CogMap:
             tmp_y = y_avg - v_values[y.idx]
             tmp_y.abs()
             Y_er.append(tmp_y / y_diff)
-
         temp_t = proba.ProbA()
         temp_t = temp_t.max(Y_er)
         temp_f = proba.ProbA()
         temp_f.append_value(0.0, 1.0)
         return v_bad, temp_t if len(v_bad) else temp_f
 
-    def pulse_model_opt(self, N, Vpulse, Vidx):
+    def pulse_model_opt(self, n, v_pulse, v_idx):
         """
         Выполняет импульсное моделирование (сокращенная версия)
-        :param N: число шагов импульсного моделирования
-        :param Vpulse: знаечния импульсов
-        :param Vidx: индексы вершин для импульсов
+        :param n: число шагов импульсного моделирования
+        :param v_pulse: знаечния импульсов
+        :param v_idx: индексы вершин для импульсов
         :return: отклонение значений проблемных вершин
         """
-        # Введение возмущений в вершины, соответствующие сигналам изменения данных (X,Y,Z) на основе текущего среза данных.
+        # Введение возмущений в вершины, соответствующие сигналам изменения данных (X,Y,Z)
+        # на основе текущего среза данных.
 
         vertices_value = [v.value for v in self.vertices]
         vertices_growth = [v.growth for v in self.vertices]
-        v_values = self.pulse_calc_opt(self.matrix, vertices_value, vertices_growth, Vpulse, Vidx, N)
+        v_values = self.pulse_calc_opt(self.matrix, vertices_value, vertices_growth, v_pulse, v_idx, n)
         flag = False
         Y_er = []
-        # Определение вершин Vi в которых  нарушается условие Yi_min < Yi < Yi_max и в которых необходимо улучшать процесс. Ситуация отмечается как «плохая» (bad) - Vi bad, i =1,2,…k.
+        # Определение вершин Vi в которых  нарушается условие Yi_min < Yi < Yi_max и в которых необходимо улучшать
+        # процесс. Ситуация отмечается как «плохая» (bad) - Vi bad, i =1,2,…k.
         for y in self.Y:
             y.idx = self.vertex_idx_by_id(y.id)
             temp_max = proba.ProbA()
@@ -946,7 +925,6 @@ class CogMap:
                 flag = True
             two = proba.ProbA()
             two.append_value(2.0, 1.0)
-            temp = proba.ProbA()
             temp = ((temp_max + temp_min) / two) - v_values[y.idx]
             temp.abs()
             Y_er.append(temp / (temp_max - temp_min))
@@ -954,8 +932,6 @@ class CogMap:
         temp_t = temp_t.max(Y_er)
         temp_f = proba.ProbA()
         temp_f.append_value(0.0, 1.0)
-        # return temp_t.avg() if flag else temp_f.avg()
-        # debug- new
         return temp_t.build_scalar() if flag else temp_f.build_scalar()
 
     def get_compositions(self, s, vertex: Vertex):
@@ -970,16 +946,16 @@ class CogMap:
 
         compositions = []
 
-        # выбор всех ближайшик вершин
-        # определение множества всех верщин КК с заданной глубиной
+        # Выбор всех ближайшик вершин
+        # Определение множества всех верщин КК с заданной глубиной
         vertex_idx = self.vertex_idx_by_id(vertex.id)
         ss_vertices = np.arange(0, len(s))
         for l in range(1, min(len(s), len(sim) + 1) + 1):
             cogmap_vertices = set(sim)
             cogmap_vertices.add(vertex_idx)
-            # список вершин ПС заданной длины
-            ss_vertices_list = list(it.permutations(ss_vertices, l))
-            cogmap_vertices_list = list(it.permutations(cogmap_vertices, l))
+            # Список вершин ПС заданной длины
+            ss_vertices_list: List = list(it.permutations(ss_vertices, l))
+            cogmap_vertices_list: List = list(it.permutations(cogmap_vertices, l))
             for prod in it.product(*[cogmap_vertices_list, ss_vertices_list]):
                 compositions.append([1 if len(prod[0]) < len(s) else 0, self.get_composition(s, prod[0], prod[1], 0)])
         return compositions

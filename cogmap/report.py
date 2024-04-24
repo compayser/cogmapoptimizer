@@ -1,22 +1,23 @@
 import json
 import pandas as pd
-import cogmap as cm
-import proba
 
 
 class Report:
+    """
+    Класс с описанием отчета
+    """
     def __init__(self, data):
         """
         Конструктор
         :param data: данные для отчета
-        :param mode: тип усреднения ДСВ в скалярную величину
         """
         self.data = data
 
     def build_report(self):
         """
         Формирует отчет
-        :return: Отчет (когнитивная карта + сценарий моделирования) в формате JSON, Pandas.DataFrame с данными по импульсному моделированию когнитивной карты из отчета
+        :return: Отчет (когнитивная карта + сценарий моделирования) в формате JSON, Pandas.DataFrame с данными
+        по импульсному моделированию когнитивной карты из отчета
         """
         scenarios = []
         impulses = []
@@ -25,8 +26,6 @@ class Report:
                 if isinstance(self.data.impulses.imp[i], float) or isinstance(self.data.impulses.imp[i], int):
                     val = self.data.impulses.imp[i]
                 else:
-                    # val = self.data.impulses.imp[i].avg()
-                    # debug - new
                     val = self.data.impulses.imp[i].build_scalar()
                 impulses.append({"val": val, "v": self.data.impulses.v_imp[i].id, "step": 1})
         scenario = {"impulses": impulses, "name": "scenario1", "id": 1670668256870,
@@ -38,8 +37,6 @@ class Report:
                 edges.append({"id": e.id, "weight": e.value, "v1": e.v1_id, "v2": e.v2_id, "shortName": e.name,
                               "formula": e.formula, "md": e.md, "color": e.color})
             else:
-                # weight = e.value.avg()
-                # debug - new
                 weight = e.value.build_scalar()
                 edges.append({"id": e.id, "weight": weight, "v1": e.v1_id, "v2": e.v2_id, "shortName": e.name,
                               "formula": e.formula, "md": e.md, "color": e.color})
@@ -48,14 +45,10 @@ class Report:
             if isinstance(v.value, float) or isinstance(v.value, int):
                 val = v.value
             else:
-                # val = v.value.avg()
-                # debug - new
                 val = v.value.build_scalar()
             if isinstance(v.growth, float) or isinstance(v.growth, int):
                 grow = v.growth
             else:
-                # grow = v.growth.avg()
-                # debug - new
                 grow = v.growth.build_scalar()
             vertices.append({"id": v.id, "value": val, "fullName": v.name, "shortName": v.short_name,
                              "color": v.color, "show": v.show, "growth": grow, "x": v.x, "y": v.y})
@@ -72,8 +65,6 @@ class Report:
             "added_new_vertices": self.data.added_new_vertices,
             "target_vertices": target_vertices,
             "bad_vertices": bad_vertices,
-            # "y_max_er": self.data.y_max_er.avg()
-            # debug - new
             "y_max_er": self.data.y_max_er.build_scalar()
         }
 
@@ -86,11 +77,8 @@ class Report:
             "Edges": edges
         }
 
-        # add by Anton
         for ii in range(len(self.data.cogmap.pulse_calc_log)):
             for jj in range(len(self.data.cogmap.pulse_calc_log[ii])):
-                # self.data.cogmap.pulse_calc_log[ii][jj] = self.data.cogmap.pulse_calc_log[ii][jj].avg()
-                # debug - new
                 self.data.cogmap.pulse_calc_log[ii][jj] = self.data.cogmap.pulse_calc_log[ii][jj].build_scalar()
 
         c = pd.DataFrame(data=self.data.cogmap.pulse_calc_log, columns=[v.id for v in self.data.cogmap.vertices])
@@ -106,4 +94,3 @@ class Report:
         with open(filename, 'w') as f:
             json.dump(r, f, indent=4, ensure_ascii=False)
         c.to_csv(filename+".csv")
-

@@ -96,8 +96,8 @@ class Optimizer:
         :param n: число шагов импульсного моделирования
         :param impactgen: генератор воздействий
         :param initial_impulses: начальные воздействия
-        :param log_values: если True, то при импульсном моделировании будет формироваться лог со
-        значениями вершин на каждом шаге
+        :param log_values: если True, то при импульсном моделировании будет формироваться лог
+        со значениями вершин на каждом шаге
         :return: данные воздействий, список оставшихся проблемных вершин, отклонение проблемных вершин
         """
         #  V - вершины для воздействия
@@ -281,7 +281,7 @@ class Optimizer:
         v_bad, max_y_er = base_cogmap.pulse_model(n)
         if len(v_bad) == 0:  # Нет проблемных вершин
             return -1, None
-        print(f"Found {len(v_bad)} problem vertice(s)")
+        print(f"Found {len(v_bad)} problem vertices")
 
         partial_solutions = []
         for v in v_bad:
@@ -298,7 +298,8 @@ class Optimizer:
 
         print(f"Found {len(partial_solutions)} solution(s)")
         if len(partial_solutions) == 0:
-            exit(0)
+            # debug exit(0)
+            return None, None
 
         print(f"Building compositions", end="")
         # Формирование композиций решений

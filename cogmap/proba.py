@@ -480,4 +480,5 @@ class ProbA:
             return (self.max_prob() + self.max2_prob()) / 2
         if self.build_scalar_mode == "min_avg":  # Среднее по 2-м минимумам
             return (self.min_prob() + self.min2_prob()) / 2
+        print(f"****** self.build_scalar_mode = {self.build_scalar_mode}")
         return None

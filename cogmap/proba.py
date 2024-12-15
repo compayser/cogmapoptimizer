@@ -1,6 +1,6 @@
+# pylint: disable=too-few-public-methods
 """
-Инструментарий для работы с вероятностной арифметикой
-Probabilistic arithmetics routines
+:file: Модуль с классом работы с вероятностной арифметикой
 """
 import sys
 import copy
@@ -23,7 +23,7 @@ class ProbVal:
         """
         Строковое представление класса
         """
-        str_ = f'{self.value}/{self.prob}\n'
+        str_ = f"{self.value}/{self.prob}\n"
         return str_
 
 
@@ -37,17 +37,19 @@ class ProbA:
         Конструктор
         """
         self.vals = []  # Список значений/вероятностей
-        self.COMPARE_RANGE = 0.5  # Пороговое значения для операций сравнения
-        self.MAX_ELEMENTS = 10  # Максимальное число элементов для ДВС при умньшение размерности массива с описанием ДСВ
-        self.BUILD_SCALAR = 'max'  # Режим получения скаляра из массива описания ДСВ (avg, max, min, max_avg, min_avg)
+        self.compare_range = 0.5  # Пороговое значения для операций сравнения
+        self.max_elements = 10  # Максимальное число элементов для ДВС при умньшение размерности
+                                # массива с описанием ДСВ
+        self.build_scalar_mode = "max"  # Режим получения скаляра из массива описания ДСВ
+                                        # (avg, max, min, max_avg, min_avg)
 
     def __str__(self):
         """
         Строковое представление класса
         """
-        str_ = f''
-        for i in range(len(self.vals)):
-            str_ += f'v[{i}]={self.vals[i].value} p[{i}]={self.vals[i].prob}\n'
+        str_ = ""
+        for i, val in enumerate(self.vals):
+            str_ += f"v[{i}]={val.value} p[{i}]={val.prob}\n"
         return str_
 
     def append_value(self, value=0.0, prob=0.0):
@@ -67,8 +69,8 @@ class ProbA:
                   <0 - недозаполненый массив (сумма вероятностей < 1)
         """
         summ = 0
-        for i in range(len(self.vals)):
-            summ += self.vals[i].prob
+        for _, val in enumerate(self.vals):
+            summ += val.prob
         if 0.9999999999 < summ < 1.0000000001:
             return 0  # OK
         if summ <= 0.9999999999:
@@ -76,11 +78,12 @@ class ProbA:
         return summ-1  # Переполненый массив значений
 
     def reduce(self, new_size=-1):
+        # pylint: disable=too-many-branches
         """
         Умньшение размерности массива с описанием ДСВ
         """
         if new_size == -1:
-            new_size = self.MAX_ELEMENTS
+            new_size = self.max_elements
         if len(self.vals) > new_size:
             self.vals.sort(key=lambda x: x.value, reverse=False)
             new_size -= 1
@@ -89,21 +92,21 @@ class ProbA:
             result = ProbA()
             index = 0
             processed_i = 0
-            for i in range(len(self.vals)):
-                rnd.append_value(self.vals[i].value, self.vals[i].prob)
+            for i, val in enumerate(self.vals):
+                rnd.append_value(val.value, val.prob)
                 if index < delta-1:
                     index += 1
                 else:
                     index = 0
                     sum_prob = 0
-                    for j in range(len(rnd.vals)):
-                        sum_prob += rnd.vals[j].prob
+                    for _, val in enumerate(rnd.vals):
+                        sum_prob += val.prob
                     rnd_res_prob = 0
                     rnd_res_val = 0
-                    for j in range(len(rnd.vals)):
+                    for _, val in enumerate(rnd.vals):
                         if sum_prob != 0:
-                            rnd_res_val += rnd.vals[j].value * (rnd.vals[j].prob / sum_prob)
-                            rnd_res_prob += rnd.vals[j].prob
+                            rnd_res_val += val.value * (val.prob / sum_prob)
+                            rnd_res_prob += val.prob
                     result.append_value(rnd_res_val, rnd_res_prob)
                     rnd = ProbA()
                     processed_i = i
@@ -114,14 +117,13 @@ class ProbA:
                     sum_prob += self.vals[j].prob
                 rnd_res_prob = 0
                 rnd_res_val = 0
-                for j in range(len(rnd.vals)):
+                for _, val in enumerate(rnd.vals):
                     if sum_prob != 0:
-                        rnd_res_val += rnd.vals[j].value * (rnd.vals[j].prob / sum_prob)
-                        rnd_res_prob += rnd.vals[j].prob
+                        rnd_res_val += val.value * (val.prob / sum_prob)
+                        rnd_res_prob += val.prob
                 if rnd_res_val != 0 and rnd_res_prob != 0:
                     result.append_value(rnd_res_val, rnd_res_prob)
             self.vals = result.vals
-        return
 
     def __add__(self, rnd):
         """
@@ -129,7 +131,7 @@ class ProbA:
         :param rnd: слагаемое в виде ДСВ
         """
         result = ProbA()
-        if isinstance(rnd, int) or isinstance(rnd, float):
+        if isinstance(rnd, (int, float)):
             val = rnd
             rnd = ProbA()
             rnd.append_value(val, 1.0)
@@ -142,15 +144,15 @@ class ProbA:
         result.reduce()
         # Редуцирование массива
         index = 0
-        for i in range(len(result.vals)):
-            for j in range(len(result.vals)):
+        for i, val_i in enumerate(result.vals):
+            for j, val_j in enumerate(result.vals):
                 if i != j and \
-                   result.vals[i].prob != -1 and \
-                   result.vals[j].prob != -1 and \
-                   result.vals[i].value == result.vals[j].value:
+                   val_i.prob != -1 and \
+                   val_j.prob != -1 and \
+                   val_i.value == val_j.value:
                     # Объединение значений
-                    result.vals[i].prob += result.vals[j].prob
-                    result.vals[j].prob = -1
+                    val_i.prob += val_j.prob
+                    val_j.prob = -1
                     index += 1
         # Удаление отброшенных элементов
         result.vals.sort(key=lambda x: (x.prob, x.value), reverse=False)
@@ -166,7 +168,7 @@ class ProbA:
         :param rnd: вычитаемое в виде ДСВ
         """
         result = ProbA()
-        if isinstance(rnd, int) or isinstance(rnd, float):
+        if isinstance(rnd, (int, float)):
             val = rnd
             rnd = ProbA()
             rnd.append_value(val, 1.0)
@@ -179,15 +181,15 @@ class ProbA:
         result.reduce()
         # Редуцирование массива
         index = 0
-        for i in range(len(result.vals)):
-            for j in range(len(result.vals)):
+        for i, val_i in enumerate(result.vals):
+            for j, val_j in enumerate(result.vals):
                 if i != j and \
-                   result.vals[i].prob != -1 and \
-                   result.vals[j].prob != -1 and \
-                   result.vals[i].value == result.vals[j].value:
-                    # Объединение значений
-                    result.vals[i].prob += result.vals[j].prob
-                    result.vals[j].prob = -1
+                   val_i.prob != -1 and \
+                   val_j.prob != -1 and \
+                   val_i.value == val_j.value:
+                   # Объединение значений
+                    val_i.prob += val_j.prob
+                    val_j.prob = -1
                     index += 1
         # Удаление отброшенных элементов
         result.vals.sort(key=lambda x: (x.prob, x.value), reverse=False)
@@ -203,7 +205,7 @@ class ProbA:
         :param rnd: множитель в виде ДСВ
         """
         result = ProbA()
-        if isinstance(rnd, int) or isinstance(rnd, float):
+        if isinstance(rnd, (int, float)):
             val = rnd
             rnd = ProbA()
             rnd.append_value(val, 1.0)
@@ -216,16 +218,17 @@ class ProbA:
         result.reduce()
         # Редуцирование массива
         index = 0
-        for i in range(len(result.vals)):
-            for j in range(len(result.vals)):
+        for i, val_i in enumerate(result.vals):
+            for j, val_j in enumerate(result.vals):
                 if i != j and \
-                   result.vals[i].prob != -1 and \
-                   result.vals[j].prob != -1 and \
-                   result.vals[i].value == result.vals[j].value:
+                   val_i.prob != -1 and \
+                   val_j.prob != -1 and \
+                   val_i.value == val_j.value:
                     # Объединение значений
-                    result.vals[i].prob += result.vals[j].prob
-                    result.vals[j].prob = -1
+                    val_i.prob += val_j.prob
+                    val_j.prob = -1
                     index += 1
+
         # Удаление отброшенных элементов
         result.vals.sort(key=lambda x: (x.prob, x.value), reverse=False)
         for i in range(index):
@@ -240,7 +243,7 @@ class ProbA:
         :param rnd: делитель в виде ДСВ
         """
         result = ProbA()
-        if isinstance(rnd, int) or isinstance(rnd, float):
+        if isinstance(rnd, (int, float)):
             val = rnd
             rnd = ProbA()
             rnd.append_value(val, 1.0)
@@ -253,16 +256,17 @@ class ProbA:
         result.reduce()
         # Редуцирование массива
         index = 0
-        for i in range(len(result.vals)):
-            for j in range(len(result.vals)):
-                if i != j and \
-                   result.vals[i].prob != -1 and \
-                   result.vals[j].prob != -1 and \
-                   result.vals[i].value == result.vals[j].value:
+        for val_i in result.vals:
+            for val_j in result.vals:
+                if val_i is not val_j and \
+                   val_i.prob != -1 and \
+                   val_j.prob != -1 and \
+                   val_i.value == val_j.value:
                     # Объединение значений
-                    result.vals[i].prob += result.vals[j].prob
-                    result.vals[j].prob = -1
+                    val_i.prob += val_j.prob
+                    val_j.prob = -1
                     index += 1
+
         # Удаление отброшенных элементов
         result.vals.sort(key=lambda x: (x.prob, x.value), reverse=False)
         for i in range(index):
@@ -282,7 +286,7 @@ class ProbA:
             if i.value > max_:
                 res_prob += i.prob
         # Результат
-        return True if res_prob > self.COMPARE_RANGE else False
+        return res_prob > self.compare_range
 
     def __ge__(self, max_):
         """
@@ -295,7 +299,7 @@ class ProbA:
             if i.value >= max_:
                 res_prob += i.prob
         # Результат
-        return True if res_prob > self.COMPARE_RANGE else False
+        return res_prob > self.compare_range
 
     def __lt__(self, min_):
         """
@@ -308,7 +312,7 @@ class ProbA:
             if i.value < min_:
                 res_prob += i.prob
         # Результат
-        return True if res_prob > self.COMPARE_RANGE else False
+        return res_prob > self.compare_range
 
     def __le__(self, min_):
         """
@@ -321,7 +325,7 @@ class ProbA:
             if i.value <= min_:
                 res_prob += i.prob
         # Результат
-        return True if res_prob > self.COMPARE_RANGE else False
+        return res_prob > self.compare_range
 
     def __ne__(self, val):
         """
@@ -332,17 +336,16 @@ class ProbA:
             # Сравнение с не ДСВ
             if not isinstance(val, float):
                 return None
-            else:
-                return True if self.avg() != val else False
-        else:
-            # Сравнение с ДСВ
-            if len(self.vals) != len(val.vals):
+            return self.avg() != val
+        # Сравнение с ДСВ
+        if len(self.vals) != len(val.vals):
+            return True
+        # Результат
+        for i, val_i in enumerate(self.vals):
+            if val_i.value != val.vals[i].value:
                 return True
-            # Результат
-            for i in range(len(self.vals)):
-                if self.vals[i].value != val.vals[i].value:
-                    return True
-            return False
+        return False
+
 
     def abs(self):
         """
@@ -356,8 +359,8 @@ class ProbA:
         Средневзвешенное значение ДСВ
         """
         average = 0.0
-        for i in range(len(self.vals)):
-            average += self.vals[i].value * self.vals[i].prob
+        for val in self.vals:
+            average += val.value * val.prob
         return average
 
     # noinspection PyMethodMayBeStatic
@@ -368,9 +371,8 @@ class ProbA:
         """
         maximum = ProbA()
         maximum.append_value(-sys.float_info.max, 1.0)
-        for i in range(len(rnd_arr)):
-            if rnd_arr[i] > maximum:
-                maximum = rnd_arr[i]
+        for value in rnd_arr:
+            maximum = max(maximum, value)
         return maximum
 
     def max_prob(self):
@@ -383,9 +385,9 @@ class ProbA:
             return self.vals[0].value
         maximum = 0.0
         idx = -1
-        for i in range(len(self.vals)):
-            if self.vals[i].prob > maximum:
-                maximum = self.vals[i].prob
+        for i, val in enumerate(self.vals):
+            if val.prob > maximum:
+                maximum = val.prob
                 idx = i
         return self.vals[idx].value
 
@@ -399,16 +401,16 @@ class ProbA:
             return self.vals[0].value
         maximum = 0.0
         idx = -1
-        for i in range(len(self.vals)):
-            if self.vals[i].prob > maximum:
-                maximum = self.vals[i].prob
+        for i, val in enumerate(self.vals):
+            if val.prob > maximum:
+                maximum = val.prob
                 idx = i
         tmp = copy.deepcopy(self)
         tmp.vals[idx].prob = -1.0
         maximum = 0.0
-        for i in range(len(tmp.vals)):
-            if tmp.vals[i].prob > maximum:
-                maximum = tmp.vals[i].prob
+        for i, val in enumerate(tmp.vals):
+            if val.prob > maximum:
+                maximum = val.prob
                 idx = i
         return tmp.vals[idx].value
 
@@ -420,14 +422,13 @@ class ProbA:
         """
         minimum = ProbA()
         minimum.append_value(sys.float_info.max, 1.0)
-        for i in range(len(rnd_arr)):
-            if rnd_arr[i] < minimum:
-                minimum = rnd_arr[i]
+        for val in rnd_arr:
+            minimum = min(minimum, val)
         return minimum
 
     def min_prob(self):
         """
-        Значение ДСВ с максимальной вероятностью
+        Значение ДСВ с минимальной вероятностью
         """
         if len(self.vals) == 0:
             return None
@@ -435,15 +436,16 @@ class ProbA:
             return self.vals[0].value
         minimum = 1.1
         idx = -1
-        for i in range(len(self.vals)):
-            if self.vals[i].prob < minimum:
-                minimum = self.vals[i].prob
-                idx = i
-        return self.vals[idx].value
+        min_idx = -1
+        for idx, val in enumerate(self.vals):
+            if val.prob < minimum:
+                minimum = val.prob
+                min_idx = idx
+        return self.vals[min_idx].value
 
     def min2_prob(self):
         """
-        Второе по вероятности значение ДСВ (max)
+        Второе по вероятности значение ДСВ (min)
         """
         if len(self.vals) == 0:
             return None
@@ -451,16 +453,16 @@ class ProbA:
             return self.vals[0].value
         minimum = 1.1
         idx = -1
-        for i in range(len(self.vals)):
-            if self.vals[i].prob < minimum:
-                minimum = self.vals[i].prob
+        for i, val in enumerate(self.vals):
+            if val.prob < minimum:
+                minimum = val.prob
                 idx = i
         tmp = copy.deepcopy(self)
         tmp.vals[idx].prob = 1.1
         minimum = 1.1
-        for i in range(len(tmp.vals)):
-            if tmp.vals[i].prob < minimum:
-                minimum = tmp.vals[i].prob
+        for i, val in enumerate(tmp.vals):
+            if val.prob < minimum:
+                minimum = val.prob
                 idx = i
         return tmp.vals[idx].value
 
@@ -468,14 +470,14 @@ class ProbA:
         """
         Получение скалярного числа из ДСВ разными методами
         """
-        if self.BUILD_SCALAR == 'avg':  # Среднее взвешенное
+        if self.build_scalar_mode == "avg":  # Среднее взвешенное
             return self.avg()
-        if self.BUILD_SCALAR == 'max':  # Максимально вероятное
+        if self.build_scalar_mode == "max":  # Максимально вероятное
             return self.max_prob()
-        if self.BUILD_SCALAR == 'min':  # Минимально вероятное
+        if self.build_scalar_mode == "min":  # Минимально вероятное
             return self.min_prob()
-        if self.BUILD_SCALAR == 'max_avg':  # Среднее по 2-м максимумам
+        if self.build_scalar_mode == "max_avg":  # Среднее по 2-м максимумам
             return (self.max_prob() + self.max2_prob()) / 2
-        if self.BUILD_SCALAR == 'min_avg':  # Среднее по 2-м минимумам
+        if self.build_scalar_mode == "min_avg":  # Среднее по 2-м минимумам
             return (self.min_prob() + self.min2_prob()) / 2
         return None

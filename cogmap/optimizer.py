@@ -1,21 +1,39 @@
-import proba
-import numpy as np
-import cogmap as cm
+# pylint: disable=too-many-arguments, too-few-public-methods, too-many-locals, unnecessary-pass
+""":file: Модуль с описанием класса когнитивного оптимизатора"""
+
 import itertools as it
-import scipy.optimize as opt
-import impact_generator as ig
+import time  # !!!
 from typing import List
+import numpy as np
+import scipy.optimize as opt
+import proba
+import cogmap as cm
+import impact_generator as ig
+
+
+def debug_print(content, file_path="info.txt"):
+    """
+    Создает файл и записывает в него строку.
+    :param file_path: Путь к файлу, который нужно создать.
+    :param content: Строка, которую нужно записать в файл.
+    """
+    try:
+        with open(file_path, "a", encoding="utf-8") as file:
+            file.write(f"{content}\n")
+    except (FileNotFoundError, PermissionError, OSError) as e:
+        print(f"Ошибка при создании файла {file_path}: {e}")
 
 
 class SolutionData:
     """ Описывает решение """
-    __slots__ = ("added_new_vertices", "cogmap", "target_vertices", "impulses", "bad_vertices", "y_max_er")
+    __slots__ = ("added_new_vertices", "cogmap", "target_vertices",
+                 "impulses", "bad_vertices", "y_max_er")
 
-    def __init__(self, added_new_vertices, cogmap, target_vertices: List[cm.Vertex], impulses: cm.Impulses,
-                 bad_vertices, y_max_er):
+    def __init__(self, added_new_vertices, cogmap, target_vertices: List[cm.Vertex],
+                 impulses: cm.Impulses, bad_vertices, y_max_er):
         """
         Конструктор
-        added_new_vertices: добавляемые вершины
+        :param added_new_vertices: добавляемые вершины
         :param cogmap: когнитивная карта
         :param target_vertices: целевые вершины
         :param impulses: воздействия
@@ -87,8 +105,9 @@ class Optimizer:
         return simple_structs
 
     # noinspection PyMethodMayBeStatic
-    def find_impact(self, cogmap: cm.CogMap, v_lst: List[cm.Vertex], n: int, impactgen: ig.ImpactGenerator,
-                    initial_impulses: List[float] = None, log_values: bool = False):
+    def find_impact(self, cogmap: cm.CogMap, v_lst: List[cm.Vertex], n: int,
+                    impactgen: ig.ImpactGenerator, initial_impulses: List[float] = None,
+                    log_values: bool = False):
         """
         Подбирает воздействия для корректировки значений проблемных вершин когнитивной карты
         :param cogmap: когнитивная карта
@@ -96,39 +115,41 @@ class Optimizer:
         :param n: число шагов импульсного моделирования
         :param impactgen: генератор воздействий
         :param initial_impulses: начальные воздействия
-        :param log_values: если True, то при импульсном моделировании будет формироваться лог
-        со значениями вершин на каждом шаге
-        :return: данные воздействий, список оставшихся проблемных вершин, отклонение проблемных вершин
+        :param log_values: если True, то при импульсном моделировании будет
+                           формироваться лог со значениями вершин на каждом шаге
+        :return: данные воздействий, список оставшихся проблемных вершин, отклонение
+                 проблемных вершин
         """
         #  V - вершины для воздействия
         #  Целевая функция - макисмальное отклонение в вершинах от оптимума
 
         # Заполняем список индексов вершин
-        Vidx = []
+        v_idx = []
         for imp_vertex in v_lst:
-            Vidx.append(cogmap.vertex_idx_by_id(imp_vertex.id))
+            v_idx.append(cogmap.vertex_idx_by_id(imp_vertex.id_))
 
         def opt_func(v_pulse):
-            return cogmap.pulse_model_opt(n, v_pulse, Vidx)
+            return cogmap.pulse_model_opt(n, v_pulse, v_idx)
 
         if initial_impulses is not None:
             x0 = initial_impulses
         else:
             x0 = impactgen.get_impact(cogmap, v_lst, n)
         tol = 1.0e-4  # Точность поиска экстремума
-        res = opt.minimize(opt_func, x0, method="Nelder-Mead", options={"xatol": tol, "disp": False, "maxiter": 200})
+        res = opt.minimize(opt_func, x0, method="Nelder-Mead",
+                           options={"xatol": tol, "disp": False, "maxiter": 200})
 
         res_ = []
-        for i in range(len(res.x)):
+        for _, x_val in enumerate(res.x):
             temp = proba.ProbA()
-            temp.append_value(res.x[i], 1.0)
+            temp.append_value(x_val, 1.0)
             res_.append(temp)
+
         if res.success:
             impulses = cm.Impulses(res_, v_lst)
             v_bad, y_max_er = cogmap.pulse_model(n, impulses, log_values)
             return impulses, v_bad, y_max_er
-        else:
-            return None, [], 0.0
+        return None, [], 0.0
 
     # noinspection PyMethodMayBeStatic
     def mix_solutions(self, base_cogmap: cm.CogMap, solutions: List[SolutionData]):
@@ -136,8 +157,8 @@ class Optimizer:
         Совмещает частные решения
         :param base_cogmap: базовая когнитивная карта
         :param solutions: список частных решений
-        :return: когнитивная карта (совмещенное решение), данные воздействия для совмещенного решения,
-        список вершин на корректировку которых нацелено совмещенное решение
+        :return: когнитивная карта (совмещенное решение), данные воздействия для совмещенного
+                 решения, список вершин на корректировку которых нацелено совмещенное решение
         """
         v_list = np.arange(start=0, stop=len(base_cogmap.matrix), dtype=int)
         cogmap = base_cogmap
@@ -146,24 +167,24 @@ class Optimizer:
         imp_v_idx = []
         target_vertices = []
         for solution in solutions:
-            for i in range(len(solution.impulses.imp)):
-                imp.append(solution.impulses.imp[i])
-                idx = solution.cogmap.vertex_idx_by_id(solution.impulses.v_imp[i].id)
-                if idx > limit:   # Новые вершины относительно базовой КК
-                    idx = idx + (len(cogmap.matrix) - len(base_cogmap.matrix))
+            for i, impulse in enumerate(solution.impulses.imp):
+                imp.append(impulse)
+                idx = solution.cogmap.vertex_idx_by_id(solution.impulses.v_imp[i].id_)
+                if idx > limit:  # Новые вершины относительно базовой КК
+                    idx += len(cogmap.matrix) - len(base_cogmap.matrix)
                 imp_v_idx.append(idx)
             cogmap = cogmap.get_composition(solution.cogmap.matrix, v_list, v_list, 2)
             target_vertices.append(solution.target_vertices[0])
         counts = np.zeros(len(cogmap.matrix))
         impulses = np.zeros(len(cogmap.matrix))
-        for i in range(len(imp)):
-            impulses[imp_v_idx[i]] = impulses[imp_v_idx[i]] + imp[i].build_scalar()
-            counts[imp_v_idx[i]] = counts[imp_v_idx[i]] + 1
+        for i, impulse in enumerate(imp):
+            impulses[imp_v_idx[i]] += impulse.build_scalar()
+            counts[imp_v_idx[i]] += 1
         res_imp = []
         res_imp_v = []
-        for i in range(len(impulses)):
+        for i, impulse in enumerate(impulses):
             if counts[i]:
-                impulses[i] = impulses[i] / counts[i]
+                impulses[i] /= counts[i]
                 res_imp.append(impulses[i])
                 res_imp_v.append(cogmap.vertices[i])
         return cogmap, cm.Impulses(res_imp, res_imp_v), target_vertices
@@ -175,16 +196,19 @@ class Optimizer:
         :param partial_solutions: список частных решений
         :return: список композиций частных решений
         """
-        # На основе списка частных решений формирование композиций решений. Каждая композиция включает по
-        # одному частному решению для всех проблемных вершин. Композиции формируются для всех сочетаний
+        # На основе списка частных решений формирование композиций решений. Каждая композиция
+        # включает по одному частному решению для всех проблемных вершин. Композиции формируются
+        # для всех сочетаний
 
         # Группируем в списки по идентификатору целевой вершины
         # (у частных решений список target_vertices содержит удинственную вершину)
-        values = set(map(lambda x: x.target_vertices[0].id, partial_solutions))
-        grouped_solutions = [[ps for ps in partial_solutions if ps.target_vertices[0].id == x] for x in values]
-        # Формируем списки композиций на основе декартова произведения списков частных решений для каждой вершины
-        # композиция включает частные решения для ВСЕХ вершин, для которых они доступны
-        # (например, если для вершины есть только одно частное решение, то оно войдет в КАЖДУЮ композицию)
+        values = set(map(lambda x: x.target_vertices[0].id_, partial_solutions))
+        grouped_solutions = [[ps for ps in partial_solutions if ps.target_vertices[0].id_ == x]
+                             for x in values]
+        # Формируем списки композиций на основе декартова произведения списков частных решений
+        # для каждой вершины композиция включает частные решения для ВСЕХ вершин, для которых они
+        # доступны (например, если для вершины есть только одно частное решение, то оно войдет в
+        # КАЖДУЮ композицию)
         compositions = []
         i = 0
         for prod in it.product(*grouped_solutions):
@@ -195,6 +219,7 @@ class Optimizer:
             i += 1
             if i % 50 == 0:
                 print(f"Mixed {i}+ compositions")
+                # debug_print(f"Mixed {i}+ compositions")
             compositions.append([cogmap, impulses, target_vertices])
 
         return compositions
@@ -232,98 +257,117 @@ class Optimizer:
         solutions = []
         compositions = cogmap.get_compositions(np.array(s), vertex)
         print(f"Found {len(compositions)} composition(s)")
+        # debug_print(f"Found {len(compositions)} composition(s)")
         comp_num = 0
         comp_len = len(compositions)
 
-        if len(compositions):
+        if compositions:
             for comp in compositions:
 
                 comp_num += 1
                 print(f"Processing composition #{comp_num}/{comp_len} ...")
+                # debug_print(f"Processing composition #{comp_num}/{comp_len} ...")
                 if comp[0] == 1:
                     if comp[1].is_stable():
                         # Новая КК создается в get_compositions
-                        imp, v_bads, y_max_er__ = self.find_impact(comp[1], comp[1].X, n, impactgen)
+                        imp, v_bads, y_max_er__ = self.find_impact(comp[1], comp[1].x,
+                                                                   n, impactgen)
                         if imp is not None:
-                            solutions.append(SolutionData(1, comp[1], [vertex], imp, v_bads, y_max_er__))
+                            solutions.append(SolutionData(1, comp[1], [vertex],
+                                                          imp, v_bads, y_max_er__))
                             impactgen.add_impact(ig.ImpactData(comp[1], imp, y_max_er__))
                 else:
-                    imp, v_bads, y_max_er__ = self.find_impact(comp[1], cogmap.X, n, impactgen)
+                    imp, v_bads, y_max_er__ = self.find_impact(comp[1], cogmap.x, n, impactgen)
                     if imp is not None:
                         if is_valid_solution(v_bads, y_max_er__):
-                            solutions.append(SolutionData(0, comp[1], [vertex], imp, v_bads, y_max_er__))
+                            solutions.append(SolutionData(0, comp[1], [vertex], imp,
+                                                          v_bads, y_max_er__))
                             impactgen.add_impact(ig.ImpactData(comp[1], imp, y_max_er__))
         else:
-            imp, v_bads, y_max_er__ = self.find_impact(cogmap, cogmap.X, n, impactgen)
+            imp, v_bads, y_max_er__ = self.find_impact(cogmap, cogmap.x, n, impactgen)
             if imp is not None:
-                # Отсутствие перехода вершин из числа благополучных в проблемные, а также ухудшения состояния проблемных
+                # Отсутствие перехода вершин из числа благополучных в проблемные, а также
+                # ухудшения состояния проблемных
                 if is_valid_solution(v_bads, y_max_er__):
                     # Добавление варианта решения в список частных решений
                     solutions.append(SolutionData(0, cogmap, [vertex], imp, v_bads, y_max_er__))
                     # Пополнение обучающей выборки нейросети
                     impactgen.add_impact(ig.ImpactData(cogmap, imp, y_max_er__))
 
+        # debug_print(f"return solutions")
         return solutions
 
-    def find_optimal_changes(self, base_cogmap: cm.CogMap, n: int, simple_structs: List[List[float]],
+    def find_optimal_changes(self, base_cogmap: cm.CogMap, n: int,
+                             simple_structs: List[List[float]],
                              impactgen: ig.ImpactGenerator, figures_range: List[int]):
         """
-        Ищет оптимальное изменение когнитивной карты для приведения значений целевых вершин в заданные пределы
+        Ищет оптимальное изменение когнитивной карты для приведения значений целевых вершин
+        в заданные пределы
         :param base_cogmap: базовая когнитивная карта
         :param n: число шагов импульсного моделирования
         :param simple_structs: список простых структур
         :param impactgen: генератор воздействий
         :param figures_range: список простых фигур для обработки
-        :return: 0 - решений не найдено, -1 - решений не требуется, 1 - решения найдены; список композиций решений
+        :return: 0 - решений не найдено, -1 - решений не требуется,
+                +1 - решения найдены; список композиций решений
         """
 
-        # Анализ тенденций развития ситуаций на когнитивной модели по результатам первой серии импульсного моделирования
+        # Анализ тенденций развития ситуаций на когнитивной модели по результатам первой
+        # серии импульсного моделирования
         v_bad, max_y_er = base_cogmap.pulse_model(n)
         if len(v_bad) == 0:  # Нет проблемных вершин
             return -1, None
         print(f"Found {len(v_bad)} problem vertices")
+        # debug_print(f"Found {len(v_bad)} problem vertices")
 
         partial_solutions = []
         for v in v_bad:
-            for i in range(len(simple_structs)):
+            for i, simple_struct in enumerate(simple_structs):
                 # Пропуск структур, не указанных в списке figures_range
                 if i not in figures_range:
                     continue
-                print(f"Processing simple structure {i} for vertex id {v.id}")
+                print(f"Processing simple structure {i} for vertex id {v.id_}")
+                # debug_print(f"Processing simple structure {i} for vertex id {v.id_}")
                 # Обработка простых структур
-                solutions = self.process_simple_structs(base_cogmap, simple_structs[i], v, n,
+                solutions = self.process_simple_structs(base_cogmap, simple_struct, v, n,
                                                         impactgen, v_bad, max_y_er)
-                if len(solutions):
+                if solutions:
                     partial_solutions.extend(solutions)
 
         print(f"Found {len(partial_solutions)} solution(s)")
+        # debug_print(f"Found {len(partial_solutions)} solution(s)")
         if len(partial_solutions) == 0:
-            # debug exit(0)
             return None, None
 
-        print(f"Building compositions", end="")
+        print("Building compositions", end="")
+        # debug_print("Building compositions")
         # Формирование композиций решений
         compositions = self.build_compositions(base_cogmap, partial_solutions)
-        print(f" - OK")
+        print(" - OK")
 
         # Выполнение когнитивного моделирования для всех композиций.
-        # Формирование списка копозиций на основе результатов моделирования
-        print(f"Modeling compositions...")
+        # Формирование списка композиций на основе результатов моделирования
+        print("Modeling compositions...")
+        # debug_print("Modeling compositions...")
         composed_solutions = []
         c_num = 1
         for c in compositions:
             print(f"Composition {c_num}/{len(compositions)}")
+            # debug_print(f"Composition {c_num}/{len(compositions)}")
             c_num += 1
-            V = []
+            v = []
             initial_impulses = []
-            for i in range(len(c[1].imp)):
-                V.append(c[1].v_imp[i])
-                initial_impulses.append(c[1].imp[i])
-            impulses, bad_vertices, y_max_er = self.find_impact(c[0], V, n, impactgen, initial_impulses, True)
-            composed_solutions.append(SolutionData(len(c[0].matrix) - len(base_cogmap.matrix), c[0],
-                                                   c[2], impulses, bad_vertices, y_max_er))
-        composed_solutions.sort(key=lambda x: (len(x.bad_vertices), x.y_max_er, len(x.cogmap.matrix)))
+            for i, impulse in enumerate(c[1].imp):
+                v.append(c[1].v_imp[i])
+                initial_impulses.append(impulse)
+            impulses, bad_vertices, y_max_er = self.find_impact(c[0], v, n, impactgen,
+                                                                initial_impulses, True)
+            composed_solutions.append(SolutionData(len(c[0].matrix) - len(base_cogmap.matrix),
+                                                   c[0], c[2], impulses, bad_vertices, y_max_er))
+        composed_solutions.sort(key=lambda x: (len(x.bad_vertices), x.y_max_er,
+                                               len(x.cogmap.matrix)))
 
         # Возвращаем статус и данные для отчета
-        print(f"Modeling compositions complete")
+        print("Modeling compositions complete")
+        # debug_print("Modeling compositions complete")
         return 1 if len(compositions) > 0 else 0, composed_solutions

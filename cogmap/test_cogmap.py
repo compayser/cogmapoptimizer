@@ -1,6 +1,9 @@
-import proba
-import numpy as np
+# pylint: disable=protected-access, too-many-statements, too-many-locals
+# pylint: disable=too-many-branches
+""":file: Модуль тестирования"""
 from unittest import TestCase
+import numpy as np
+import proba
 from cogmap import CogMap, Vertex, Edge, Impulses
 
 
@@ -8,14 +11,14 @@ class TestVertex(TestCase):
     """
     Тест вершины
     """
-    pass
+    pass  # pylint: disable=unnecessary-pass
 
 
 class TestEdge(TestCase):
     """
     Тест ребра
     """
-    pass
+    pass  # pylint: disable=unnecessary-pass
 
 
 class TestCogMap(TestCase):
@@ -53,6 +56,7 @@ class TestCogMap(TestCase):
         e.append(Edge(458, 27, 38, rnd9, "C"))
         # Когнитивная карта
         self.c = CogMap(v, e)
+        self.vertices = []
 
     def test_vertex_idx_by_id(self):
         """
@@ -77,10 +81,10 @@ class TestCogMap(TestCase):
         rnd03.append_value(0.3, 1)
         m2 = np.array([[rnd0, rnd01, rnd02_], [rnd0, rnd0, rnd03], [rnd0, rnd0, rnd0]])
         count = 0
-        for i in range(len(m2)):
-            for j in range(len(m2[i])):
+        for i, row in enumerate(m2):
+            for j, val in enumerate(row):
                 count += 1
-                if not(m1[i, j] != m2[i, j]):
+                if not m1[i, j] != val:
                     count -= 1
         self.assertTrue(count == 0)
         rnd6 = proba.ProbA()
@@ -95,16 +99,16 @@ class TestCogMap(TestCase):
         self.c.edges.append(Edge(113, 38, 21, rnd06, "A"))
         self.c.edges.append(Edge(112, 21, 27, rnd08, "B"))
         self.c.edges.append(Edge(111, 38, 27, rnd01, "C"))
-        self.c.rebuild_matrix()
+        self.c._rebuild_matrix()
         m2 = np.array([[rnd0, rnd01, rnd02_, rnd0],
                        [rnd0, rnd0, rnd03, rnd0],
                        [rnd01, rnd0, rnd0, rnd06],
                        [rnd08, rnd0, rnd0, rnd0]])
         count = 0
-        for i in range(len(m2)):
-            for j in range(len(m2[i])):
+        for i, row in enumerate(m2):
+            for j, val in enumerate(row):
                 count += 1
-                if not(self.c.matrix[i, j] != m2[i, j]):
+                if not self.c.matrix[i, j] != val:
                     count -= 1
         self.assertTrue(count == 0)
 
@@ -117,7 +121,7 @@ class TestCogMap(TestCase):
         rnd101.append_value(101, 1)
         rnd2 = proba.ProbA()
         rnd2.append_value(2, 1)
-        self.c.add_vertex(Vertex(878, rnd101, 0, 0, rnd2, "bone"))
+        self.c._add_vertex(Vertex(878, rnd101, 0, 0, rnd2, "bone"))
         self.assertEqual(len(self.c.vertices), n + 1)
         m1 = self.c.matrix
         rnd0 = proba.ProbA()
@@ -133,10 +137,10 @@ class TestCogMap(TestCase):
                        [rnd0, rnd0, rnd0, rnd0],
                        [rnd0, rnd0, rnd0, rnd0]])
         count = 0
-        for i in range(len(m2)):
-            for j in range(len(m2[i])):
+        for i, row in enumerate(m2):
+            for j, val in enumerate(row):
                 count += 1
-                if not(m1[i, j] != m2[i, j]):
+                if not m1[i, j] != val:
                     count -= 1
         self.assertTrue(count == 0)
 
@@ -147,7 +151,7 @@ class TestCogMap(TestCase):
         n = len(self.c.edges)
         rnd = proba.ProbA()
         rnd.append_value(2, 1)
-        self.c.add_edge(Edge(8111, 38, 27, rnd, "A"))
+        self.c._add_edge(Edge(8111, 38, 27, rnd, "A"))
         self.assertEqual(len(self.c.edges), n + 1)
         m1 = self.c.matrix
         rnd0 = proba.ProbA()
@@ -162,10 +166,10 @@ class TestCogMap(TestCase):
         rnd2.append_value(2, 1)
         m2 = np.array([[rnd0, rnd01, rnd02_], [rnd0, rnd0, rnd03], [rnd2, rnd0, rnd0]])
         count = 0
-        for i in range(len(m2)):
-            for j in range(len(m2[i])):
+        for i, row in enumerate(m2):
+            for j, val in enumerate(row):
                 count += 1
-                if not(m1[i, j] != m2[i, j]):
+                if not m1[i, j] != val:
                     count -= 1
         self.assertTrue(count == 0)
 
@@ -174,7 +178,7 @@ class TestCogMap(TestCase):
         Тест удаления вершин
         """
         n = len(self.c.vertices)
-        self.c.rem_vertex(27)
+        self.c._rem_vertex(27)
         self.assertEqual(len(self.c.vertices), n - 1)
         m1 = self.c.matrix
         rnd0 = proba.ProbA()
@@ -183,10 +187,10 @@ class TestCogMap(TestCase):
         rnd03.append_value(0.3, 1)
         m2 = np.array([[rnd0, rnd03], [rnd0, rnd0]])
         count = 0
-        for i in range(len(m2)):
-            for j in range(len(m2[i])):
+        for i, row in enumerate(m2):
+            for j, val in enumerate(row):
                 count += 1
-                if not (m1[i, j] != m2[i, j]):
+                if not m1[i, j] != val:
                     count -= 1
         self.assertTrue(count == 0)
 
@@ -195,7 +199,7 @@ class TestCogMap(TestCase):
         Тест удаления ребер
         """
         n = len(self.c.edges)
-        self.c.rem_edge(452)
+        self.c._rem_edge(452)
         self.assertEqual(len(self.c.edges), n - 1)
         m1 = self.c.matrix
         rnd0 = proba.ProbA()
@@ -206,10 +210,10 @@ class TestCogMap(TestCase):
         rnd03.append_value(0.3, 1)
         m2 = np.array([[rnd0, rnd0, rnd02_], [rnd0, rnd0, rnd03], [rnd0, rnd0, rnd0]])
         count = 0
-        for i in range(len(m2)):
-            for j in range(len(m2[i])):
+        for i, row in enumerate(m2):
+            for j, val in enumerate(row):
                 count += 1
-                if not(m1[i, j] != m2[i, j]):
+                if not m1[i, j] != val:
                     count -= 1
         self.assertTrue(count == 0)
 
@@ -226,7 +230,7 @@ class TestCogMap(TestCase):
         rnd12_.append_value(-1.2, 1)
         q = [rnd11, rnd12_]
         vq = [0, 2]
-        res = self.c.pulse_calc(q, vq, steps)
+        res = self.c._pulse_calc(q, vq, steps)
         rnd91 = proba.ProbA()
         rnd91.append_value(9.1, 1)
         rnd70 = proba.ProbA()
@@ -235,18 +239,17 @@ class TestCogMap(TestCase):
         rnd08.append_value(0.8, 1)
         good = [rnd91, rnd70, rnd08]
         count = 0
-        for i in range(len(res)):
+        for i, val in enumerate(res):
             count += 1
-            if not(res[i] != good[i]):
+            if not val != good[i]:
                 count -= 1
         self.assertEqual(count, 0)
-
         # Число циклов
         steps = 2
         # Ставим стартовые импульсы на V0 с val=1,1 и на V2 с val=-1,2
         q = [rnd11, rnd12_]
         vq = [0, 2]
-        res = self.c.pulse_calc(q, vq, steps)
+        res = self.c._pulse_calc(q, vq, steps)
         rnd91 = proba.ProbA()
         rnd91.append_value(9.1, 1)
         rnd711 = proba.ProbA()
@@ -255,9 +258,9 @@ class TestCogMap(TestCase):
         rnd058.append_value(0.5800000000000001, 1)
         good = [rnd91, rnd711, rnd058]
         count = 0
-        for i in range(len(res)):
+        for i, val in enumerate(res):
             count += 1
-            if not(res[i] != good[i]):
+            if not val != good[i]:
                 count -= 1
         self.assertEqual(count, 0)
 
@@ -266,7 +269,7 @@ class TestCogMap(TestCase):
         # Ставим стартовые импульсы на V0 с val=1,1 и на V2 с val=-1,2
         q = [rnd11, rnd12_]
         vq = [0, 2]
-        res = self.c.pulse_calc(q, vq, steps)
+        res = self.c._pulse_calc(q, vq, steps)
         rnd91 = proba.ProbA()
         rnd91.append_value(9.1, 1)
         rnd711 = proba.ProbA()
@@ -275,9 +278,9 @@ class TestCogMap(TestCase):
         rnd061.append_value(0.6130000000000001, 1)
         good = [rnd91, rnd711, rnd061]
         count = 0
-        for i in range(len(res)):
+        for i, val in enumerate(res):
             count += 1
-            if not(res[i] != good[i]):
+            if not val != good[i]:
                 count -= 1
         self.assertEqual(count, 0)
 
@@ -295,7 +298,7 @@ class TestCogMap(TestCase):
         rnd4 = proba.ProbA()
         rnd4.append_value(+6, 1.0)
         ar = [[rnd1, rnd2], [rnd3, rnd4]]
-        f, m = self.c.eig_vals_calc(ar)
+        f, m = self.c._eig_vals_calc(ar)
         self.assertEqual(f, False)
         self.assertEqual(m, 3)
 
@@ -303,9 +306,9 @@ class TestCogMap(TestCase):
         """
         Тест вычисления симплексов
         """
-        self.assertEqual(self.c.simplex_calc(0), [])
-        self.assertEqual(self.c.simplex_calc(1), [0])
-        self.assertEqual(self.c.simplex_calc(2), [0, 1])
+        self.assertEqual(self.c._simplex_calc(0), [])
+        self.assertEqual(self.c._simplex_calc(1), [0])
+        self.assertEqual(self.c._simplex_calc(2), [0, 1])
 
     def test_cycles_calc(self):
         """
@@ -315,7 +318,7 @@ class TestCogMap(TestCase):
               [1, 0, -1, 1],
               [1, 1, 0, -1],
               [-1, 1, 1, 0]]
-        count, neg = self.c.cycles_calc(ar)
+        count, neg = self.c._cycles_calc(ar)
         self.assertEqual(count, 20)
         self.assertEqual(neg, 8)
 
@@ -324,7 +327,7 @@ class TestCogMap(TestCase):
         Тест удаления ребра по вершинам
         """
         n = len(self.c.edges)
-        self.c.rem_edge_by_vertices(27, 42)
+        self.c._rem_edge_by_vertices(27, 42)
         self.assertEqual(len(self.c.edges), n - 1)
         m1 = self.c.matrix
         rnd0 = proba.ProbA()
@@ -335,10 +338,10 @@ class TestCogMap(TestCase):
         rnd03.append_value(0.3, 1)
         m2 = np.array([[rnd0, rnd0, rnd02_], [rnd0, rnd0, rnd03], [rnd0, rnd0, rnd0]])
         count = 0
-        for i in range(len(m2)):
-            for j in range(len(m2[i])):
+        for i, row in enumerate(m2):
+            for j, val in enumerate(row):
                 count += 1
-                if not(m1[i, j] != m2[i, j]):
+                if not m1[i, j] != val:
                     count -= 1
         self.assertTrue(count == 0)
 
@@ -347,17 +350,17 @@ class TestCogMap(TestCase):
         Тест вычисления симплекса для одной вершины
         """
         ar = [[0, -1, 1, 1], [1, 0, -1, 1], [1, 1, 0, -1], [-1, 1, 1, 0]]
-        self.assertEqual(self.c.sy1(ar, 0), [1, 2, 3])
-        self.assertEqual(self.c.sy1(ar, 1), [0, 2, 3])
-        self.assertEqual(self.c.sy1(ar, 2), [0, 1, 3])
-        self.assertEqual(self.c.sy1(ar, 3), [0, 1, 2])
+        self.assertEqual(self.c._sy1(ar, 0), [1, 2, 3])
+        self.assertEqual(self.c._sy1(ar, 1), [0, 2, 3])
+        self.assertEqual(self.c._sy1(ar, 2), [0, 1, 3])
+        self.assertEqual(self.c._sy1(ar, 3), [0, 1, 2])
 
     def test_sy(self):
         """
         Тест вычисления всех симплициальных комплексов
         """
         ar = [[0, -1, 1, 1], [1, 0, -1, 1], [1, 1, 0, -1], [-1, 1, 1, 0]]
-        self.assertEqual(self.c.sy(ar), [[[0], [1], [2], [3]], [[0, 1, 2, 3]]])
+        self.assertEqual(self.c._sy(ar), [[[0], [1], [2], [3]], [[0, 1, 2, 3]]])
 
     def test_combo_v(self):
         """
@@ -412,12 +415,12 @@ class TestCogMap(TestCase):
                 [rnd1, rnd1, rnd1, rnd1, rnd0, rnd0],
                 [rnd0, rnd0, rnd12, rnd0, rnd0, rnd0]]
 
-        r = self.c.comboV(k1, s1, [2], [1], 0)
+        r = self.c._combo_v(k1, s1, [2], [1], 0)
         count = 0
-        for i in range(len(r)):
-            for j in range(len(r[i])):
+        for i, row in enumerate(r):
+            for j, val in enumerate(row):
                 count += 1
-                if not(r[i, j] != res1[i][j]):
+                if not val != res1[i][j]:
                     count -= 1
         self.assertTrue(count == 0)
 
@@ -429,12 +432,12 @@ class TestCogMap(TestCase):
                 [rnd1, rnd1, rnd0, rnd1, rnd1],
                 [rnd1, rnd21, rnd1, rnd0, rnd1],
                 [rnd1, rnd1, rnd1, rnd1, rnd0]]
-        r = self.c.comboV(k1, s1, [1, 3], [0, 1], 0)
+        r = self.c._combo_v(k1, s1, [1, 3], [0, 1], 0)
         count = 0
-        for i in range(len(r)):
-            for j in range(len(r[i])):
+        for i, row in enumerate(r):
+            for j, val in enumerate(row):
                 count += 1
-                if not(r[i, j] != res2[i][j]):
+                if not val != res2[i][j]:
                     count -= 1
         self.assertTrue(count == 0)
 
@@ -447,12 +450,12 @@ class TestCogMap(TestCase):
                 [rnd41, rnd43, rnd1, rnd0, rnd1, rnd42],
                 [rnd1, rnd1, rnd1, rnd1, rnd0, rnd0],
                 [rnd21, rnd23, rnd0, rnd24, rnd0, rnd0]]
-        r = self.c.comboV(k1, s1, [0, 1, 3], [0, 2, 3], 0)
+        r = self.c._combo_v(k1, s1, [0, 1, 3], [0, 2, 3], 0)
         count = 0
-        for i in range(len(r)):
-            for j in range(len(r[i])):
+        for i, row in enumerate(r):
+            for j, val in enumerate(row):
                 count += 1
-                if not(r[i, j] != res3[i][j]):
+                if not val != res3[i][j]:
                     count -= 1
         self.assertTrue(count == 0)
 
@@ -482,10 +485,10 @@ class TestCogMap(TestCase):
                 [rnd0, rnd0, rnd0, rnd1, rnd0]]
         new_cm = self.c.get_composition(s1, [0], [0], 0)
         count = 0
-        for i in range(len(new_cm.matrix)):
-            for j in range(len(new_cm.matrix[i])):
+        for i, row in enumerate(new_cm.matrix):
+            for j, val in enumerate(row):
                 count += 1
-                if not(new_cm.matrix[i, j] != res1[i][j]):
+                if not val != res1[i][j]:
                     count -= 1
         self.assertTrue(count == 0)
 
@@ -495,10 +498,10 @@ class TestCogMap(TestCase):
                 [rnd1_, rnd0, rnd0, rnd0]]
         new_cm = self.c.get_composition(s1, [0, 1], [0, 2], 0)
         count = 0
-        for i in range(len(new_cm.matrix)):
-            for j in range(len(new_cm.matrix[i])):
+        for i, row in enumerate(new_cm.matrix):
+            for j, val in enumerate(row):
                 count += 1
-                if not(new_cm.matrix[i, j] != res2[i][j]):
+                if not val != res2[i][j]:
                     count -= 1
         self.assertTrue(count == 0)
 
@@ -516,7 +519,7 @@ class TestCogMap(TestCase):
         rnd0 = proba.ProbA()
         rnd0.append_value(0.0, 1.0)
         self.assertFalse(max_y_er != rnd0)
-        self.c.Y.append(self.c.vertices[2])
+        self.c.y.append(self.c.vertices[2])
         v_bad, max_y_er = self.c.pulse_model(5, imp)
         self.assertEqual(v_bad, [])
         self.assertFalse(max_y_er != rnd0)
@@ -526,7 +529,7 @@ class TestProbVal(TestCase):
     """
     Тест вероятностного числа
     """
-    pass
+    pass  # pylint: disable=unnecessary-pass
 
 
 class TestProbA(TestCase):
@@ -596,25 +599,35 @@ class TestProbA(TestCase):
             self.rnd.append_value(val, prob)
         self.rnd.reduce(10)
         count = 0
-        if self.rnd.vals[0].value == 5.000000000000001 and self.rnd.vals[0].prob == 0.10999999999999999:
+        if self.rnd.vals[0].value == 5.000000000000001 and \
+                self.rnd.vals[0].prob == 0.10999999999999999:
             count += 1
-        if self.rnd.vals[1].value == 16.000000000000004 and self.rnd.vals[1].prob == 0.10999999999999999:
+        if self.rnd.vals[1].value == 16.000000000000004 and \
+                self.rnd.vals[1].prob == 0.10999999999999999:
             count += 1
-        if self.rnd.vals[2].value == 27.000000000000004 and self.rnd.vals[2].prob == 0.10999999999999999:
+        if self.rnd.vals[2].value == 27.000000000000004 and \
+                self.rnd.vals[2].prob == 0.10999999999999999:
             count += 1
-        if self.rnd.vals[3].value == 38.000000000000000 and self.rnd.vals[3].prob == 0.10999999999999999:
+        if self.rnd.vals[3].value == 38.000000000000000 and \
+                self.rnd.vals[3].prob == 0.10999999999999999:
             count += 1
-        if self.rnd.vals[4].value == 49.000000000000014 and self.rnd.vals[4].prob == 0.10999999999999999:
+        if self.rnd.vals[4].value == 49.000000000000014 and \
+                self.rnd.vals[4].prob == 0.10999999999999999:
             count += 1
-        if self.rnd.vals[5].value == 60.000000000000014 and self.rnd.vals[5].prob == 0.10999999999999999:
+        if self.rnd.vals[5].value == 60.000000000000014 and \
+                self.rnd.vals[5].prob == 0.10999999999999999:
             count += 1
-        if self.rnd.vals[6].value == 71.000000000000000 and self.rnd.vals[6].prob == 0.10999999999999999:
+        if self.rnd.vals[6].value == 71.000000000000000 and \
+                self.rnd.vals[6].prob == 0.10999999999999999:
             count += 1
-        if self.rnd.vals[7].value == 82.000000000000000 and self.rnd.vals[7].prob == 0.10999999999999999:
+        if self.rnd.vals[7].value == 82.000000000000000 and \
+                self.rnd.vals[7].prob == 0.10999999999999999:
             count += 1
-        if self.rnd.vals[8].value == 93.000000000000030 and self.rnd.vals[8].prob == 0.10999999999999999:
+        if self.rnd.vals[8].value == 93.000000000000030 and \
+                self.rnd.vals[8].prob == 0.10999999999999999:
             count += 1
-        if self.rnd.vals[9].value == 99.000000000000000 and self.rnd.vals[9].prob == 0.01000000000000000:
+        if self.rnd.vals[9].value == 99.000000000000000 and \
+                self.rnd.vals[9].prob == 0.01000000000000000:
             count += 1
         self.assertEqual(count, 10)
 
@@ -793,25 +806,26 @@ class TestProbA(TestCase):
         rnd.append_value(4.0, 0.4)
 
         # Подтест 1 - ошибка
-        rnd.BUILD_SCALAR = 'trash'
+        rnd.build_scalar_mode = 'trash'
+        print(f"****** rnd.build_scalar() = {rnd.build_scalar()}")
         self.assertEqual(rnd.build_scalar(), None)
 
         # Подтест 2 - среднее
-        rnd.BUILD_SCALAR = 'avg'
+        rnd.build_scalar_mode = 'avg'
         self.assertEqual(rnd.build_scalar(), 3.0)
 
         # Подтест 3 - максимум
-        rnd.BUILD_SCALAR = 'max'
+        rnd.build_scalar_mode = 'max'
         self.assertEqual(rnd.build_scalar(), 4.0)
 
         # Подтест 4 - минимум
-        rnd.BUILD_SCALAR = 'min'
+        rnd.build_scalar_mode = 'min'
         self.assertEqual(rnd.build_scalar(), 1.0)
 
         # Подтест 5 - средний максимум
-        rnd.BUILD_SCALAR = 'max_avg'
+        rnd.build_scalar_mode = 'max_avg'
         self.assertEqual(rnd.build_scalar(), 3.5)
 
         # Подтест 6 - средний минимум
-        rnd.BUILD_SCALAR = 'min_avg'
+        rnd.build_scalar_mode = 'min_avg'
         self.assertEqual(rnd.build_scalar(), 1.5)

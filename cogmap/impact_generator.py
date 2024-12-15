@@ -1,8 +1,12 @@
-import proba
-import numpy as np
-import cogmap as cm
+# pylint: disable=too-many-locals, too-few-public-methods
+"""
+:file: Модуль с описанием класса для генерации воздействий
+"""
 from typing import List
-from keras.models import load_model
+import numpy as np
+from keras.models import load_model  # pylint: disable=E0401
+import proba
+import cogmap as cm
 
 
 class ImpactData:
@@ -48,8 +52,8 @@ class ImpactGenerator:
         """
         value_deltas = cogmap.pulse_model_nn(n)
         compact_matrix = cogmap.matrix[:, :]
-        for i in range(len(value_deltas)):
-            compact_matrix[i, i] = value_deltas[i]
+        for i, delta in enumerate(value_deltas):
+            compact_matrix[i, i] = delta
         m = np.array(compact_matrix).ravel()
 
         growths = [v.growth for v in cogmap.vertices]
@@ -60,23 +64,23 @@ class ImpactGenerator:
         data.extend(np.zeros((32 ** 2) - len(m)))
 
         data_ = []
-        for i in range(len(data)):
-            if isinstance(data[i], proba.ProbA):
-                data_.append(data[i].build_scalar())
+        for _, item in enumerate(data):
+            if isinstance(item, proba.ProbA):
+                data_.append(item.build_scalar())
             else:
-                data_.append(data[i])
+                data_.append(item)
         data = data_
 
-        all_impulses_sum = self.model.predict([data])
+        all_impulses_sum = self.model.predict([data], verbose=0)
         growths_ = []
-        for i in range(len(growths)):
-            if isinstance(growths[i], proba.ProbA):
-                growths_.append(growths[i].build_scalar())
+        for _, item in enumerate(growths):
+            if isinstance(item, proba.ProbA):
+                growths_.append(item.build_scalar())
             else:
-                growths_.append(growths[i])
+                growths_.append(item)
         growths = growths_
         all_impulses = np.array(all_impulses_sum[0]) - np.array(growths)
         res_impulses = []
         for v in v_lst:
-            res_impulses.append(all_impulses[cogmap.vertex_idx_by_id(v.id)])
+            res_impulses.append(all_impulses[cogmap.vertex_idx_by_id(v.id_)])
         return res_impulses

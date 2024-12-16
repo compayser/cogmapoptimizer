@@ -1,0 +1,20 @@
+{
+    "local_storage_folder": "c:\\share\\Deploy\\Results\\",
+    "cog_map": "CogMapOptimizer_test.cmj",
+    "cog_map_xyz": "CogMapOptimizer_test.cmj_xyz",
+    "pulse_model_steps": 5,
+    "nodes": [
+        {
+            "net_path": "\\\\192.168.1.57\\share\\PyPy\\",
+            "local_path": "c:\\share\\PyPy\\",
+            "user": "user",
+            "pass": "user"
+        },
+        {
+            "net_path": "\\\\192.168.1.55\\share\\py55\\",
+            "local_path": "c:\\share\\py55\\",
+            "user": "root",
+            "pass": "root"
+        }
+    ]
+}

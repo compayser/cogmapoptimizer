@@ -1,8 +1,12 @@
-# Test case
+# Test case 2
 
-## 1 Initial data
+## 1 Experimental confirmation of the operability of the "Cognitive Maps Parallel Processing Toolkit" component
 
-### 1.1 Legend
+This example is an experimental confirmation of the operability of the "Cognitive Maps Parallel Processing Toolkit" component, which consists of comparing the calculation (optimization) options for cognitive maps on a single-machine computing system and on a multi-machine version. The example data used for the example is the example previously used to confirm the concept of using probabilistic cognitive maps.
+
+## 2 Initial data
+
+### 2.1 Legend
 
 It is necessary to build a certain object (using the example of the construction of an object like “Dormitory”). There is a project for the specified construction project, an integral part of which is the construction work schedule - a list of works by type, indicating their duration and sequence of execution.
 
@@ -15,7 +19,7 @@ These factors can significantly influence the construction process. In particula
 
 Objective: by influencing existing concepts that describe the factors influencing the construction process and the connections between them, to achieve a schedule of construction and installation work that meets or exceeds the initial expectations of the customer (that is, the original project).
 
-### 1.2 Initial cognitive maps
+### 2.2 Initial cognitive maps
 
 Due to the fact that a cognitive map that could describe the complete construction process (including tens of works and no less number of external and internal factors even for such a simple construction project as a “Dormitory”) turns out to be overly complex. As a way out, you can use the principle of decomposition: cognitive modeling can be divided into several stages. As an example, two cognitive maps will be considered:
 
@@ -65,9 +69,9 @@ Internal factors:
 
 Fig. 2 — Example 2b. Cognitive map of a particular stage of work (arrangement of the foundation)_
 
-## 2 Cognitive modeling
+## 3 Cognitive modeling
 
-### 2.1 Fuzzy probabilistic cognitive maps
+### 3.1 Fuzzy probabilistic cognitive maps
 
 Fuzzy probabilistic cognitive maps are a type of cognitive maps in which the values of the weight coefficients for vertices and edges are proposed to be expressed as discrete random variables. This approach is intended to implement mechanisms for working with the parameters of a cognitive model, which are specified by a set of expert opinions, which, in turn, is expressed as an array of numerical values (weights) and frequencies (probabilities) of occurrence of these values.
 
@@ -79,7 +83,7 @@ To modify fuzzy cognitive maps in order to work with discrete random variables, 
 
 The data structure for storing the values of discrete random variables is proposed to be simple: discrete random variables are described as a list of known length, each element of which is a “value - probability” pair. “Value” is generally a real number (in some cases, if necessary, it can be represented as an integer value). A “probability” is a positive real number such that the sum of all “probabilities” in the list is strictly equal to 1 (adjusted for the available accuracy of storing numbers on the computing system used).
 
-### 2.2 General modeling principles
+### 3.2 General modeling principles
 
 In both of the above examples, modeling comes down to the fact that in the initial node (Project start) the initial weight (corresponding to the initial volume of work) and the initial impact (corresponding to the conditional speed of performing this work) are specified. Further, during the modeling process, at each step the impact spreads across the map, affecting all its vertices that correspond to certain types of construction and installation works. These vertices also have their own weighting coefficients - equivalent to the volume of required labor costs.
 
@@ -87,7 +91,7 @@ In addition to the main impact on the cognitive map from the initial vertex, the
 
 The simulation is considered completed if the amount of work remaining to be completed at the top of the Project finish (end of the construction project) is reduced to zero.
 
-### 2.3 Human Solutions
+### 3.3 Human Solutions
 
 The results of creating a model describing the technical processes of construction and carrying out cognitive modeling are the so-called “burndown charts”, which are shown in Fig. 3-4. For first example, the abscissa shows the construction time expressed in weeks, for second one - in days. The y-axis in both examples displays the amount of remaining work in conventional units.
 
@@ -101,7 +105,7 @@ Fig. 4 — Example 2b. The result of cognitive modeling in the form of a task co
 
 As can be seen from the presented graphs, the duration of work both according to the [general schedule](pics/yPlan-General.png) and the [particular stage schedule](pics/yPlan-Particular.png) coincide with those planned in accordance with the construction project. This confirms the correctness of the selection of weighting coefficients for both vertices and edges, as well as (in general) the adequacy of the proposed model.
 
-## 2.4 Solutions obtained by AI
+## 3.4 Solutions obtained by AI
 
 The target vertices of the cognitive map graphs are the vertices associated with the completion of work (Project finish for the first example and Stage finish for the second). The purpose of processing the created cognitive maps is to select a method (or methods) to minimize the time to achieve the minimum value of the weights of the specified vertices, which will correspond to the completion of the work.
 
@@ -111,7 +115,7 @@ As a result of cognitive modeling, the following results were obtained.
 
 _Clarification._ The resulting cognitive maps display the weights of vertices and edges that are different from the original ones. This is explained by the fact that recommendations obtained on the basis of fuzzy probabilistic cognitive maps should not be probabilistic (no matter how paradoxical it may sound). A recommendation issued by an expert advisory system should not look like the advice “To achieve a result, with probability N, perform action A, and with probability 1-N, do not perform it.” Therefore, the weighted average of discrete random variables is taken as recommendations: it one way or another takes into account the opinion of all experts involved in creating the model, and at the same time does not coarse the final modeling results, being as close as possible to reality.
 
-### 2.4.1 Example 2a (general work schedule)
+### 3.4.1 Example 2a (general work schedule)
 
 For example 2a (general work schedule), a set of proposed solutions was generated, the most effective of which was considered the following (see Fig. 5).
 
@@ -125,7 +129,7 @@ Also in the resulting cognitive map the weights of the edges between the vertice
 
 Additionally, the weight of the D-Finish rib changes (increases by 25%). _Interpretation: Reducing labor costs for laying utilities and interior decoration allows you to free up human resources and direct them to another area of work - the exterior decoration of a building under construction_.
 
-### 2.4.2 Evaluation of the resulting AI solution for example 2a
+### 3.4.2 Evaluation of the resulting AI solution for example 2a
 
 As a result of cognitive modeling, a task burndown diagram similar to a human solution was obtained (Fig. 6), but with a significant reduction in work time (2.3 times).
 
@@ -133,7 +137,7 @@ As a result of cognitive modeling, a task burndown diagram similar to a human so
 
 _Fig. 6 - Example 2a. Problem burndown diagram for the solution obtained by AI_
 
-### 2.4.3 Example 2b (schedule for a particular stage of work)
+### 3.4.3 Example 2b (schedule for a particular stage of work)
 
 For example 2b (schedule for a particular stage of work), a set of solutions was also generated, the most effective of which is shown in Fig. 7.
 
@@ -149,7 +153,7 @@ Secondly, taking into account what has just been said, the weight of edge 5-6 ra
 
 Thirdly, the proportions of the weighting coefficients on the 6-Finish and 5-Finish edges change. _Interpretation: taking into account the fact that work at stage 5 begins to be carried out more efficiently and effectively, this makes it possible to transfer part of the human resources to a more labor-intensive area of work - to stage 6 (concreting piles)._
 
-### 2.4.4 Evaluation of the resulting AI solution for example 2b
+### 3.4.4 Evaluation of the resulting AI solution for example 2b
 
 Cognitive modeling produces results supported by the task burndown chart (Fig. 8). In this case, a reduction in work time was obtained by approximately 25%.
 
@@ -157,11 +161,11 @@ Cognitive modeling produces results supported by the task burndown chart (Fig. 8
 
 _Fig. 8 — Example 2b. Problem burndown diagram for the solution obtained by AI_
 
-## 3 Comparison of solutions
+## 4 Comparison of solutions
 
 Comparing the solutions proposed by humans and AI (Fig. 3, 4, 6, 8), one can be convinced that the AI solution is more effective - a significant reduction in the time required for construction and installation work is achieved, both on a large and small scale.
 
-## 4 Experimental studies
+## 5 Experimental studies
 
 In order to conduct experimental studies of the developed algorithms and test their software implementation, test cases were developed:
 
@@ -169,3 +173,7 @@ In order to conduct experimental studies of the developed algorithms and test th
 - optimization ([schedule of the particular construction stage](data/Example2-ParticularPlan_rnd.zip)).
 
 By comparing [human and AI solutions for test cases](data/ControlExampleResults.zip), you can verify that the AI solution is more effective.
+
+## 6 Conclusions
+
+Based on the results of the comparison of processing in the single- and multi-machine variants (without and with the use of the "Cognitive Maps Parallel Processing Toolkit" component), a complete correspondence of the results was revealed, which proves the validity of using this approach. As expected, the time spent on calculation decreases proportionally to the increase in computing power (with an adjustment for the discreteness of breaking down the general task into subtasks solved on distributed computing nodes).

@@ -5,4 +5,14 @@
 
 Документация по ГОСТ ЕСПД в формате PDF:
 
+[![PDF](https://icons.iconarchive.com/icons/hopstarter/soft-scraps/48/Adobe-PDF-Document-icon.png) Компонент адаптивной оптимизации выполнения производственных процессов с использованием вероятностных моделей и динамически изменяемой среды. Спецификация](specif-komponent.pdf)
+[![PDF](https://icons.iconarchive.com/icons/hopstarter/soft-scraps/48/Adobe-PDF-Document-icon.png) Экспериментальный образец комплекса. Спецификация](specif-obrasec.pdf)
+
+[![PDF](https://icons.iconarchive.com/icons/hopstarter/soft-scraps/48/Adobe-PDF-Document-icon.png) Компонент адаптивной оптимизации выполнения производственных процессов с использованием вероятностных моделей и динамически изменяемой среды. Описание программы](program-description.pdf)
+
+[![PDF](https://icons.iconarchive.com/icons/hopstarter/soft-scraps/48/Adobe-PDF-Document-icon.png) Экспериментальный образец комплекса. Руководство программиста](programmers-guide.pdf)
+
+[![PDF](https://icons.iconarchive.com/icons/hopstarter/soft-scraps/48/Adobe-PDF-Document-icon.png) Компонент адаптивной оптимизации выполнения производственных процессов с использованием вероятностных моделей и динамически изменяемой среды. Текст программы](program-src.pdf)
 [![PDF](https://icons.iconarchive.com/icons/hopstarter/soft-scraps/48/Adobe-PDF-Document-icon.png) Инструментарий визуализации вероятностных когнитивных карт. Текст программы](program-src-graph-drawer.pdf)
+[![PDF](https://icons.iconarchive.com/icons/hopstarter/soft-scraps/48/Adobe-PDF-Document-icon.png) Инструментарий подготовки конкретизирующих ИИ-запросов для когнитивных карт. Текст программы](program-src-ai-interpreter.pdf)
+[![PDF](https://icons.iconarchive.com/icons/hopstarter/soft-scraps/48/Adobe-PDF-Document-icon.png) Инструментарий параллельной обработки когнитивных карт. Текст программы](program-src-deploy.pdf)

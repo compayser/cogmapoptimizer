@@ -1,0 +1,48 @@
+digraph G {
+    graph [size="12!"]
+    rankdir=RL
+    A0  [label="Producing" color="#000000"]
+    A1  [label="Anti-corrosion" color="#000000"]
+    A2  [label="Installing" color="#000000"]
+    A3  [label="Drilling" color="#000000"]
+    A4  [label="Filling voids" color="#000000"]
+    A5  [label="Filling piles" color="#000000"]
+    A6  [label="Temperature" color="#000000"]
+    A7  [label="Precipitation" color="#000000"]
+    A8  [label="Suppliers" color="#000000"]
+    A9  [label="Drill workers" color="#000000"]
+    A10  [label="Stage start" color="#000000"]
+    A11  [label="Stage finish" color="#000000"]
+    A12  [label="Other employees" color="#000000"]
+
+    A10 -> A0 [label="4/0.95, 4.1/0.05" color="#008000" fontcolor="#008000" fontsize="8"]
+    A5 -> A11 [label="0.65/0.9, 0.64/0.05, 0.66/0.05" color="#008000" fontcolor="#008000" fontsize="8"]
+    A4 -> A5 [label="-0.05/0.9, -0.03/0.1" color="#FF0000" fontcolor="#FF0000" fontsize="8"]
+    A0 -> A1 [label="1.0/0.9, 0.98/0.1" color="#008000" fontcolor="#008000" fontsize="8"]
+    A1 -> A2 [label="1.3/0.9, 1.32/0.1" color="#008000" fontcolor="#008000" fontsize="8"]
+    A2 -> A4 [label="0.5/0.8, 0.48/0.05, 0.49/0.05, 0.51/0.05, 0.52/0.05" color="#008000" fontcolor="#008000" fontsize="8"]
+    A2 -> A5 [label="0.35/0.8, 0.36/0.15, 0.37/0.05" color="#008000" fontcolor="#008000" fontsize="8"]
+    A10 -> A3 [label="4.0/0.9, 4.1/0.1" color="#008000" fontcolor="#008000" fontsize="8"]
+    A3 -> A2 [label="1.0/0.8, 1.05/0.1, 1.1/0.1" color="#008000" fontcolor="#008000" fontsize="8"]
+    A7 -> A3 [label="0.1/0.8, 0.11/0.05, 0.12/0.15" color="#008000" fontcolor="#008000" fontsize="8"]
+    A7 -> A1 [label="-0.1/0.8, -0.11/0.1, -0.12/0.1" color="#FF0000" fontcolor="#FF0000" fontsize="8"]
+    A8 -> A0 [label="-0.1/0.8, -0.11/0.1, -0.12/0.1" color="#FF0000" fontcolor="#FF0000" fontsize="8"]
+    A8 -> A1 [label="-0.1/0.8, -0.11/0.1, -0.12/0.1" color="#FF0000" fontcolor="#FF0000" fontsize="8"]
+    A7 -> A2 [label="-0.05/0.8, -0.06/0.1, -0.04/0.1" color="#FF0000" fontcolor="#FF0000" fontsize="8"]
+    A8 -> A4 [label="-0.1/0.8, -0.11/0.1, -0.12/0.1" color="#FF0000" fontcolor="#FF0000" fontsize="8"]
+    A8 -> A5 [label="-0.1/0.9, -0.11/0.05, -0.12/0.05" color="#FF0000" fontcolor="#FF0000" fontsize="8"]
+    A6 -> A3 [label="-0.1/0.8, -0.11/0.1, -0.12/0.1" color="#FF0000" fontcolor="#FF0000" fontsize="8"]
+    A9 -> A3 [label="-0.1/0.8, -0.11/0.1, -0.12/0.1" color="#FF0000" fontcolor="#FF0000" fontsize="8"]
+    A6 -> A1 [label="-0.1/0.8, -0.11/0.1, -0.12/0.1" color="#FF0000" fontcolor="#FF0000" fontsize="8"]
+    A9 -> A2 [label="-0.1/0.8, -0.11/0.1, -0.12/0.1" color="#FF0000" fontcolor="#FF0000" fontsize="8"]
+    A12 -> A1 [label="-0.1/0.8, -0.11/0.1, -0.12/0.1" color="#FF0000" fontcolor="#FF0000" fontsize="8"]
+    A12 -> A4 [label="-0.1/0.8, -0.11/0.1, -0.12/0.1" color="#FF0000" fontcolor="#FF0000" fontsize="8"]
+    A12 -> A5 [label="-0.1/0.8, -0.11/0.1, -0.12/0.1" color="#FF0000" fontcolor="#FF0000" fontsize="8"]
+    A6 -> A5 [label="-0.1/0.8, -0.11/0.2" color="#FF0000" fontcolor="#FF0000" fontsize="8"]
+    
+    { rank=same; A0 A1 A2 A3 }
+    { rank=same; A4 A5 A6 A7 }
+    { rank=same; A8 A9 A10 A11 }
+    { rank=same; A12 }
+    
+ }

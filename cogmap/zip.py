@@ -9,7 +9,7 @@ def archive(dir_name, output_filename):
     """
     if output_filename.rfind(".zip") == len(output_filename)-4:
         output_filename = output_filename[:-4]
-    shutil.make_archive(output_filename, 'zip', dir_name)
+    shutil.make_archive(output_filename, "zip", dir_name)
 
 
 def extract(file_name, extract_dir=""):

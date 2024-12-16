@@ -468,7 +468,7 @@ class ProbA:
 
     def build_scalar(self):
         """
-        Получение скалярного числа из ДСВ разными методами
+        Получение скаляра из ДСВ разными методами
         """
         if self.build_scalar_mode == "avg":  # Среднее взвешенное
             return self.avg()

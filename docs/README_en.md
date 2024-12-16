@@ -1,7 +1,7 @@
 [![SAI](./media/SAI_badge_flat.svg)](https://sai.itmo.ru/)
 [![ITMO](./media/ITMO_badge_flat_rus.svg)](https://en.itmo.ru/en/)
 
-[![Rus](https://img.shields.io/badge/lang-ru-red.svg)](/docs/README.md)
+[![Rus](https://img.shields.io/badge/lang-ru-yellow.svg)](/docs/README.md)
 
 # Description #
 

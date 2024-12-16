@@ -32,7 +32,7 @@ def get_random_string(length):
     """
     abc = string.ascii_uppercase
     abc = abc.join("0123456789")
-    return ''.join(random.choice(abc) for _ in range(length))
+    return "".join(random.choice(abc) for _ in range(length))
 
 
 def get_uid():

@@ -1,0 +1,32 @@
+Есть граф, описывающий предметную область (строительство).
+Граф состоит из множества вершин: вершина №1 - "Base", вершина №2 - "Block-boxes", вершина №3 - "Additional constructions", вершина №4 - "Exterior finishing", вершина №5 - "Interior decoration", вершина №6 - "Arrangement of utilities", вершина №7 - "Temperature", вершина №8 - "Precipitation", вершина №9 - "Suppliers", вершина №10 - "Management", вершина №11 - "Project start", вершина №12 - "Project finish".
+Вершины воздействуют друг на друга позитивно или негативно (если сила воздействия положительная или отрицательная, соответственно). Эти вершины связаны между собой следующим образом:
+- вершина "Base" воздействует на вершину "Block-boxes" с силой -0.1005.
+- вершина "Block-boxes" воздействует на вершину "Additional constructions" с силой -0.1005.
+- вершина "Additional constructions" воздействует на вершины "Interior decoration" с силой -0.1005, "Exterior finishing" с силой -0.1005.
+- вершина "Exterior finishing" воздействует на вершину "Project finish" с силой -0.1005.
+- вершина "Interior decoration" воздействует на вершину "Arrangement of utilities" с силой -0.1005.
+- вершина "Arrangement of utilities" воздействует на вершины "Project finish" с силой -0.1005, "Interior decoration" с силой -0.1005.
+- вершина "Temperature" воздействует на вершины "Base" с силой 2.0065, "Block-boxes" с силой 2.0065, "Additional constructions" с силой 2.0065, "Exterior finishing" с силой 2.0065, "Interior decoration" с силой 2.0065, "Arrangement of utilities" с силой 2.0065.
+- вершина "Precipitation" воздействует на вершины "Base" с силой 0.602, "Block-boxes" с силой 0.602, "Additional constructions" с силой 0.602, "Exterior finishing" с силой 0.602.
+- вершина "Suppliers" воздействует на вершину "Base" с силой -0.1005, "Block-boxes" с силой -0.1005, "Interior decoration" с силой -0.1005, "Additional constructions" с силой -0.1005, "Arrangement of utilities" с силой -0.1005, "Exterior finishing" с силой -0.1005.
+- вершина "Management" воздействует на вершину "Base" с силой -0.1005.
+- вершина "Project start" воздействует на вершину "Base" с силой 1.01.
+- вершина "Project finish" воздействует на вершин.
+Данный граф был изменен, вследствие чего он принял следующий вид.
+Его вершины: вершина №1 - "Base", вершина №2 - "Block-boxes", вершина №3 - "Additional constructions", вершина №4 - "Exterior finishing", вершина №5 - "Interior decoration", вершина №6 - "Arrangement of utilities", вершина №7 - "Temperature", вершина №8 - "Precipitation", вершина №9 - "Suppliers", вершина №10 - "Management", вершина №11 - "Project start", вершина №12 - "Project finish".
+Вершины измененного графа связаны между собой следующим образом:
+- вершина "Base" воздействует на вершину "Block-boxes" с силой -0.1005.
+- вершина "Block-boxes" воздействует на вершину "Additional constructions" с силой -0.1005.
+- вершина "Additional constructions" воздействует на вершины "Interior decoration" с силой -0.1005, "Exterior finishing" с силой -0.1005.
+- вершина "Exterior finishing" воздействует на вершину "Project finish" с силой -0.1005.
+- вершина "Interior decoration" воздействует на вершину "Arrangement of utilities" с силой -0.1005.
+- вершина "Arrangement of utilities" воздействует на вершину "Project finish" с силой -0.1005.
+- вершина "Temperature" воздействует на вершины "Base" с силой 2.0065, "Block-boxes" с силой 2.0065, "Additional constructions" с силой 2.0065, "Exterior finishing" с силой 2.0065, "Interior decoration" с силой 2.0065, "Arrangement of utilities" с силой 2.0065.
+- вершина "Precipitation" воздействует на вершины "Base" с силой 0.502, "Block-boxes" с силой 0.502, "Additional constructions" с силой 0.502, "Exterior finishing" с силой 0.502.
+- вершина "Suppliers" воздействует на вершину "Base" с силой -0.1005, "Block-boxes" с силой -0.1005, "Interior decoration" с силой -0.1005, "Additional constructions" с силой -0.1005, "Arrangement of utilities" с силой -0.1005, "Exterior finishing" с силой -0.1005.
+- вершина "Management" воздействует на вершину "Base" с силой -0.1005.
+- вершина "Project start" воздействует на вершину "Base" с силой 1.01.
+- вершина "Project finish" воздействует на вершин.
+Если разница в силе воздействия аналогичных вершин этих двух графов меньше 5%, то можно считать, что сила не менялась и игнорировать эту разницу.
+Вопрос: Объясни максимально подробно, с примерами, как можно интерпретировать внесенные в начальный граф изменения и как реализовать такие изменения?

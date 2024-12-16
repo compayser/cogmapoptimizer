@@ -1,0 +1,485 @@
+{
+    "MapTitle": "Plan 2",
+    "ModelingResults": {
+        "added_new_vertices": 0,
+        "target_vertices": [
+            {
+                "id": 22,
+                "fullName": "Stage finish"
+            }
+        ],
+        "bad_vertices": [],
+        "y_max_er": 0.0
+    },
+    "Settings": {
+        "showVertexShortName": true,
+        "showEdgeShortName": true,
+        "showVertexValue": false,
+        "highliteImpulsed": false,
+        "useColoring": true,
+        "showVertexFullName": true,
+        "showVertexGrowth": false,
+        "useEdgeWeight": true,
+        "useVertexValues": true,
+        "showEdgeWeight": true,
+        "useTitleBorders": false
+    },
+    "Scenarios": [
+        {
+            "impulses": [
+                {
+                    "val": 1.295289390933845,
+                    "v": 1,
+                    "step": 1
+                },
+                {
+                    "val": -15.892560948512667,
+                    "v": 2,
+                    "step": 1
+                },
+                {
+                    "val": 5.515985148246386,
+                    "v": 4,
+                    "step": 1
+                },
+                {
+                    "val": 6.670006439348013,
+                    "v": 3,
+                    "step": 1
+                },
+                {
+                    "val": 5.384933445996531,
+                    "v": 5,
+                    "step": 1
+                },
+                {
+                    "val": 25.57311439374036,
+                    "v": 13,
+                    "step": 1
+                },
+                {
+                    "val": -0.202824439145556,
+                    "v": 14,
+                    "step": 1
+                },
+                {
+                    "val": 0.2841166909131685,
+                    "v": 15,
+                    "step": 1
+                }
+            ],
+            "name": "scenario1",
+            "id": 1670668256870,
+            "indicators": [
+                22
+            ]
+        }
+    ],
+    "Vertices": [
+        {
+            "id": 1,
+            "value": 4.0024999999999995,
+            "fullName": "Producing",
+            "shortName": "1",
+            "color": "0x808080ff",
+            "show": "false",
+            "growth": 0.0,
+            "x": 192,
+            "y": 224
+        },
+        {
+            "id": 2,
+            "value": 4.005,
+            "fullName": "Anti-corrosion",
+            "shortName": "2",
+            "color": "0x808080ff",
+            "show": "false",
+            "growth": 0.0,
+            "x": 325,
+            "y": 224
+        },
+        {
+            "id": 4,
+            "value": 5.005,
+            "fullName": "Installing",
+            "shortName": "4",
+            "color": "0x808080ff",
+            "show": "false",
+            "growth": 0.0,
+            "x": 441,
+            "y": 322
+        },
+        {
+            "id": 3,
+            "value": 3.8049999999999997,
+            "fullName": "Drilling",
+            "shortName": "3",
+            "color": "0x808080ff",
+            "show": "false",
+            "growth": 0.0,
+            "x": 242,
+            "y": 351
+        },
+        {
+            "id": 5,
+            "value": 6.99,
+            "fullName": "Filling voids",
+            "shortName": "5",
+            "color": "0x808080ff",
+            "show": "false",
+            "growth": 0.0,
+            "x": 565,
+            "y": 323
+        },
+        {
+            "id": 6,
+            "value": 6.99,
+            "fullName": "Filling piles",
+            "shortName": "6",
+            "color": "0x808080ff",
+            "show": "false",
+            "growth": 0.0,
+            "x": 715.6279296875,
+            "y": 294.00164794921875
+        },
+        {
+            "id": 11,
+            "value": 10.025,
+            "fullName": "Temperature",
+            "shortName": "T",
+            "color": "0x999900ff",
+            "show": "false",
+            "growth": 1.0,
+            "x": 331,
+            "y": 478
+        },
+        {
+            "id": 12,
+            "value": 10.0225,
+            "fullName": "Precipitation",
+            "shortName": "P",
+            "color": "0x999900ff",
+            "show": "false",
+            "growth": 1.0,
+            "x": 104,
+            "y": 401
+        },
+        {
+            "id": 13,
+            "value": 9.986999999999998,
+            "fullName": "Suppliers",
+            "shortName": "S",
+            "color": "0x1a3399ff",
+            "show": "false",
+            "growth": 1.0,
+            "x": 216.6279296875,
+            "y": 85.00164031982422
+        },
+        {
+            "id": 14,
+            "value": 10.0175,
+            "fullName": "Drill workers",
+            "shortName": "DW",
+            "color": "0x336633ff",
+            "show": "false",
+            "growth": 1.0,
+            "x": 550,
+            "y": 476
+        },
+        {
+            "id": 21,
+            "value": 10.04,
+            "fullName": "Stage start",
+            "shortName": "Start",
+            "color": "0x99ccccff",
+            "show": "false",
+            "growth": -1.0,
+            "x": 71,
+            "y": 288
+        },
+        {
+            "id": 22,
+            "value": 8.035,
+            "fullName": "Stage finish",
+            "shortName": "Finish",
+            "color": "0x99ccccff",
+            "show": "true",
+            "growth": 0.0,
+            "x": 883,
+            "y": 293
+        },
+        {
+            "id": 15,
+            "value": 9.9975,
+            "fullName": "Other employees",
+            "shortName": "OE",
+            "color": "0x336633ff",
+            "show": "false",
+            "growth": 1.0,
+            "x": 544,
+            "y": 151
+        }
+    ],
+    "Edges": [
+        {
+            "id": 1699949161050,
+            "weight": 4.005,
+            "v1": 21,
+            "v2": 1,
+            "shortName": "",
+            "formula": "",
+            "md": "(135.5,245.5)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1699949194410,
+            "weight": 0.825,
+            "v1": 6,
+            "v2": 22,
+            "shortName": "",
+            "formula": "",
+            "md": "(790.81396484375,269.50081634521484)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1799949194410,
+            "weight": 0.25075000000000003,
+            "v1": 5,
+            "v2": 22,
+            "shortName": "",
+            "formula": "",
+            "md": "(790.81396484375,269.50081634521484)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1999949194410,
+            "weight": 0.476,
+            "v1": 5,
+            "v2": 6,
+            "shortName": "",
+            "formula": "",
+            "md": "(790.81396484375,269.50081634521484)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1699949314657,
+            "weight": 0.9980000000000001,
+            "v1": 1,
+            "v2": 2,
+            "shortName": "",
+            "formula": "",
+            "md": "(240.5,230.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1699949395401,
+            "weight": 1.3020000000000003,
+            "v1": 2,
+            "v2": 4,
+            "shortName": "",
+            "formula": "",
+            "md": "(350.0,274.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1699949401881,
+            "weight": 0.5000000000000001,
+            "v1": 4,
+            "v2": 5,
+            "shortName": "",
+            "formula": "",
+            "md": "(503.5,324.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1799949401881,
+            "weight": 0.35250000000000004,
+            "v1": 4,
+            "v2": 6,
+            "shortName": "",
+            "formula": "",
+            "md": "(503.5,324.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1700045280442,
+            "weight": 4.010000000000001,
+            "v1": 21,
+            "v2": 3,
+            "shortName": "",
+            "formula": "",
+            "md": "(126.5,320.5)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1700045295786,
+            "weight": 1.0150000000000001,
+            "v1": 3,
+            "v2": 4,
+            "shortName": "",
+            "formula": "",
+            "md": "(312.0,339.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1700045425856,
+            "weight": 0.10350000000000002,
+            "v1": 12,
+            "v2": 3,
+            "shortName": "",
+            "formula": "",
+            "md": "(172.0,381.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1700045449201,
+            "weight": -0.10300000000000002,
+            "v1": 12,
+            "v2": 2,
+            "shortName": "",
+            "formula": "",
+            "md": "(326.0,267.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1700045501496,
+            "weight": -0.10300000000000002,
+            "v1": 13,
+            "v2": 1,
+            "shortName": "",
+            "formula": "",
+            "md": "(206.81396484375,154.5008201599121)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1700045527640,
+            "weight": -0.10300000000000002,
+            "v1": 13,
+            "v2": 2,
+            "shortName": "",
+            "formula": "",
+            "md": "(285.31396484375,152.0008201599121)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1700045593057,
+            "weight": -0.05,
+            "v1": 12,
+            "v2": 4,
+            "shortName": "",
+            "formula": "",
+            "md": "(390.0,385.5)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1700045616399,
+            "weight": -0.10300000000000002,
+            "v1": 13,
+            "v2": 5,
+            "shortName": "",
+            "formula": "",
+            "md": "(391.31396484375,204.0008201599121)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1700045622832,
+            "weight": -0.10150000000000002,
+            "v1": 13,
+            "v2": 6,
+            "shortName": "",
+            "formula": "",
+            "md": "(465.6279296875,192.50163650512695)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1700045702638,
+            "weight": -0.10300000000000002,
+            "v1": 11,
+            "v2": 3,
+            "shortName": "",
+            "formula": "",
+            "md": "(331.0,397.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1700045722999,
+            "weight": -0.10300000000000002,
+            "v1": 14,
+            "v2": 3,
+            "shortName": "",
+            "formula": "",
+            "md": "(359.5,391.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1700045755046,
+            "weight": -0.10300000000000002,
+            "v1": 11,
+            "v2": 2,
+            "shortName": "",
+            "formula": "",
+            "md": "(368.5,260.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1700045814421,
+            "weight": -0.10300000000000002,
+            "v1": 14,
+            "v2": 4,
+            "shortName": "",
+            "formula": "",
+            "md": "(459.5,378.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1700045915437,
+            "weight": -0.10300000000000002,
+            "v1": 15,
+            "v2": 2,
+            "shortName": "",
+            "formula": "",
+            "md": "(434.5,187.5)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1700045925061,
+            "weight": -0.10300000000000002,
+            "v1": 15,
+            "v2": 5,
+            "shortName": "",
+            "formula": "",
+            "md": "(554.5,237.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1700045936172,
+            "weight": -0.10300000000000002,
+            "v1": 15,
+            "v2": 6,
+            "shortName": "",
+            "formula": "",
+            "md": "(628.31396484375,225.50081634521484)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1700045972501,
+            "weight": -0.10200000000000004,
+            "v1": 11,
+            "v2": 6,
+            "shortName": "",
+            "formula": "",
+            "md": "(520.31396484375,392.00081634521484)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 1999949194411,
+            "weight": 0.5,
+            "v1": 22,
+            "v2": 5,
+            "shortName": "New 1999949194411",
+            "formula": "",
+            "md": "(724.0,308.0)",
+            "color": "0x80ff80ff"
+        }
+    ]
+}

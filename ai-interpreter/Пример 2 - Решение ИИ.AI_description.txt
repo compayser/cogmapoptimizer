@@ -1,0 +1,34 @@
+Есть граф, описывающий предметную область (строительство).
+Граф состоит из множества вершин: вершина №1 - "Producing", вершина №2 - "Anti-corrosion", вершина №3 - "Installing", вершина №4 - "Drilling", вершина №5 - "Filling voids", вершина №6 - "Filling piles", вершина №7 - "Temperature", вершина №8 - "Precipitation", вершина №9 - "Suppliers", вершина №10 - "Drill workers", вершина №11 - "Stage start", вершина №12 - "Stage finish", вершина №13 - "Other employees".
+Вершины воздействуют друг на друга позитивно или негативно (если сила воздействия положительная или отрицательная, соответственно). Эти вершины связаны между собой следующим образом:
+- вершина "Producing" воздействует на вершину "Anti-corrosion" с силой 4.005.
+- вершина "Anti-corrosion" воздействует на вершину "Installing" с силой 0.65.
+- вершина "Installing" воздействует на вершины "Filling voids" с силой 0.5015, "Filling piles" с силой 0.5015.
+- вершина "Drilling" воздействует на вершину "Installing" с силой -0.048.
+- вершина "Filling voids" воздействует на вершины "Stage finish" с силой 0.998, "Filling piles" с силой 0.998.
+- вершина "Filling piles" воздействует на вершину "Stage finish" с силой 1.302.
+- вершина "Temperature" воздействует на вершины "Drilling" с силой 0.5, "Anti-corrosion" с силой 0.5, "Filling piles" с силой 0.5.
+- вершина "Precipitation" воздействует на вершины "Drilling" с силой 0.3525, "Anti-corrosion" с силой 0.3525, "Installing" с силой 0.3525.
+- вершина "Suppliers" воздействует на вершины "Producing" с силой 4.01, "Anti-corrosion" с силой 4.01, "Filling voids" с силой 4.01, "Filling piles" с силой 4.01.
+- вершина "Drill workers" воздействует на вершины "Drilling" с силой 1.015, "Installing" с силой 1.015.
+- вершина "Stage start" воздействует на вершину "Producing" с силой 0.1035, "Drilling" с силой 0.1035.
+- вершина "Stage finish" воздействует на вершин.
+- вершина "Other employees" воздействует на вершины "Anti-corrosion" с силой -0.103, "Filling voids" с силой -0.103, "Filling piles" с силой -0.103.
+Данный граф был изменен, вследствие чего он принял следующий вид.
+Его вершины: вершина №1 - "Producing", вершина №2 - "Anti-corrosion", вершина №3 - "Installing", вершина №4 - "Drilling", вершина №5 - "Filling voids", вершина №6 - "Filling piles", вершина №7 - "Temperature", вершина №8 - "Precipitation", вершина №9 - "Suppliers", вершина №10 - "Drill workers", вершина №11 - "Stage start", вершина №12 - "Stage finish", вершина №13 - "Other employees".
+Вершины измененного графа связаны между собой следующим образом:
+- вершина "Producing" воздействует на вершину "Anti-corrosion" с силой 4.005.
+- вершина "Anti-corrosion" воздействует на вершину "Installing" с силой 0.825.
+- вершина "Installing" воздействует на вершины "Filling voids" с силой 0.25075, "Filling piles" с силой 0.25075.
+- вершина "Drilling" воздействует на вершину "Installing" с силой 0.476.
+- вершина "Filling voids" воздействует на вершины "Stage finish" с силой 0.998, "Filling piles" с силой 0.998.
+- вершина "Filling piles" воздействует на вершину "Stage finish" с силой 1.302.
+- вершина "Temperature" воздействует на вершины "Drilling" с силой 0.5, "Anti-corrosion" с силой 0.5, "Filling piles" с силой 0.5.
+- вершина "Precipitation" воздействует на вершины "Drilling" с силой 0.3525, "Anti-corrosion" с силой 0.3525, "Installing" с силой 0.3525.
+- вершина "Suppliers" воздействует на вершины "Producing" с силой 4.01, "Anti-corrosion" с силой 4.01, "Filling voids" с силой 4.01, "Filling piles" с силой 4.01.
+- вершина "Drill workers" воздействует на вершины "Drilling" с силой 1.015, "Installing" с силой 1.015.
+- вершина "Stage start" воздействует на вершины "Producing" с силой 0.1035, "Drilling" с силой 0.1035.
+- вершина "Stage finish" воздействует на вершину "Filling voids" с силой -0.103.
+- вершина "Other employees" воздействует на вершины "Anti-corrosion" с силой -0.103, "Filling voids" с силой -0.103, "Filling piles" с силой -0.103.
+Если разница в силе воздействия аналогичных вершин этих двух графов меньше 5%, то можно считать, что сила не менялась и игнорировать эту разницу.
+Вопрос: Объясни максимально подробно, с примерами, как можно интерпретировать внесенные в начальный граф изменения и как реализовать такие изменения?

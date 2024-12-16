@@ -1,0 +1,474 @@
+{
+    "MapTitle": "Plan 1",
+    "ModelingResults": {
+        "added_new_vertices": 0,
+        "target_vertices": [
+            {
+                "id": 17,
+                "fullName": "Project finish"
+            }
+        ],
+        "bad_vertices": [],
+        "y_max_er": 0.0
+    },
+    "Settings": {
+        "showVertexShortName": true,
+        "showEdgeShortName": true,
+        "showVertexValue": false,
+        "highliteImpulsed": false,
+        "useColoring": true,
+        "showVertexFullName": true,
+        "showVertexGrowth": false,
+        "useEdgeWeight": true,
+        "useVertexValues": true,
+        "showEdgeWeight": true,
+        "useTitleBorders": false
+    },
+    "Scenarios": [
+        {
+            "impulses": [
+                {
+                    "val": -19.234647326872334,
+                    "v": 11,
+                    "step": 1
+                },
+                {
+                    "val": 2.45489551235873,
+                    "v": 12,
+                    "step": 1
+                },
+                {
+                    "val": -1.7529249310376578,
+                    "v": 13,
+                    "step": 1
+                },
+                {
+                    "val": 9.793970744404255,
+                    "v": 14,
+                    "step": 1
+                },
+                {
+                    "val": 1.7032797120862675,
+                    "v": 15,
+                    "step": 1
+                },
+                {
+                    "val": 5.6763714652387804,
+                    "v": 16,
+                    "step": 1
+                },
+                {
+                    "val": -1.4658630053634445,
+                    "v": 3,
+                    "step": 1
+                },
+                {
+                    "val": -2.1613349371417536,
+                    "v": 4,
+                    "step": 1
+                }
+            ],
+            "name": "scenario1",
+            "id": 1670668256870,
+            "indicators": [
+                17
+            ]
+        }
+    ],
+    "Vertices": [
+        {
+            "id": 11,
+            "value": 10.0,
+            "fullName": "Base",
+            "shortName": "A",
+            "color": "0x808080ff",
+            "show": "true",
+            "growth": 0.0,
+            "x": 192,
+            "y": 307
+        },
+        {
+            "id": 12,
+            "value": 10.0,
+            "fullName": "Block-boxes",
+            "shortName": "B",
+            "color": "0x808080ff",
+            "show": "true",
+            "growth": 0.0,
+            "x": 287,
+            "y": 235
+        },
+        {
+            "id": 13,
+            "value": 10.0,
+            "fullName": "Additional constructions",
+            "shortName": "C",
+            "color": "0x808080ff",
+            "show": "true",
+            "growth": 0.0,
+            "x": 441,
+            "y": 325
+        },
+        {
+            "id": 14,
+            "value": 10.0,
+            "fullName": "Exterior finishing",
+            "shortName": "D",
+            "color": "0x808080ff",
+            "show": "true",
+            "growth": 0.0,
+            "x": 607,
+            "y": 355
+        },
+        {
+            "id": 15,
+            "value": 10.0,
+            "fullName": "Interior decoration",
+            "shortName": "E",
+            "color": "0x808080ff",
+            "show": "true",
+            "growth": 0.0,
+            "x": 579,
+            "y": 201
+        },
+        {
+            "id": 16,
+            "value": 10.0,
+            "fullName": "Arrangement of utilities",
+            "shortName": "F",
+            "color": "0x808080ff",
+            "show": "true",
+            "growth": 0.0,
+            "x": 709.6279296875,
+            "y": 174.0016326904297
+        },
+        {
+            "id": 1,
+            "value": 9.8,
+            "fullName": "Temperature",
+            "shortName": "T",
+            "color": "0x999900ff",
+            "show": "false",
+            "growth": 1.0,
+            "x": 222,
+            "y": 451
+        },
+        {
+            "id": 2,
+            "value": 10.3,
+            "fullName": "Precipitation",
+            "shortName": "P",
+            "color": "0x999900ff",
+            "show": "false",
+            "growth": 1.0,
+            "x": 470,
+            "y": 451
+        },
+        {
+            "id": 3,
+            "value": 10.0,
+            "fullName": "Suppliers",
+            "shortName": "S",
+            "color": "0x1a3399ff",
+            "show": "false",
+            "growth": 1.0,
+            "x": 384.6279296875,
+            "y": 21.00164031982422
+        },
+        {
+            "id": 4,
+            "value": 10.25,
+            "fullName": "Management",
+            "shortName": "M",
+            "color": "0x336633ff",
+            "show": "false",
+            "growth": 1.0,
+            "x": 181,
+            "y": 66
+        },
+        {
+            "id": 5,
+            "value": 10.0,
+            "fullName": "Project start",
+            "shortName": "Start",
+            "color": "0x99ccccff",
+            "show": "false",
+            "growth": -1.0,
+            "x": 71,
+            "y": 288
+        },
+        {
+            "id": 17,
+            "value": 10.0,
+            "fullName": "Project finish",
+            "shortName": "Finish",
+            "color": "0x99ccccff",
+            "show": "true",
+            "growth": 0.0,
+            "x": 868,
+            "y": 239
+        }
+    ],
+    "Edges": [
+        {
+            "id": 18,
+            "weight": -0.1005,
+            "v1": 3,
+            "v2": 11,
+            "shortName": "",
+            "formula": "",
+            "md": "(274.5,151.5)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 19,
+            "weight": -0.1005,
+            "v1": 3,
+            "v2": 12,
+            "shortName": "",
+            "formula": "",
+            "md": "(350.5,151.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 20,
+            "weight": -0.1005,
+            "v1": 3,
+            "v2": 15,
+            "shortName": "",
+            "formula": "",
+            "md": "(431.0,98.5)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 21,
+            "weight": -0.1005,
+            "v1": 3,
+            "v2": 13,
+            "shortName": "",
+            "formula": "",
+            "md": "(372.5,164.5)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 22,
+            "weight": -0.1005,
+            "v1": 3,
+            "v2": 16,
+            "shortName": "",
+            "formula": "",
+            "md": "(538.6279416742916,131.00163959134932)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 23,
+            "weight": -0.1005,
+            "v1": 3,
+            "v2": 14,
+            "shortName": "",
+            "formula": "",
+            "md": "(411.8139708371458,197.00081979567466)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 24,
+            "weight": 2.0065,
+            "v1": 5,
+            "v2": 11,
+            "shortName": "",
+            "formula": "",
+            "md": "(135.5,245.5)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 25,
+            "weight": 0.502,
+            "v1": 16,
+            "v2": 17,
+            "shortName": "",
+            "formula": "",
+            "md": "(798.8139708371459,220.00081979567466)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 26,
+            "weight": -0.1005,
+            "v1": 4,
+            "v2": 11,
+            "shortName": "",
+            "formula": "",
+            "md": "(205.5,175.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 27,
+            "weight": -0.1005,
+            "v1": 4,
+            "v2": 12,
+            "shortName": "",
+            "formula": "",
+            "md": "(273.5,151.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 28,
+            "weight": 1.01,
+            "v1": 11,
+            "v2": 12,
+            "shortName": "",
+            "formula": "",
+            "md": "(240.5,285.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 29,
+            "weight": 1.4024999999999999,
+            "v1": 12,
+            "v2": 13,
+            "shortName": "",
+            "formula": "",
+            "md": "(350.0,274.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 30,
+            "weight": 1.01,
+            "v1": 13,
+            "v2": 15,
+            "shortName": "",
+            "formula": "",
+            "md": "(476.0,232.5)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 31,
+            "weight": 1.2035,
+            "v1": 13,
+            "v2": 14,
+            "shortName": "",
+            "formula": "",
+            "md": "(518.5,290.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 32,
+            "weight": 1.1505999999999998,
+            "v1": 15,
+            "v2": 16,
+            "shortName": "",
+            "formula": "",
+            "md": "(655.3139708371458,219.50081979567466)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 33,
+            "weight": 0.75,
+            "v1": 14,
+            "v2": 17,
+            "shortName": "",
+            "formula": "",
+            "md": "(737.5,297.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 34,
+            "weight": -0.20249999999999999,
+            "v1": 1,
+            "v2": 11,
+            "shortName": "",
+            "formula": "",
+            "md": "(207.0,379.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 35,
+            "weight": -0.20249999999999999,
+            "v1": 1,
+            "v2": 12,
+            "shortName": "",
+            "formula": "",
+            "md": "(305.5,295.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 36,
+            "weight": -0.10200000000000002,
+            "v1": 1,
+            "v2": 13,
+            "shortName": "",
+            "formula": "",
+            "md": "(335.0,387.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 37,
+            "weight": -0.10200000000000002,
+            "v1": 1,
+            "v2": 14,
+            "shortName": "",
+            "formula": "",
+            "md": "(414.5,403.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 38,
+            "weight": -0.050499999999999996,
+            "v1": 1,
+            "v2": 15,
+            "shortName": "",
+            "formula": "",
+            "md": "(266.5,326.0)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 39,
+            "weight": -0.050499999999999996,
+            "v1": 1,
+            "v2": 16,
+            "shortName": "",
+            "formula": "",
+            "md": "(739.8139708371459,572.5008197956747)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 40,
+            "weight": -0.302,
+            "v1": 2,
+            "v2": 11,
+            "shortName": "",
+            "formula": "",
+            "md": "(383.0,390.5)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 41,
+            "weight": -0.10099999999999999,
+            "v1": 2,
+            "v2": 12,
+            "shortName": "",
+            "formula": "",
+            "md": "(431.5,368.5)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 42,
+            "weight": -0.20200000000000004,
+            "v1": 2,
+            "v2": 13,
+            "shortName": "",
+            "formula": "",
+            "md": "(479.5,405.5)",
+            "color": "0xff8080ff"
+        },
+        {
+            "id": 43,
+            "weight": -0.20200000000000004,
+            "v1": 2,
+            "v2": 14,
+            "shortName": "",
+            "formula": "",
+            "md": "(541.5,420.5)",
+            "color": "0xff8080ff"
+        }
+    ]
+}

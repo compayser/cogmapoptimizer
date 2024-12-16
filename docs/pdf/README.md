@@ -11,6 +11,10 @@
 
 [![PDF](https://icons.iconarchive.com/icons/hopstarter/soft-scraps/48/Adobe-PDF-Document-icon.png) Компонент адаптивной оптимизации выполнения производственных процессов с использованием вероятностных моделей и динамически изменяемой среды. Описание программы](program-description.pdf)
 
+[![PDF](https://icons.iconarchive.com/icons/hopstarter/soft-scraps/48/Adobe-PDF-Document-icon.png) Инструментарий визуализации вероятностных когнитивных карт. Описание программы](program-description-graph-drawer.pdf)
+
+[![PDF](https://icons.iconarchive.com/icons/hopstarter/soft-scraps/48/Adobe-PDF-Document-icon.png) Инструментарий подготовки конкретизирующих ИИ-запросов для когнитивных карт. Описание программы](program-description-ai-interpreter.pdf)
+
 [![PDF](https://icons.iconarchive.com/icons/hopstarter/soft-scraps/48/Adobe-PDF-Document-icon.png) Инструментарий параллельной обработки когнитивных карт. Описание программы](program-description-deploy.pdf)
 
 [![PDF](https://icons.iconarchive.com/icons/hopstarter/soft-scraps/48/Adobe-PDF-Document-icon.png) Экспериментальный образец комплекса. Руководство программиста](programmers-guide.pdf)

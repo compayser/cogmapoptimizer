@@ -1,8 +1,12 @@
 # Test case #1
 
-## 1 Initial data
+## 1 Experimental confirmation of the operability of the "Cognitive Maps Parallel Processing Toolkit" component
 
-### 1.1 Legend
+The example is an experimental confirmation of the operability of the "Cognitive Maps Parallel Processing Toolkit" component, which consists of comparing the calculation (optimization) options for cognitive maps on a single-machine computing system and on a multi-machine version. The data for the example is the example previously used to confirm the concept of using probabilistic cognitive maps.
+
+## 2 Initial data
+
+### 2.1 Legend
 
 There is an oil field in the center of which a production well is situated. There are some exploration wells around the production well.
 
@@ -10,7 +14,7 @@ During oil production, a situation may arise when the production rate exceeds th
 
 Objective: by influencing existing wells and connections between them, to achieve deficit-free oil production in a producing well.
 
-### 1.2 Initial cognitive map
+### 2.2 Initial cognitive map
 
 The initial example is taken from the work of 2022 in order to confirm the results obtained in the current year. A field of size 4x4 (Fig. 1) is described by vertices K1—K16 evenly distributed on the plane. The resource extraction point K17 (production well) is located in the geometric center of the field. The connections between the vertices are bidirectional and have a absolute weight of 0.1 (positive weights for points K1-K16, and opposite signs for the resource extraction point).
 
@@ -32,7 +36,7 @@ A negative result of the modeling is that at the 2nd step of the modeling a reso
 
 In reality, the volume of the resource, naturally, would not be negative - this can be interpreted as a local time decrease in the rate of resource extraction from the space under consideration, or as a temporary suspension of resource extraction. In any case, such a situation movement is unacceptable or, at least, undesirable.
 
-## 2 Human solution
+## 3 Human solution
 
 In order to get rid of the short-term resource shortage that arises during the modeling process, it is necessary to make changes to the structure of the system that will affect its behavior.
 
@@ -60,7 +64,7 @@ During the modeling process, no resource deficit is observed; its volume stabili
 
 [File with human solution](data/Example1-2Human.cmj)
 
-## 3 AI solution (2022)
+## 4 AI solution (2022)
 
 During of processing the initial cognitive map using adaptive optimization algorithms for the execution of production processes based on intelligent technologies using cognitive analysis of the parameters of the production environment and trends in production processes in the oil and gas industry, a set of options for influencing the system was obtained in order to solve the problem of avoiding reaching a deficit state of the extraction point resource from the field of the space under consideration.
 
@@ -92,7 +96,7 @@ As a result of applying the solution recommended by the AI, an effective solutio
 
 _Fig. 6 — Result of modeling the life cycle of a system modified according to the recommendation of the AI_
 
-## 4 Solution obtained by the new version of AI algorithms (2023)
+## 5 Solution obtained by the new version of AI algorithms (2023)
 
 In order to confirm the performance of new AI algorithms, a cognitive model of the subject area under study was created similar to that described above. The parameters of the cognitive map (the weights of vertices and edges) are described in the form of discrete random variables: the main (most probable value) value is taken from the old model, additional (less probable) values imitate the pluralism of opinions of experts involved in evaluating the model, introducing some “noise”, which tilts the value up and down and creates a distribution of the random variable.
 
@@ -112,15 +116,19 @@ As a result of the simulation, in general, results were obtained that were somew
 
 _Fig. 8 — Result of modeling the life cycle of a system modified according to the recommendation of a new version of the AI
 
-## 5 Solutions comparing 
+## 6 Solutions comparing 
 
 Comparing the solutions proposed by humans and two versions of AI algorithms (Fig. 4, 6 and 8), one can be convinced that:
 - the AI solution is more effective than the solution proposed by a human (there is no “failure” with the cessation or significant limitation of production at the 2nd modeling step, and the process also stabilizes more quickly),
 - the solution of the new AI algorithm is slightly more effective than the solution proposed by the previous version of AI (allows it to slightly exceed the initial indicators).
 <br><br>
 
-## 6 Experimental studies
+## 7 Experimental studies
 
 In order to conduct experimental studies of the developed new AI algorithms and test their software implementation, a [corresponding version of the test case](data/Example1.zip) was developed.
 
 By comparing solutions proposed by humans and AI, one can be convinced that AI solutions are more effective, and the new version of the algorithms is slightly superior to the previous one.
+
+## 8 Conclusions
+
+Based on the results of the comparison of processing in single- and multi-machine versions (without and with the use of the "Cognitive Maps Parallel Processing Toolkit" component), a correspondence of the results was found, proving the validity of using this approach. As expected, the time spent on calculation decreases proportionally to the increase in computing power (with an adjustment for the discreteness of breaking down the overall task into subtasks solved on distributed computing nodes).

@@ -2,7 +2,7 @@
 """:file: Модуль с описанием класса когнитивного оптимизатора"""
 
 import itertools as it
-import time  # !!!
+import time
 from typing import List
 import numpy as np
 import scipy.optimize as opt

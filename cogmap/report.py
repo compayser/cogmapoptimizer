@@ -60,7 +60,8 @@ class Report:
                 grow = v.growth.build_scalar()
             vertices.append({"id": v.id_, "value": val,
                              "fullName": v.name, "shortName": v.short_name,
-                             "color": v.color, "show": v.show, "growth": grow, "x": v.x, "y": v.y})
+                             "color": v.color, "show": v.show, "growth": grow, 
+                             "x": v.x, "y": v.y})
 
         target_vertices = []
         for v in self.data.target_vertices:

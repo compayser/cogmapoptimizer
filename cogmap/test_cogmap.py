@@ -806,25 +806,25 @@ class TestProbA(TestCase):
         rnd.append_value(4.0, 0.4)
 
         # Подтест 1 - ошибка
-        # rnd.build_scalar_mode = 'trash'
+        # rnd.build_scalar_mode = "trash"
         # self.assertEqual(rnd.build_scalar(), None)
 
         # Подтест 2 - среднее
-        rnd.build_scalar_mode = 'avg'
+        rnd.build_scalar_mode = "avg"
         self.assertEqual(rnd.build_scalar(), 3.0)
 
         # Подтест 3 - максимум
-        rnd.build_scalar_mode = 'max'
+        rnd.build_scalar_mode = "max"
         self.assertEqual(rnd.build_scalar(), 4.0)
 
         # Подтест 4 - минимум
-        rnd.build_scalar_mode = 'min'
+        rnd.build_scalar_mode = "min"
         self.assertEqual(rnd.build_scalar(), 1.0)
 
         # Подтест 5 - средний максимум
-        rnd.build_scalar_mode = 'max_avg'
+        rnd.build_scalar_mode = "max_avg"
         self.assertEqual(rnd.build_scalar(), 3.5)
 
         # Подтест 6 - средний минимум
-        rnd.build_scalar_mode = 'min_avg'
+        rnd.build_scalar_mode = "min_avg"
         self.assertEqual(rnd.build_scalar(), 1.5)

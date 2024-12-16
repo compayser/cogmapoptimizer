@@ -21,6 +21,9 @@ To use the component, the cognitive map must satisfy the following conditions:
 
 * [cogmap](cogmap) - cognitive modeling library files
 * [cognitive](cognitive) - files of an agent-based modeling tool based on FlameGPU
+* [deploy](deploy) - files of cognitive map parallel processing Tool 
+* [ai-interpreter](ai-interpreter) - files of tool for preparing cognitive maps AI queries 
+* [graph-drawer](graph-drawer) - files of probabilistic cognitive maps visualization tool 
 * [docs](docs/README.md) - description of the library
 * [examples](examples/README_en.md) - examples of cognitive models and optimization results
 * [License GPL v3.0](LICENSE.md)

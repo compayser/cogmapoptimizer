@@ -9,4 +9,3 @@
 * [Adaptive optimization component for production processes using probabilistic models and a dynamically changing environment. Programmer's guide](programmers-guide.md)
 * [Adaptive optimization component for production processes using probabilistic models and a dynamically changing environment. Program text](program-src.md)
 * [Cognitive Maps Parallel Processing Toolkit. Program Description](program-description-deploy.md)
-* 

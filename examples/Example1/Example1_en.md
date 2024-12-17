@@ -27,15 +27,15 @@ The initial example is taken from the 2022 works in order to confirm the results
 
 To demonstrate the operation of the visualization toolkit of probabilistic cognitive maps, cognitive maps were recreated using it. The results of the toolkit operation are presented in Fig. 1.
 
-![Fig. 1](pics/xVisual.png.png)
+![Fig. 1](pics/xVisual.png)
 
-_Fig. 1 ó Demonstration of the work of the visualization toolkit for probabilistic cognitive maps_
+_Fig. 1 ‚Äî Demonstration of the work of the visualization toolkit for probabilistic cognitive maps_
 
 A 4x4 field (Fig. 2) is described by vertices K1-K16 uniformly distributed on the plane. The resource extraction point K17 (production well) is located in the geometric center of the field. The connections between the vertices are bidirectional and have a weight modulus equal to 0.1 (positive weights for points K1-K16, opposite-sign for the resource extraction point).
 
 ![Fig. 2](pics/xPic1.png)
 
-_Fig. 2 ó Initial view of the simulated system_
+_Fig. 2 ‚Äî Initial view of the simulated system_
 
 [File with the initial cognitive map](data/Example1-1Init.cmj)
 
@@ -43,7 +43,7 @@ The simulation result is shown in Fig. 3.
 
 ![Fig. 3](pics/xPic2.png)
 
-_Fig. 3 ó Result of modeling the life cycle of the initial system (resource volume at the point of withdrawal K17)_
+_Fig. 3 ‚Äî Result of modeling the life cycle of the initial system (resource volume at the point of withdrawal K17)_
 
 During the modeling process, the resource volume at the point of withdrawal stabilizes around the +0.12 mark during the first 4-5 modeling steps. This is a good result, since it shows that in the long term, the resource is not exhausted, which would reduce the efficiency of the system under consideration.
 
@@ -63,17 +63,17 @@ Let us consider two more ways to increase the efficiency of resource extraction 
 
 If an additional vertex is created near the resource extraction point, connected to it by connections with a sufficiently high throughput, then there is a possibility that the resource flow from such an additional source will be able to compensate for the deficit caused by excessively intensive extraction.
 
-This is a fairly obvious statement. Therefore, the task itself is to determine how ìwideî such a connection between vertices should be.
+This is a fairly obvious statement. Therefore, the task itself is to determine how ‚Äúwide‚Äù such a connection between vertices should be.
 
 As the simulation shows, the introduction of an additional node (K18) (Fig. 4) with a connection that provides a very fast resource flow (0.7 instead of 0.1) can really improve the situation (Fig. 5).
 
 ![Fig. 4](pics/xPic3.png)
 
-_Fig. 4 ó Modified system with an additional node (K18)_
+_Fig. 4 ‚Äî Modified system with an additional node (K18)_
 
 ![Fig. 5](pics/xPic4.png)
 
-_Fig. 5 ó Result of modeling the life cycle of a modified system with one additional node_
+_Fig. 5 ‚Äî Result of modeling the life cycle of a modified system with one additional node_
 
 During the simulation, no resource deficit is observed, its volume stabilizes over time at around +0.78.
 
@@ -97,19 +97,19 @@ Let's consider the most effective of them (Fig. 6).
 
 ![Fig. 6](pics/xPic5.png)
 
-_Fig. 6 ó Solving the problem using an adaptive optimization algorithm for production processes based on cognitive analysis of production environment parameters_
+_Fig. 6 ‚Äî Solving the problem using an adaptive optimization algorithm for production processes based on cognitive analysis of production environment parameters_
 
 As can be seen in the image, no additional nodes were introduced into the system - the AI got by with modifying the existing ones and creating several new arcs on the graph.
 
 The solution proposed by the AI can be interpreted as follows. Modifying the existing connections between nodes (wells) represents either an increase in the porosity of the oil-bearing formation (hydraulic fracturing) or a decrease (pumping cement slurries). The presence of a new connection (V10-V7), as paradoxical as it may be, can even be considered as laying a pipeline that pumps oil emulsion from one well to another (in the event that hydraulic fracturing is not possible).
 
-As a result of applying the solution recommended by the AI, an effective solution to the problem is obtained (see Fig. 7) ó the weight value for the K17 vertex stabilizes over time around the 1.8 mark (that is, not much lower than the initial values), and resource deficit is not observed at any of the modeling steps.
+As a result of applying the solution recommended by the AI, an effective solution to the problem is obtained (see Fig. 7) ‚Äî the weight value for the K17 vertex stabilizes over time around the 1.8 mark (that is, not much lower than the initial values), and resource deficit is not observed at any of the modeling steps.
 
 [File with the solution obtained by the AI](data/Example1-3OldResultsAI.cmj)
 
 ![Fig. 7](pics/xPic6.png)
 
-_Fig. 7 ó Result of modeling the life cycle of a system modified according to the AI recommendation_
+_Fig. 7 ‚Äî Result of modeling the life cycle of a system modified according to the AI recommendation_
 
 ## 5 Solution obtained by the new version of AI algorithms (2023)
 
@@ -123,13 +123,13 @@ Otherwise, the resulting cognitive map is similar to the initial map presented a
 
 ![Fig. 8](pics/xPic7.png)
 
-_Fig. 8 ó Result of modeling the life cycle of the system modified according to the AI recommendation_
+_Fig. 8 ‚Äî Result of modeling the life cycle of the system modified according to the AI recommendation_
 
-As a result of the modeling, the results obtained were, in general, somewhat better than the results obtained using the previous version of the AI algorithms: the solution also turns out to be effective ó the weight value for the target vertex (K17) stabilizes around 1.98, which is even slightly higher than the initial value; resource deficit is also not observed at any of the modeling steps.
+As a result of the modeling, the results obtained were, in general, somewhat better than the results obtained using the previous version of the AI algorithms: the solution also turns out to be effective ‚Äî the weight value for the target vertex (K17) stabilizes around 1.98, which is even slightly higher than the initial value; resource deficit is also not observed at any of the modeling steps.
 
 ![Fig. 9](pics/xPic8.png)
 
-_Fig. 9 ó Result of modeling the life cycle of the modified AI system based on the recommendation of the new version_
+_Fig. 9 ‚Äî Result of modeling the life cycle of the modified AI system based on the recommendation of the new version_
 
 ## 6 Comparison of solutions
 
@@ -154,13 +154,13 @@ To demonstrate the operability of the adaptive optimization component for the ex
 
 Examples of an auto-generated query and an interpretation received from AI (Fig. 10, 11) are given below.
 
-![Fig. 10](pics/yPic9.png)
+![Fig. 10](pics/xPic9.png)
 
-_Fig. 10 ó An example of an auto-generated query obtained by the toolkit for preparing concretizing AI queries for cognitive maps and an AI-derived interpretation of the solution (general construction schedule)_
+_Fig. 10 ‚Äî An example of an auto-generated query obtained by the toolkit for preparing concretizing AI queries for cognitive maps and an AI-derived interpretation of the solution (general construction schedule)_
 
-![Fig. 11](pics/yPic10.png)
+![Fig. 11](pics/xPic10.png)
 
-_Fig. 11 ó An example of an auto-generated query obtained by the toolkit for preparing concretizing AI queries for cognitive maps and an AI-derived interpretation of the solution (particular construction stage schedule)_
+_Fig. 11 ‚Äî An example of an auto-generated query obtained by the toolkit for preparing concretizing AI queries for cognitive maps and an AI-derived interpretation of the solution (particular construction stage schedule)_
 
 ## 9 Conclusions
 

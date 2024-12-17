@@ -2,7 +2,7 @@
 [![ITMO](./docs/media/ITMO_badge_flat_rus.svg)](https://en.itmo.ru/en/)
 
 [![license](https://img.shields.io/github/license/compayser/cogmapoptimizer)](https://github.com/compayser/cogmapoptimizer/blob/main/LICENSE.md)
-[![Eng](https://img.shields.io/badge/lang-en-red.svg)](/README_en.md)
+[![Rus](https://img.shields.io/badge/lang-ru-red.svg)](/README.md)
 
 # General information #
 

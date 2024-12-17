@@ -42,7 +42,7 @@ def trunc_num(num, digits=5):
 
 def ProcessCogMap(orig_filename, processed_filename):
     # Прочитать начальную когнитивную карту
-    with open(orig_filename, "r") as cog_file:
+    with open(orig_filename, "r", encoding="cp1251") as cog_file:
         cogmap_json = cog_file.read()
     json = js.loads(cogmap_json)
 
@@ -99,7 +99,7 @@ def ProcessCogMap(orig_filename, processed_filename):
     # Описание переработанного графа
     result = result + "Данный граф был изменен, вследствие чего он принял следующий вид.\n"
     # Прочитать переработанную когнитивную карту
-    with open(processed_filename, "r") as cog_file:
+    with open(processed_filename, "r", encoding="cp1251") as cog_file:
         cogmap_json = cog_file.read()
     json = js.loads(cogmap_json)
 
@@ -152,7 +152,7 @@ def ProcessCogMap(orig_filename, processed_filename):
 
 
 def SaveResult(file_name, string):
-    file = open(file_name, "w")
+    file = open(file_name, "w", encoding="cp1251")
     n = file.write(string)
     file.close()
 

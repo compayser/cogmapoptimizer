@@ -17,7 +17,7 @@ To use the component, the cognitive map must meet the following conditions:
 * the number of vertices of the cognitive map graph (N) is no more than 32;
 * the number of cognitive map graph arcs (M) is no more than 992.
 
-# Repository information#
+# Repository information #
 
 ## Repository composition ##
 
